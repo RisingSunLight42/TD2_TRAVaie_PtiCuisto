@@ -5,4 +5,5 @@ if(isset($_POST['re_title']) && isset($_POST['re_desc']) && isset($_POST['re_res
     $resume = $_POST['re_resume'];
     $categorize = $_POST['re_cat'];
 }
+
 ?>
