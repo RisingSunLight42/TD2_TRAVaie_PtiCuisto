@@ -1,9 +1,0 @@
-<?php
-if(isset($_POST['re_title']) && isset($_POST['re_desc']) && isset($_POST['re_resume']) && isset($_POST['re_cat'])) {
-    $title = $_POST['re_title'];
-    $desc = $_POST['re_desc'];
-    $resume = $_POST['re_resume'];
-    $categorize = $_POST['re_cat'];
-}
-
-?>
