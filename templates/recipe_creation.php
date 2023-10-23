@@ -14,15 +14,15 @@
         Entrez un résumé de votre recette : <input type ="text" name="re_resume"/> <br/>
         Quel est la catégorie de votre recette ? 
         <label>ENTREE</label>
-        <input type="radio" name="re_cat" value="ENTREE"/>
+        <input type="radio" name="re_cat" value="1"/>
         <label>ENTREE</label>
-        <input type="radio" name="re_cat" value="PLAT"/>
+        <input type="radio" name="re_cat" value="2"/>
         <label>PLAT</label>
-        <input type="radio" name="re_cat" value="DESSERT"/>
+        <input type="radio" name="re_cat" value="3"/>
         <label>DESSERT</label>
-        <input type="radio" name="re_cat" value="APERITIF"/>
+        <input type="radio" name="re_cat" value="4"/>
         <label>APERITIF</label>
-        <input type="radio" name="re_cat" value="BOISSON"/>
+        <input type="radio" name="re_cat" value="5"/>
         <label>BOISSON</label> <br/>
         <input type="submit" name="confirm" value="OK"/> 
     </form>
