@@ -12,9 +12,9 @@
         <a href="/templates/filter.php">Filtrer</a>
     </div>
     <div>
-        <button>Creation</button>
-        <button>Modification</button>
-        <button>Suppression</button>
+        <button><a href="/templates/recipe_creation.php">Creation</a></button>
+        <button><a href="/templates/recipe_modification.php">Modification</a></button>
+        <button><a href="/templates/recipe_deleted.php">Suppresion</a></button>
     </div>
     
 </body>

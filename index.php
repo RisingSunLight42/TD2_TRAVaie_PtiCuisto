@@ -10,7 +10,7 @@
         <a href="./index.php">Accueil</a>
         <a href="./templates/all_recipes.php">Nos recettes</a>
         <a href="./templates/filter.php">Filtrer</a>
-        <a href="./templates/compte.php">Compte</a>
+        <a href="./templates/account.php">Compte</a>
     </div>
 
     
