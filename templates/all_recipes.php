@@ -10,5 +10,14 @@
         <a href="../index.php">Accueil</a>
         <a href ="./recipe.php">Recette simple</a>
     <div>
+        <?php
+        require_once("connexion.php");
+        include_once("pdo_agile.php");
+
+        $requete = "select * from ptic_recipes";
+
+        LireDonneesPDO1($bdd,$requete, $tab);
+        afficherTab($tab);
+        ?>
 </body>
 </html>
