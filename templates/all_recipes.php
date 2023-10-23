@@ -17,7 +17,10 @@
         $requete = "select * from ptic_recipes";
 
         LireDonneesPDO1($bdd,$requete, $tab);
-        afficherTab($tab);
+        for ($i= 0; $i < count($tab); $i++){
+            echo "<div>";
+            echo "<h1>".$tab[$i]['reci_title']."</h1>";
+        }
         ?>
 </body>
 </html>
