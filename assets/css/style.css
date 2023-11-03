@@ -3,6 +3,8 @@
     --background-color: #ffffff;
     --main-color: #2a3990;
     --unknown-color: #999999;
+    --heading-font: 'Permanent Marker';
+    --body-font: 'Pacifico';
 }
 
 * {
@@ -18,11 +20,25 @@ nav {
     
 }
 
+section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+article {
+    border-color: var(--unknown-color);
+    border: solid 1px;
+    width: 48%;
+    margin: 1%;
+}
+
 #websiteLinks {
     display: flex;
     justify-content: space-between;
     width: fit-content;
     margin: 1.2em;
+    font-size: 1.5em;
 
 }
 
@@ -30,6 +46,27 @@ nav {
     list-style-type: none;
     padding-left: 50px;
 
+}
+
+#lastRecipes {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#edito {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--main-color);
+    color: var(--background-color);
+}
+
+#imgEdito {
+    width: 30%;
 }
 
 a {
@@ -40,11 +77,10 @@ a {
 #logo {
     height: 100%;
     width: 25%;
-    margin: 5px;
+    margin: 5mm;
 }
 
 footer {
-    position: unset;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -56,7 +92,7 @@ footer {
     display: flex;
     list-style-type: none;
     padding: 0;
-    background-color: #ffffff;
+    background-color: var(--background-color);
 }
 
 #facebook, #twitter, #linkedin {
