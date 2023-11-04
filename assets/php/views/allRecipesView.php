@@ -14,6 +14,13 @@
     <div>
         <?php
             echo $content;
+            if ($number > 20) {
+                $anchor = $number - 20;
+                echo "<script type='text/javascript'>",
+                    "window.location.href = '#$anchor';",
+                    "</script>";
+;
+            }
         ?>
 </body>
 </html>

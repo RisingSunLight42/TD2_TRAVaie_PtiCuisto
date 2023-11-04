@@ -12,7 +12,8 @@ function getAllRecipes() {
         $resume = $recipe['reci_resume'];
         $type = $recipe['rtype_title'];
         $image = $recipe['reci_image'];
-        $content .= "<div>";
+        $anchor = $i + 1;
+        $content .= "<div id='$anchor'>";
         $content .= "<img src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" width=50px height=50px/>" ;
         $content .= "<h1 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
         $content .= "<h2>$type</h2>";
