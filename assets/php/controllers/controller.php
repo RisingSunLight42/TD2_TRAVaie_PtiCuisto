@@ -2,8 +2,7 @@
 require('./assets/php/model/model.php');
 
 function getAllRecipes() {
-    [$recipes, $number] = getRecipes();
-    $number += 10;
+    [$recipes, $number, $count] = getRecipes();
     $content = "";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
@@ -20,8 +19,10 @@ function getAllRecipes() {
         $content .= "<p>$resume<p>";
         $content .= "</div>";           
     }
-    $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' value='Afficher plus' /></form>";
-
+    if ($count > $number) {
+        $number += 10;
+        $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' value='Afficher plus' /></form>";
+    }
     require('./assets/php/views/allRecipesView.php');
 }
 

@@ -7,12 +7,15 @@ function getRecipes() {
     $number = 10;
     if (isset($_POST['number'])) $number = $_POST['number'];
     
-    $requete = "select reci_id, reci_title, reci_resume, rtype_title, reci_image
+    $recipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image
     FROM ptic_recipes
     JOIN ptic_recipes_type USING (rtype_id)
     ORDER BY reci_id LIMIT $number";
-    LireDonneesPDO1($bdd, $requete, $recipes);
-    return [$recipes, intval($number)];
+    LireDonneesPDO1($bdd, $recipeRequest, $recipes);
+
+    $countRequest = "SELECT COUNT(*) as count FROM ptic_recipes";
+    LireDonneesPDO1($bdd, $countRequest, $count);
+    return [$recipes, intval($number), $count[0]['count']];
 }
 
 function createRecipe() {
