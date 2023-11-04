@@ -13,15 +13,7 @@
         <a href ="index.php?action=recipe">Recette simple</a>
     <div>
         <?php
-            for ($i= 0; $i < count($recipes); $i++){
-                echo "<div>";
-                echo '<img src='.$recipes[$i]['reci_image'].'alt="image de recetee"/>';
-                echo "<h1>".$recipes[$i]['reci_title']."</h1>";
-                echo "<h2>".$recipes[$i]['rtype_title']."</h2>";
-                echo "<p>".$recipes[$i]['reci_resume']."<p>";
-                echo "<div>";           
-            }
-            echo "<button>afficher plus</button>";
+            echo $content;
         ?>
 </body>
 </html>
