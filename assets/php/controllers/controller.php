@@ -34,8 +34,19 @@ function recipe() {
     $reci_id = $_GET['value'];
     $recipe = getOneRecipe($reci_id);
     $title = $recipe['reci_title'];
+    $type = $recipe['rtype_title'];
+    $reci_content = $recipe['reci_content'];
+    $reci_content = str_replace("\n", "<br>", $reci_content);
+    $image = $recipe['reci_image'];
+    $creationDate = $recipe['reci_creation_date'];
+    $lastUpdateDate = $recipe['reci_edit_date'];
+    $editorUsername = $recipe['users_nickname'];
     $content = "<h1>$title</h1>";
-    $content .= "<p></p>";
+    $content .= "<p>$type</p>";
+    $content .= "<p>$reci_content</p>";
+    $content .= "<p>Créé le : $creationDate par $editorUsername</p>";
+    $content .= "<p>Édité pour la dernière fois le : $lastUpdateDate</p>";
+    $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
     require('./assets/php/views/recipeView.php');
 }
 
