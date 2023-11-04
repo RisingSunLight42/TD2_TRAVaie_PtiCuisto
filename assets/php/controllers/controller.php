@@ -31,6 +31,11 @@ function accueil() {
 }
 
 function recipe() {
+    $reci_id = $_GET['value'];
+    $recipe = getOneRecipe($reci_id);
+    $title = $recipe['reci_title'];
+    $content = "<h1>$title</h1>";
+    $content .= "<p></p>";
     require('./assets/php/views/recipeView.php');
 }
 

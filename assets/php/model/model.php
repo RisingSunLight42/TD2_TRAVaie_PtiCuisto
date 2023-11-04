@@ -18,6 +18,18 @@ function getRecipes() {
     return [$recipes, intval($number), $count[0]['count']];
 }
 
+function getOneRecipe($reci_id) {
+    $bdd = dbConnect();
+
+    $recipeRequest = "SELECT reci_title, reci_resume, rtype_title, reci_image, reci_content, users_nickname, reci_creation_date, reci_edit_date
+    FROM ptic_recipes
+    JOIN ptic_recipes_type USING (rtype_id)
+    JOIN ptic_users USING (users_id)
+    WHERE reci_id = $reci_id";
+    LireDonneesPDO1($bdd, $recipeRequest, $recipe);
+    return $recipe[0];
+}
+
 function createRecipe() {
     $bdd = dbConnect();
     if(isset($_POST['re_title']) && isset($_POST['re_desc']) && isset($_POST['re_resume']) && isset($_POST['re_cat'])) {
