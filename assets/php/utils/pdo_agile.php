@@ -1,18 +1,6 @@
 ﻿<?php
 // E.Porcq  pdo_oracle.php  11/10/2016
 
-/*  Exemple
-	$db_username = "XXX";
-	$db_password = "XXX";
-	//$db = "oci:dbname=info;charset=AL32UTF8"; // fonctionne si tnsname.ora est complet (base UTF8)
-	//$db = "oci:dbname=info;charset=WE8ISO8859P15"; // fonctionne si tnsname.ora est complet
-	// $db = "'oci:dbname=kiutoracle18.unicaen.fr:1521/info.kiutoracle18.unicaen.fr;charset=AL32UTF8'; ; // fonctionne si tnsname.ora est complet (base UTF8)
-	$db = fabriquerChaineConnex(); // plus général 
-
-	$conn = ConnecterPDO($db,$db_username,$db_password);
-*/
-
-//---------------------------------------------------------------------------------------------
 function OuvrirConnexionPDO($db,$db_username,$db_password)
 {
 	try
@@ -68,7 +56,7 @@ function majDonneesPrepareesTabPDO($cur,$tab) // fonctionne directement après p
 function LireDonneesPDO1($conn,$sql,&$tab) // requêtes select non préparées
 {
 	$i=0;
-	foreach  ($conn->query($sql,PDO::FETCH_ASSOC) as $ligne)     
+	foreach($conn->query($sql,PDO::FETCH_ASSOC) as $ligne)     
 		$tab[$i++] = $ligne;
 	$nbLignes = $i;
 	return $nbLignes;
@@ -125,10 +113,9 @@ function fabriquerChaineConnexPDO()
 }
 
 function afficherTab($obj)
-    {
-        echo "<PRE>";
-        print_r($obj);
-        echo "</PRE>";
-    }
-
+	{
+		echo "<PRE>";
+		print_r($obj);
+		echo "</PRE>";
+	}
  ?>

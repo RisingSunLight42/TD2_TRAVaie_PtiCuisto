@@ -1,18 +1,20 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PtiCuistot - Accueil</title>
-</head>
-<body>
-    <div id="menuButton">
-        <a href="./index.php">Accueil</a>
-        <a href="./templates/all_recipes.php">Nos recettes</a>
-        <a href="./templates/filter.php">Filtrer</a>
-        <a href="./templates/account.php">Compte</a>
-    </div>
+<?php
+require('./assets/php/controllers/controller.php');   
 
-    
-</body>
-</html>
+if (isset($_GET['action'])) {
+    $action = $_GET['action'];
+    if ($action == 'accueil') accueil();
+    elseif ($action == 'allRecipes') getAllRecipes();
+    elseif ($action == 'recipeCreation') recipeCreation();
+    elseif ($action == 'recipeCreationHandling') recipeCreationHandling();
+    elseif ($action == 'recipeModification') recipeModification();
+    elseif ($action == 'recipeDeletion') recipeDeletion();
+    elseif ($action == 'filter') filter();
+    elseif ($action == 'recipe') recipe();
+    elseif ($action == 'account') account();
+    else accueil();
+}
+else {
+    accueil();
+}
+?>
