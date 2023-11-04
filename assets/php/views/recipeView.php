@@ -7,9 +7,9 @@
 </head>
 <body>
     <div id="menuButton">
-        <a href="../index.php">Accueil</a>
-        <a href="./all_recipes.php">Retour aux recettes</a>
-        <a href="./filter.php">Retour au filtre</a>
+        <a href="index.php">Accueil</a>
+        <a href="index.php?action=allRecipes">Retour aux recettes</a>
+        <a href="index.php?action=filter">Retour au filtre</a>
     </div>
 </body>
 </html>
