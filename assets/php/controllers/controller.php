@@ -3,6 +3,22 @@ require('./assets/php/model/model.php');
 
 function getAllRecipes() {
     $recipes = getRecipes();
+    $content = "";
+    for ($i= 0; $i < count($recipes); $i++){
+        $recipe = $recipes[$i];
+        $title = $recipe['reci_title'];
+        $resume = $recipe['reci_resume'];
+        $type = $recipe['rtype_title'];
+        $image = $recipe['reci_image'];
+        $content .= "<div>";
+        $content .= "<img src='$image' alt='image de recette' width=50px height=50px/>" ;
+        $content .= "<h1>$title</h1>";
+        $content .= "<h2>$type</h2>";
+        $content .= "<p>$resume<p>";
+        $content .= "</div>";           
+    }
+    $content .= "<button>Afficher plus</button>";
+
     require('./assets/php/views/allRecipesView.php');
 }
 
