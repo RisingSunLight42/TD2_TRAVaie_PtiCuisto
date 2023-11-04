@@ -31,6 +31,17 @@ function getOneRecipe($reci_id) {
     return $recipe[0];
 }
 
+function getRecipeIngredients($reci_id) {
+    $bdd = dbConnect();
+
+    $ingredientsRequest = "SELECT ing_title
+    FROM ptic_needed_ingredients
+    JOIN ptic_ingredients USING (ing_id)
+    WHERE reci_id = $reci_id";
+    LireDonneesPDO1($bdd, $ingredientsRequest, $ingredients);
+    return $ingredients;
+}
+
 function createRecipe() {
     $bdd = dbConnect();
     if(isset($_POST['re_title']) && isset($_POST['re_desc']) && isset($_POST['re_resume']) && isset($_POST['re_cat'])) {
