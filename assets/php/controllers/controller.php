@@ -31,6 +31,38 @@ function accueil() {
 }
 
 function recipe() {
+    $reci_id = $_GET['value'];
+    $recipe = getOneRecipe($reci_id);
+    $ingredients = getRecipeIngredients($reci_id);
+
+    // Ingredients building format
+    $ingredientsHTML = "";
+    if (!is_null($ingredients)) {
+        $ingredientsHTML = "<h2>Ingrédients nécessaires</h2><p>";
+    $nbIngredients = count($ingredients);
+    for ($i= 0; $i < $nbIngredients - 1; $i++){
+        $ingredientsHTML .= $ingredients[$i]['ing_title'].", ";
+    }
+    $ingredientsHTML .= $ingredients[$nbIngredients - 1]['ing_title'].".";
+    $ingredientsHTML .= "</p>";
+    }
+
+    // Recipe building format
+    $title = $recipe['reci_title'];
+    $type = $recipe['rtype_title'];
+    $reci_content = $recipe['reci_content'];
+    $reci_content = str_replace("\n", "<br>", $reci_content);
+    $image = $recipe['reci_image'];
+    $creationDate = $recipe['reci_creation_date'];
+    $lastUpdateDate = $recipe['reci_edit_date'];
+    $editorUsername = $recipe['users_nickname'];
+    $content = "<h1>$title</h1>";
+    $content .= "<p>$type</p>";
+    $content .= $ingredientsHTML;
+    $content .= "<h2>Recette</h2><p>$reci_content</p>";
+    $content .= "<p>Créé le : $creationDate par $editorUsername</p>";
+    $content .= "<p>Édité pour la dernière fois le : $lastUpdateDate</p>";
+    $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
     require('./assets/php/views/recipeView.php');
 }
 
