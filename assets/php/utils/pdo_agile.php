@@ -6,7 +6,6 @@ function OuvrirConnexionPDO($db,$db_username,$db_password)
 	try
 	{
 		$conn = new PDO($db,$db_username,$db_password);
-		//echo "Connexion réussie<br>";
 		$res = true;
 	}
 	catch (PDOException $erreur)
