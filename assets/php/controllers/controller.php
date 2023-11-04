@@ -2,22 +2,24 @@
 require('./assets/php/model/model.php');
 
 function getAllRecipes() {
-    $recipes = getRecipes();
+    [$recipes, $number] = getRecipes();
+    $number += 10;
     $content = "";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
+        $recipe_id = $recipe['reci_id'];
         $title = $recipe['reci_title'];
         $resume = $recipe['reci_resume'];
         $type = $recipe['rtype_title'];
         $image = $recipe['reci_image'];
         $content .= "<div>";
-        $content .= "<img src='$image' alt='image de recette' width=50px height=50px/>" ;
-        $content .= "<h1>$title</h1>";
+        $content .= "<img src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" width=50px height=50px/>" ;
+        $content .= "<h1 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
         $content .= "<h2>$type</h2>";
         $content .= "<p>$resume<p>";
         $content .= "</div>";           
     }
-    $content .= "<button>Afficher plus</button>";
+    $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' value='Afficher plus' /></form>";
 
     require('./assets/php/views/allRecipesView.php');
 }

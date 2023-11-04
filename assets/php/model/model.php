@@ -4,13 +4,15 @@ include_once("./assets/php/utils/pdo_agile.php");
 
 function getRecipes() {
     $bdd = dbConnect();
-    $nombre = 10;
-    $requete = "select reci_title, reci_resume, rtype_title, reci_image 
+    $number = 10;
+    if (isset($_POST['number'])) $number = $_POST['number'];
+    
+    $requete = "select reci_id, reci_title, reci_resume, rtype_title, reci_image 
     from ptic_recipes 
     inner join ptic_recipes_type on ptic_recipes.rtype_id = ptic_recipes_type.rtype_id
-    where reci_id <=".$nombre;
+    where reci_id <=".$number;
     LireDonneesPDO1($bdd, $requete, $recipes);
-    return $recipes;
+    return [$recipes, intval($number)];
 }
 
 function createRecipe() {
