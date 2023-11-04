@@ -7,10 +7,10 @@ function getRecipes() {
     $number = 10;
     if (isset($_POST['number'])) $number = $_POST['number'];
     
-    $requete = "select reci_id, reci_title, reci_resume, rtype_title, reci_image 
-    from ptic_recipes 
-    inner join ptic_recipes_type on ptic_recipes.rtype_id = ptic_recipes_type.rtype_id
-    where reci_id <=".$number;
+    $requete = "select reci_id, reci_title, reci_resume, rtype_title, reci_image
+    FROM ptic_recipes
+    JOIN ptic_recipes_type USING (rtype_id)
+    ORDER BY reci_id LIMIT $number";
     LireDonneesPDO1($bdd, $requete, $recipes);
     return [$recipes, intval($number)];
 }
