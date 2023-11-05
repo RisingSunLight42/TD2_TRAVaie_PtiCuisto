@@ -12,5 +12,8 @@
         <a href="index.php?action=filter">Filtrer</a>
         <a href="index.php?action=account">Compte</a>
     </div>
+    <?php
+        echo $content;
+    ?>
 </body>
 </html>

@@ -27,6 +27,21 @@ function getAllRecipes() {
 }
 
 function accueil() {
+    $recipes = getLastThreeRecipes();
+    $content = "<section id='lastestRecipes'>";
+    for ($i= 0; $i < count($recipes); $i++){
+        $recipe = $recipes[$i];
+        $recipe_id = $recipe['reci_id'];
+        $title = $recipe['reci_title'];
+        $resume = $recipe['reci_resume'];
+        $image = $recipe['reci_image'];
+        $content .= "<div>";
+        $content .= "<img src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" width=200px height=200px/>" ;
+        $content .= "<h1 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
+        $content .= "<p>$resume<p>";
+        $content .= "</div>";           
+    }
+    $content .= "</section>";
     require('./assets/php/views/accueilView.php');
 }
 
