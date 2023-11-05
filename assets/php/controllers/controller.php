@@ -28,7 +28,10 @@ function getAllRecipes() {
 
 function accueil() {
     $recipes = getLastThreeRecipes();
+
+    // Latest recipes building
     $content = "<section id='lastestRecipes'>";
+    $content .= "<h1>Les dernières recettes</h1>";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
         $recipe_id = $recipe['reci_id'];
@@ -37,11 +40,17 @@ function accueil() {
         $image = $recipe['reci_image'];
         $content .= "<div>";
         $content .= "<img src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" width=200px height=200px/>" ;
-        $content .= "<h1 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
+        $content .= "<h2 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h2>";
         $content .= "<p>$resume<p>";
         $content .= "</div>";           
     }
     $content .= "</section>";
+
+    // Edito building
+    $editoText = str_replace("\n", "<br>", getLastEdito());
+    $content .= "<section id='edito'>";
+    $content .= "<h1>Edito</h1>";
+    $content .= "<p>$editoText</p></section>";
     require('./assets/php/views/accueilView.php');
 }
 
