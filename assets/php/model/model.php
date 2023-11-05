@@ -52,6 +52,16 @@ function getLastThreeRecipes() {
     return $recipes;
 }
 
+function getLastEdito() {
+    $bdd = dbConnect();
+    
+    $editoRequest = "SELECT edi_text
+    FROM ptic_edito
+    ORDER BY edi_date DESC LIMIT 1";
+    LireDonneesPDO1($bdd, $editoRequest, $edito);
+    return $edito[0]['edi_text'];
+}
+
 function createRecipe() {
     $bdd = dbConnect();
     if(isset($_POST['re_title']) && isset($_POST['re_desc']) && isset($_POST['re_resume']) && isset($_POST['re_cat'])) {
