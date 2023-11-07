@@ -3,7 +3,9 @@ session_start();
 require('./assets/php/model/model.php');
 
 function getAllRecipes() {
-    [$recipes, $number] = getRecipes();
+    $number = 10;
+    if (isset($_POST['number']) && is_numeric($_POST['number'])) $number = strip_tags(intval($_POST['number']));
+    $recipes = getRecipes($number);
     $count = getRecipesCount();
     $content = "";
     for ($i= 0; $i < count($recipes); $i++){
@@ -57,6 +59,7 @@ function welcome() {
 }
 
 function recipe() {
+    if (empty($_GET['value'])) welcome();
     $reci_id = strip_tags($_GET['value']);
     if (!is_numeric($reci_id)) return getAllRecipes();
     if (intval($reci_id) < 1) return getAllRecipes();
