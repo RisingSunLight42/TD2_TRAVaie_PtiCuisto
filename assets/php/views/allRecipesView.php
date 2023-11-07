@@ -19,7 +19,6 @@
                 echo "<script type='text/javascript'>",
                     "window.location.href = '#$anchor';",
                     "</script>";
-;
             }
         ?>
 </body>

@@ -10,31 +10,18 @@
     <form id="re_form" name="r_creation" method="post" action="index.php?action=recipeCreationHandling">
         Entrez le titre de la recette : <input type="text" name="re_title"/> <br/>
         Entrez le contenu de votre recette : <input type="text"  name="re_desc"/> <br/>
-        
         Entrez un résumé de votre recette : <input type ="text" name="re_resume"/> <br/>
         Quel est la catégorie de votre recette ? 
-        <label>ENTREE</label>
-        <input type="radio" name="re_cat" value="1"/>
-        <label>ENTREE</label>
-        <input type="radio" name="re_cat" value="2"/>
-        <label>PLAT</label>
-        <input type="radio" name="re_cat" value="3"/>
+        <input type="radio" name="re_cat" value="ENTREE"/>
+        <label>Entrée</label>
+        <input type="radio" name="re_cat" value="PLAT"/>
+        <label>Plat</label>
+        <input type="radio" name="re_cat" value="DESSERT"/>
         <label>DESSERT</label>
-        <input type="radio" name="re_cat" value="4"/>
+        <input type="radio" name="re_cat" value="APERITIF"/>
         <label>APERITIF</label>
-        <input type="radio" name="re_cat" value="5"/>
+        <input type="radio" name="re_cat" value="BOISSON"/>
         <label>BOISSON</label> <br/>
-        <select class="js-select-auto__select">
-        <optgroup label="Gryffindor">
-            <option>Select option</option> <!-- 👈 not visible in the dropdown -->
-            <option value="0">Harry Potter</option>
-        <option value="1">Hermione Granger</option>
-        </optgroup>
-
-  <optgroup label="Slytherin">
-    <option value="2">Draco Malfoy</option>
-  </optgroup>
-</select>
         <input type="submit" name="confirm" value="OK"/> 
     </form>
 </body>

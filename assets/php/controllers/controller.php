@@ -178,6 +178,7 @@ function recipeCreation() {
 }
 
 function recipeCreationHandling() {
+    createRecipe();
     require('./assets/php/views/recipeCreationHandlingView.php');
 }
 
