@@ -2,7 +2,7 @@
 require('./assets/php/controllers/controller.php');   
 
 if (isset($_GET['action'])) {
-    $action = $_GET['action'];
+    $action = strip_tags($_GET['action']);
     if ($action == 'welcome') welcome();
     elseif ($action == 'allRecipes') getAllRecipes();
     elseif ($action == 'recipeCreation') recipeCreation();

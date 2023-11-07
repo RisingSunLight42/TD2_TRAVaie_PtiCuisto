@@ -3,7 +3,10 @@ session_start();
 require('./assets/php/model/model.php');
 
 function getAllRecipes() {
-    [$recipes, $number, $count] = getRecipes();
+    $number = 10;
+    if (isset($_POST['number']) && is_numeric($_POST['number'])) $number = strip_tags(intval($_POST['number']));
+    $recipes = getRecipes($number);
+    $count = getRecipesCount();
     $content = "";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
@@ -56,20 +59,25 @@ function welcome() {
 }
 
 function recipe() {
-    $reci_id = $_GET['value'];
+    if (empty($_GET['value'])) welcome();
+    $reci_id = strip_tags($_GET['value']);
+    if (!is_numeric($reci_id)) return getAllRecipes();
+    if (intval($reci_id) < 1) return getAllRecipes();
     $recipe = getOneRecipe($reci_id);
+    if (empty($recipe)) getAllRecipes();
+    $recipe = $recipe[0];
     $ingredients = getRecipeIngredients($reci_id);
 
     // Ingredients building format
     $ingredientsHTML = "";
-    if (!is_null($ingredients)) {
+    if (!empty($ingredients)) {
         $ingredientsHTML = "<h2>Ingrédients nécessaires</h2><p>";
-    $nbIngredients = count($ingredients);
-    for ($i= 0; $i < $nbIngredients - 1; $i++){
-        $ingredientsHTML .= $ingredients[$i]['ing_title'].", ";
-    }
-    $ingredientsHTML .= $ingredients[$nbIngredients - 1]['ing_title'].".";
-    $ingredientsHTML .= "</p>";
+        $nbIngredients = count($ingredients);
+        for ($i= 0; $i < $nbIngredients - 1; $i++){
+            $ingredientsHTML .= $ingredients[$i]['ing_title'].", ";
+        }
+        $ingredientsHTML .= $ingredients[$nbIngredients - 1]['ing_title'].".";
+        $ingredientsHTML .= "</p>";
     }
 
     // Recipe building format
