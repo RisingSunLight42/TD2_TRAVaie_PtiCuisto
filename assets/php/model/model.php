@@ -13,9 +13,14 @@ function getRecipes() {
     ORDER BY reci_id LIMIT $number";
     LireDonneesPDO1($bdd, $recipeRequest, $recipes);
 
+    return [$recipes, intval($number)];
+}
+
+function getRecipesCount() {
+    $bdd = dbConnect();
     $countRequest = "SELECT COUNT(*) as count FROM ptic_recipes";
     LireDonneesPDO1($bdd, $countRequest, $count);
-    return [$recipes, intval($number), $count[0]['count']];
+    return $count[0]['count'];
 }
 
 function getOneRecipe($reci_id) {

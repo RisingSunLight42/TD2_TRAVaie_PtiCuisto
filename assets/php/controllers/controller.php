@@ -3,7 +3,8 @@ session_start();
 require('./assets/php/model/model.php');
 
 function getAllRecipes() {
-    [$recipes, $number, $count] = getRecipes();
+    [$recipes, $number] = getRecipes();
+    $count = getRecipesCount();
     $content = "";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
