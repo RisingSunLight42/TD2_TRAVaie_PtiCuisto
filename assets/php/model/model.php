@@ -2,18 +2,19 @@
 require_once("./assets/php/utils/connexion.php");
 include_once("./assets/php/utils/pdo_agile.php");
 
-function getRecipes() {
+function getRecipes($number) {
     $bdd = dbConnect();
-    $number = 10;
-    if (isset($_POST['number'])) $number = $_POST['number'];
     
-    $recipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image
+    $preparedRecipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image
     FROM ptic_recipes
     JOIN ptic_recipes_type USING (rtype_id)
-    ORDER BY reci_id LIMIT $number";
-    LireDonneesPDO1($bdd, $recipeRequest, $recipes);
+    ORDER BY reci_id LIMIT :limit";
 
-    return [$recipes, intval($number)];
+    $preparedRecipesGet = $bdd->prepare($preparedRecipeRequest);
+    $preparedRecipesGet->bindValue(':limit', (int) $number, PDO::PARAM_INT);
+    $preparedRecipesGet->execute();
+
+    return $preparedRecipesGet->fetchAll();
 }
 
 function getRecipesCount() {
