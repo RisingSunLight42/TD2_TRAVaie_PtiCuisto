@@ -96,6 +96,7 @@ function filter() {
 }
 
 function account() {
+    $content = "";
     if (isset($_SESSION['connected'])) {
         require('./assets/php/views/accountView.php');
         return;
@@ -104,6 +105,25 @@ function account() {
 }
 
 function connectionForm() {
+    /* Commented code, only works in PHP8+
+    This code is usefull since it's more open/close than a basic if/else structure
+
+    $content = "";
+    $errorMessageFunction = function(&$content, $errorText) {
+        $content .= $errorText;
+        return true;
+    };
+    $requiredFieldMissing = false;
+    $requiredFieldMissing = match (true) {
+        (!isset($_POST['username'])) => $errorMessageFunction($content, "<p>Nom d'utilisateur manquant !</p>"),
+        (!isset($_POST['password'])) => $errorMessageFunction($content, "<p>Mot de passe manquant !</p>"),
+        default => false,
+    };
+    if ($requiredFieldMissing) {
+        require('./assets/php/views/connectionView.php');
+        return;
+    }*/
+
     $content = "<p>Connexion réussie !</p>";
     require('./assets/php/views/accountView.php');
 }
