@@ -1,4 +1,5 @@
 <?php
+session_start();
 require('./assets/php/model/model.php');
 
 function getAllRecipes() {
@@ -26,7 +27,7 @@ function getAllRecipes() {
     require('./assets/php/views/allRecipesView.php');
 }
 
-function accueil() {
+function welcome() {
     $recipes = getLastThreeRecipes();
 
     // Latest recipes building
@@ -51,7 +52,7 @@ function accueil() {
     $content .= "<section id='edito'>";
     $content .= "<h1>Edito</h1>";
     $content .= "<p>$editoText</p></section>";
-    require('./assets/php/views/accueilView.php');
+    require('./assets/php/views/welcomeView.php');
 }
 
 function recipe() {
@@ -95,6 +96,15 @@ function filter() {
 }
 
 function account() {
+    if (isset($_SESSION['connected'])) {
+        require('./assets/php/views/accountView.php');
+        return;
+    }
+    require('./assets/php/views/connectionView.php');
+}
+
+function connectionForm() {
+    $content = "<p>Connexion réussie !</p>";
     require('./assets/php/views/accountView.php');
 }
 
