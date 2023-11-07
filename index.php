@@ -3,7 +3,7 @@ require('./assets/php/controllers/controller.php');
 
 if (isset($_GET['action'])) {
     $action = $_GET['action'];
-    if ($action == 'accueil') accueil();
+    if ($action == 'welcome') welcome();
     elseif ($action == 'allRecipes') getAllRecipes();
     elseif ($action == 'recipeCreation') recipeCreation();
     elseif ($action == 'recipeCreationHandling') recipeCreationHandling();
@@ -12,9 +12,10 @@ if (isset($_GET['action'])) {
     elseif ($action == 'filter') filter();
     elseif ($action == 'recipe') recipe();
     elseif ($action == 'account') account();
-    else accueil();
+    elseif ($action == 'connectionForm') connectionForm();
+    else welcome();
 }
 else {
-    accueil();
+    welcome();
 }
 ?>

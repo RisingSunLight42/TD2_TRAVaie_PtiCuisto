@@ -1,4 +1,5 @@
 <?php
+session_start();
 require('./assets/php/model/model.php');
 
 function getAllRecipes() {
@@ -26,7 +27,7 @@ function getAllRecipes() {
     require('./assets/php/views/allRecipesView.php');
 }
 
-function accueil() {
+function welcome() {
     $recipes = getLastThreeRecipes();
 
     // Latest recipes building
@@ -51,7 +52,7 @@ function accueil() {
     $content .= "<section id='edito'>";
     $content .= "<h1>Edito</h1>";
     $content .= "<p>$editoText</p></section>";
-    require('./assets/php/views/accueilView.php');
+    require('./assets/php/views/welcomeView.php');
 }
 
 function recipe() {
@@ -95,6 +96,72 @@ function filter() {
 }
 
 function account() {
+    $content = "";
+    if (isset($_SESSION['connected']) && boolval($_SESSION['connected']) === true) {
+        require('./assets/php/views/accountView.php');
+        return;
+    }
+    require('./assets/php/views/connectionView.php');
+}
+
+function checkIfConnectionValuesExists(&$content) {
+    /* Commented code, only works in PHP8+
+    This code is usefull since it's more open/close than a basic if/else structure
+
+    $errorMessageFunction = function(&$content, $errorText) {
+        $content .= $errorText;
+        return true;
+    };
+    $requiredFieldMissing = false;
+    $requiredFieldMissing = match (true) {
+        (empty($_POST['email'])) => $errorMessageFunction($content, "<p>Email manquant !</p>"),
+        (empty($_POST['password'])) => $errorMessageFunction($content, "<p>Mot de passe manquant !</p>"),
+        default => false,
+    };
+    if ($requiredFieldMissing) {
+        require('./assets/php/views/connectionView.php');
+        return;
+    }*/
+    $fieldsMissing = 0;
+    if (empty($_POST['email'])) {
+        $content .= "<p>Email manquant !</p>";
+        $fieldsMissing++;
+    }
+    if (empty($_POST['password'])) {
+        $content .= "<p>Mot de passe manquant !</p>";
+        $fieldsMissing++;
+    }
+    return $fieldsMissing;
+}
+
+function connectionForm() {
+    $content = "";
+    $fieldsMissing = checkIfConnectionValuesExists($content);
+    if ($fieldsMissing > 0) {
+        require('./assets/php/views/connectionView.php');
+        return;
+    }
+
+    $givenEmail = strip_tags($_POST['email']);
+    $givenPassword = strip_tags($_POST['password']);
+
+    $returnedCredentials = getConnectionCredentials($givenEmail);
+    if (empty($returnedCredentials)) {
+        $content .= "Email incorrect !";
+        require('./assets/php/views/connectionView.php');
+        return;
+    }
+    [$storedUsername, $storedPassword] = $returnedCredentials[0];
+    if (!password_verify($givenPassword, $storedPassword)) {
+        $content .= "Mot de passe incorrect !";
+        require('./assets/php/views/connectionView.php');
+        return;
+    }
+
+    $_SESSION['username'] = $storedUsername;
+    $_SESSION['connected'] = true;
+
+    $content .= "<p>Connexion réussie. Bienvenue $storedUsername !</p>";
     require('./assets/php/views/accountView.php');
 }
 

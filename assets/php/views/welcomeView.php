@@ -7,10 +7,10 @@
 </head>
 <body>
     <div id="menuButton">
-        <a href="index.php?action=accueil">Accueil</a>
+        <a href="index.php?action=welcome">Accueil</a>
         <a href="index.php?action=allRecipes">Nos recettes</a>
         <a href="index.php?action=filter">Filtrer</a>
-        <a href="index.php?action=account">Compte</a>
+        <a href="index.php?action=account">Connexion</a>
     </div>
     <?php
         echo $content;
