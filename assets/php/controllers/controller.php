@@ -104,27 +104,45 @@ function account() {
     require('./assets/php/views/connectionView.php');
 }
 
-function connectionForm() {
+function checkIfConnectionValuesExists(&$content) {
     /* Commented code, only works in PHP8+
     This code is usefull since it's more open/close than a basic if/else structure
 
-    $content = "";
     $errorMessageFunction = function(&$content, $errorText) {
         $content .= $errorText;
         return true;
     };
     $requiredFieldMissing = false;
     $requiredFieldMissing = match (true) {
-        (!isset($_POST['username'])) => $errorMessageFunction($content, "<p>Nom d'utilisateur manquant !</p>"),
-        (!isset($_POST['password'])) => $errorMessageFunction($content, "<p>Mot de passe manquant !</p>"),
+        (empty($_POST['username'])) => $errorMessageFunction($content, "<p>Nom d'utilisateur manquant !</p>"),
+        (empty($_POST['password'])) => $errorMessageFunction($content, "<p>Mot de passe manquant !</p>"),
         default => false,
     };
     if ($requiredFieldMissing) {
         require('./assets/php/views/connectionView.php');
         return;
     }*/
+    $fieldsMissing = 0;
+    if (empty($_POST['username'])) {
+        $content .= "<p>Nom d'utilisateur manquant !</p>";
+        $fieldsMissing++;
+    }
+    if (empty($_POST['password'])) {
+        $content .= "<p>Mot de passe manquant !</p>";
+        $fieldsMissing++;
+    }
+    return $fieldsMissing;
+}
 
-    $content = "<p>Connexion réussie !</p>";
+function connectionForm() {
+    $content = "";
+    $fieldsMissing = checkIfConnectionValuesExists($content);
+    if ($fieldsMissing > 0) {
+        require('./assets/php/views/connectionView.php');
+        return;
+    }
+
+    $content .= "<p>Connexion réussie !</p>";
     require('./assets/php/views/accountView.php');
 }
 
