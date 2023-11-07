@@ -142,8 +142,21 @@ function connectionForm() {
         return;
     }
 
-    $email = strip_tags($_POST['email']);
-    $password = strip_tags($_POST['password']);
+    $givenEmail = strip_tags($_POST['email']);
+    $givenPassword = strip_tags($_POST['password']);
+
+    $returnedPassword = getConnectionCredentials($givenEmail);
+    if (empty($returnedPassword)) {
+        $content .= "Email incorrect !";
+        require('./assets/php/views/connectionView.php');
+        return;
+    }
+    $storedPassword = $returnedPassword[0]['users_password'];
+    if (!password_verify($givenPassword, $storedPassword)) {
+        $content .= "Mot de passe incorrect !";
+        require('./assets/php/views/connectionView.php');
+        return;
+    }
 
     $content .= "<p>Connexion réussie !</p>";
     require('./assets/php/views/accountView.php');
