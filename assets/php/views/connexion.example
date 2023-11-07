@@ -1,9 +1,0 @@
-<?php
-
-    $bdd = PDO('mysql:host=SERVERNAME;dbname=DBNAME;charset=utf8', 'LOGIN', 'PASSWORD');
-
-    catch(Exception $e)
-    {
-        die('Erreur : '.$e->getMessage());
-    }
-?>

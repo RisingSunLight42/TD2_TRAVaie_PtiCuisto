@@ -11,5 +11,10 @@
         <a href="index.php?action=allRecipes">Retour aux recettes</a>
         <a href="index.php?action=filter">Retour au filtre</a>
     </div>
+    <section>
+        <?php
+            echo $content;
+        ?>
+    </section>
 </body>
 </html>

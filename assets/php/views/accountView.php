@@ -16,6 +16,10 @@
         <button><a href="index.php?action=recipeModification">Modification</a></button>
         <button><a href="index.php?action=recipeDeletion">Suppresion</a></button>
     </div>
-    
+    <section>
+        <?php
+        echo $content;
+        ?>
+    </section>
 </body>
 </html>
