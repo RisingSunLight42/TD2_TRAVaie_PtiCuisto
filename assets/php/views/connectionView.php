@@ -7,7 +7,7 @@
 </head>
 <body>
     <div id="menuButton">
-        <a href="index.php?action=accueil">Accueil</a>
+        <a href="index.php?action=welcome">Accueil</a>
         <a href="index.php?action=allRecipes">Nos recettes</a>
         <a href="index.php?action=filter">Filtrer</a>
     </div>
