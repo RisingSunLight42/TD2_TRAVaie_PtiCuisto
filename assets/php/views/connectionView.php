@@ -15,8 +15,8 @@
     echo $content;
     ?>
     <form action="index.php?action=connectionForm" method="post">
-        <label for="username">Nom d'utilisateur</label>
-        <input type="text" name="username" id="username" placeholder="Jean-Marc666" required>
+        <label for="email">Email</label>
+        <input type="email name="email" id="email" placeholder="jeanmarc666@gmail.com" required>
         <label for="password">Mot de passe</label>
         <input type="password" name="password" id="password" placeholder="******" required>
         <input type="submit" value="Connexion">

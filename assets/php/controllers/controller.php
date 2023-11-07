@@ -114,7 +114,7 @@ function checkIfConnectionValuesExists(&$content) {
     };
     $requiredFieldMissing = false;
     $requiredFieldMissing = match (true) {
-        (empty($_POST['username'])) => $errorMessageFunction($content, "<p>Nom d'utilisateur manquant !</p>"),
+        (empty($_POST['email'])) => $errorMessageFunction($content, "<p>Email manquant !</p>"),
         (empty($_POST['password'])) => $errorMessageFunction($content, "<p>Mot de passe manquant !</p>"),
         default => false,
     };
@@ -123,8 +123,8 @@ function checkIfConnectionValuesExists(&$content) {
         return;
     }*/
     $fieldsMissing = 0;
-    if (empty($_POST['username'])) {
-        $content .= "<p>Nom d'utilisateur manquant !</p>";
+    if (empty($_POST['email'])) {
+        $content .= "<p>Email manquant !</p>";
         $fieldsMissing++;
     }
     if (empty($_POST['password'])) {
@@ -141,6 +141,9 @@ function connectionForm() {
         require('./assets/php/views/connectionView.php');
         return;
     }
+
+    $email = strip_tags($_POST['email']);
+    $password = strip_tags($_POST['password']);
 
     $content .= "<p>Connexion réussie !</p>";
     require('./assets/php/views/accountView.php');
