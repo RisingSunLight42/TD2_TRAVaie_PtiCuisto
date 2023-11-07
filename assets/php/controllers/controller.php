@@ -56,8 +56,12 @@ function welcome() {
 }
 
 function recipe() {
-    $reci_id = $_GET['value'];
+    $reci_id = strip_tags($_GET['value']);
+    if (!is_numeric($reci_id)) return getAllRecipes();
+    if (intval($reci_id) < 1) return getAllRecipes();
     $recipe = getOneRecipe($reci_id);
+    if (empty($recipe)) getAllRecipes();
+    $recipe = $recipe[0];
     $ingredients = getRecipeIngredients($reci_id);
 
     // Ingredients building format
