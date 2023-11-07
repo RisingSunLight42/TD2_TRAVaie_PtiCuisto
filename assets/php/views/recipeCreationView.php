@@ -24,6 +24,17 @@
         <label>APERITIF</label>
         <input type="radio" name="re_cat" value="5"/>
         <label>BOISSON</label> <br/>
+        <select class="js-select-auto__select">
+        <optgroup label="Gryffindor">
+            <option>Select option</option> <!-- 👈 not visible in the dropdown -->
+            <option value="0">Harry Potter</option>
+        <option value="1">Hermione Granger</option>
+        </optgroup>
+
+  <optgroup label="Slytherin">
+    <option value="2">Draco Malfoy</option>
+  </optgroup>
+</select>
         <input type="submit" name="confirm" value="OK"/> 
     </form>
 </body>
