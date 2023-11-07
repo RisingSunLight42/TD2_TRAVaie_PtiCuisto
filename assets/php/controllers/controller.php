@@ -34,27 +34,31 @@ function welcome() {
     $recipes = getLastThreeRecipes();
 
     // Latest recipes building
-    $content = "<section id='lastestRecipes'>";
-    $content .= "<h1>Les dernières recettes</h1>";
+    $content = "";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
         $recipe_id = $recipe['reci_id'];
         $title = $recipe['reci_title'];
         $resume = $recipe['reci_resume'];
         $image = $recipe['reci_image'];
-        $content .= "<div>";
-        $content .= "<img src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" width=200px height=200px/>" ;
-        $content .= "<h2 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h2>";
+        $content .= "<div class='card mb-3' style='max-width: 540px;'>";
+        $content .= "<div class='row g-0'>";
+        $content .= "<div class='col-md-4'>";
+        $content .= "<img src='$image' class='img-fluid rounded-start' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\"/>" ;
+        $content .= "</div>";
+        $content .= "<div class='col-md-8'>";
+        $content .= "<div class='card-body'>";
+        $content .= "<h5 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h5>";
         $content .= "<p>$resume<p>";
-        $content .= "</div>";           
+        $content .= "</div>";
+        $content .= "</div>";
+        $content .= "</div>";         
+        $content .= "</div>";         
     }
-    $content .= "</section>";
 
     // Edito building
     $editoText = str_replace("\n", "<br>", getLastEdito());
-    $content .= "<section id='edito'>";
-    $content .= "<h1>Edito</h1>";
-    $content .= "<p>$editoText</p></section>";
+    $edito = "<p>$editoText</p>";
     require('./assets/php/views/welcomeView.php');
 }
 
