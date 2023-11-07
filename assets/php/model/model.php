@@ -35,12 +35,13 @@ function getOneRecipe($reci_id) {
 function getRecipeIngredients($reci_id) {
     $bdd = dbConnect();
 
-    $ingredientsRequest = "SELECT ing_title
+    $preparedIngredientsRequest = "SELECT ing_title
     FROM ptic_needed_ingredients
     JOIN ptic_ingredients USING (ing_id)
-    WHERE reci_id = $reci_id";
-    LireDonneesPDO1($bdd, $ingredientsRequest, $ingredients);
-    return $ingredients;
+    WHERE reci_id = ?";
+    $preparedRequestGet = $bdd->prepare($preparedIngredientsRequest);
+    $preparedRequestGet->execute([$reci_id]);
+    return $preparedRequestGet->fetchAll();
 }
 
 function getLastThreeRecipes() {
