@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recette</title>
+    <title>Filtres</title>
 </head>
 <body>
     <div id="menuButton">
-        <a href="../index.php">Accueil</a>
-        <a href="./all_recipes.php">Retour aux recettes</a>
-        <a href="./filter.php">Retour au filtre</a>
+        <a href="index.php">Accueil</a>
+        <a href ="index.php?action=recipe">Recette simple</a>
     </div>
 </body>
 </html>
