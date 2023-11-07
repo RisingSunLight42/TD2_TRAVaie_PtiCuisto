@@ -66,7 +66,7 @@ function recipe() {
 
     // Ingredients building format
     $ingredientsHTML = "";
-    if (!is_null($ingredients)) {
+    if (!empty($ingredients)) {
         $ingredientsHTML = "<h2>Ingrédients nécessaires</h2><p>";
     $nbIngredients = count($ingredients);
     for ($i= 0; $i < $nbIngredients - 1; $i++){
