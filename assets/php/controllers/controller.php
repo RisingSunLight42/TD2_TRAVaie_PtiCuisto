@@ -68,12 +68,12 @@ function recipe() {
     $ingredientsHTML = "";
     if (!empty($ingredients)) {
         $ingredientsHTML = "<h2>Ingrédients nécessaires</h2><p>";
-    $nbIngredients = count($ingredients);
-    for ($i= 0; $i < $nbIngredients - 1; $i++){
-        $ingredientsHTML .= $ingredients[$i]['ing_title'].", ";
-    }
-    $ingredientsHTML .= $ingredients[$nbIngredients - 1]['ing_title'].".";
-    $ingredientsHTML .= "</p>";
+        $nbIngredients = count($ingredients);
+        for ($i= 0; $i < $nbIngredients - 1; $i++){
+            $ingredientsHTML .= $ingredients[$i]['ing_title'].", ";
+        }
+        $ingredientsHTML .= $ingredients[$nbIngredients - 1]['ing_title'].".";
+        $ingredientsHTML .= "</p>";
     }
 
     // Recipe building format
