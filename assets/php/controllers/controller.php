@@ -97,7 +97,7 @@ function filter() {
 
 function account() {
     $content = "";
-    if (isset($_SESSION['connected'])) {
+    if (isset($_SESSION['connected']) && boolval($_SESSION['connected']) === true) {
         require('./assets/php/views/accountView.php');
         return;
     }
@@ -145,20 +145,23 @@ function connectionForm() {
     $givenEmail = strip_tags($_POST['email']);
     $givenPassword = strip_tags($_POST['password']);
 
-    $returnedPassword = getConnectionCredentials($givenEmail);
-    if (empty($returnedPassword)) {
+    $returnedCredentials = getConnectionCredentials($givenEmail);
+    if (empty($returnedCredentials)) {
         $content .= "Email incorrect !";
         require('./assets/php/views/connectionView.php');
         return;
     }
-    $storedPassword = $returnedPassword[0]['users_password'];
+    [$storedUsername, $storedPassword] = $returnedCredentials[0];
     if (!password_verify($givenPassword, $storedPassword)) {
         $content .= "Mot de passe incorrect !";
         require('./assets/php/views/connectionView.php');
         return;
     }
 
-    $content .= "<p>Connexion réussie !</p>";
+    $_SESSION['username'] = $storedUsername;
+    $_SESSION['connected'] = true;
+
+    $content .= "<p>Connexion réussie. Bienvenue $storedUsername !</p>";
     require('./assets/php/views/accountView.php');
 }
 

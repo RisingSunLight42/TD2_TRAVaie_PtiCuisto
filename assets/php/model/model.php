@@ -77,7 +77,7 @@ function createRecipe() {
 function getConnectionCredentials($email) {
     $bdd = dbConnect();
 
-    $getCredentialsRequest = "SELECT users_password FROM ptic_users WHERE users_email = ?";
+    $getCredentialsRequest = "SELECT users_nickname, users_password FROM ptic_users WHERE users_email = ?";
     $preparedRequestGet = $bdd->prepare($getCredentialsRequest);
     $preparedRequestGet->execute([$email]);
     return $preparedRequestGet->fetchAll();
