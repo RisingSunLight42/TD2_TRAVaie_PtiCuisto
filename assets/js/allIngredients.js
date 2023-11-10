@@ -15,7 +15,18 @@ document
     .getElementById(`ingredient${ingredientNumber}`)
     .addEventListener("itemSelected", (event) => {
         const target = event.target;
-        (document.getElementById("nbIngredients")).value = ingredientNumber;
+        try {
+            (document.getElementById("nbIngredients")).value = ingredientNumber;
+        } catch (error) {
+            const nbIngredients = document.createElement("input");
+            nbIngredients.setAttribute("id", "nbIngredients");
+            nbIngredients.setAttribute("name", "nbIngredients");
+            nbIngredients.setAttribute("type", "hidden");
+            nbIngredients.setAttribute("value", ingredientNumber);
+            const form = document.getElementById("re_form");
+            form.appendChild(nbIngredients);
+        }
+        
         arrayOfIngredients.splice(arrayOfIngredients.indexOf(target.value), 1); // Retire l'ingrédient choisit de la liste des possibilités
         const ingredientInputId = target.id; // Récupère l'id de l'input réalisé
         ingredientNumber++; // Augmente le nombre d'ingrédients
