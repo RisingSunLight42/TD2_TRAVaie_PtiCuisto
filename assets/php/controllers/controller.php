@@ -107,11 +107,20 @@ function filter() {
 /*account's page controller*/
 function account() {
     $content = "";
+    $unlogButton = "";
     if (isset($_SESSION['connected']) && boolval($_SESSION['connected']) === true) {
+        $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
         require('./assets/php/views/accountView.php');
         return;
     }
     require('./assets/php/views/connectionView.php');
+}
+
+/* */
+function disconnect() {
+    $_SESSION['connected'] = false;
+    unset($_SESSION['username']);
+    welcome();
 }
 
 function checkIfConnectionValuesExists(&$content) {
@@ -171,6 +180,7 @@ function connectionForm() {
     $_SESSION['username'] = $storedUsername;
     $_SESSION['connected'] = true;
 
+    $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
     $content .= "<p>Connexion réussie. Bienvenue $storedUsername !</p>";
     require('./assets/php/views/accountView.php');
 }
