@@ -86,6 +86,20 @@ function createRecipe() {
     preparerRequetePDO($bdd,$sql);
 }
 
+/* To delete a recipe */
+function deleteRecipe($reci_id) {
+    $bdd = dbConnect();
+
+    $deleteRecipeIngredientsSQL = "DELETE FROM ptic_needed_ingredients WHERE reci_id = ?";
+    $deleteRecipeSQL = "DELETE FROM ptic_recipes WHERE reci_id = ?";
+
+    $prepareDeleteRecipeIngredients = $bdd->prepare($deleteRecipeIngredientsSQL);
+    $prepareDeleteRecipe = $bdd->prepare($deleteRecipeSQL);
+
+    $prepareDeleteRecipeIngredients->execute([$reci_id]);
+    $prepareDeleteRecipe->execute([$reci_id]);
+}
+
 function getConnectionCredentials($email) {
     $bdd = dbConnect();
 

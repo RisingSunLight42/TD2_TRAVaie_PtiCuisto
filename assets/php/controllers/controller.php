@@ -4,12 +4,16 @@ require('./assets/php/model/model.php');
 /* The controller is the part of the MVC who will managed the information flow between the model and the view.
 When the user made action on the website, the controller will retrive this information and send it to the model to do treatments*/
 /*All recipes's page controller*/ 
-function getAllRecipes() {
+function getAllRecipes($textSupp="") {
     $number = 10;
     if (isset($_POST['number']) && is_numeric($_POST['number'])) $number = strip_tags(intval($_POST['number']));
     $recipes = getRecipes($number);
+    $deleteButton = "";
+    if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
+        $deleteButton .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
+    }
     $count = getRecipesCount();
-    $content = "";
+    $content = "$textSupp";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
         $recipe_id = $recipe['reci_id'];
@@ -23,6 +27,7 @@ function getAllRecipes() {
         $content .= "<h1 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
         $content .= "<h2>$type</h2>";
         $content .= "<p>$resume<p>";
+        $content .= str_replace("RECI_ID", $recipe_id, $deleteButton);
         $content .= "</div>";           
     }
     if ($count > $number) {
@@ -98,6 +103,9 @@ function recipe() {
     $content .= "<p>Créé le : $creationDate par $editorUsername</p>";
     $content .= "<p>Édité pour la dernière fois le : $lastUpdateDate</p>";
     $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
+    if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
+        $content .= "<button><a href='index.php?action=recipeDeletion&value=$reci_id'>Suppression</a></button>";
+    }
     require('./assets/php/views/recipeView.php');
 }
 /*filter's page controller*/
@@ -200,6 +208,9 @@ function recipeModification() {
 }
 /*recipe deletion controller*/
 function recipeDeletion() {
-    require('./assets/php/views/recipeDeletionView.php');
+    if (empty($_GET['value'])) getAllRecipes();
+    $reci_id = strip_tags($_GET['value']);
+    deleteRecipe($reci_id);
+    getAllRecipes("<p>La recette a bien été supprimée !</p>");
 }
 ?>
