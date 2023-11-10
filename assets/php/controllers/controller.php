@@ -174,6 +174,12 @@ function connectionForm() {
 }
 
 function recipeCreation() {
+    $ingredients = getIngredients();
+    $ingredientsList = "[";
+    for ($i= 0; $i < count($ingredients); $i++){
+        $ingredientsList .= '"'.$ingredients[$i]['ing_title'].'",';
+    }
+    $ingredientsList .= "]";
     require('./assets/php/views/recipeCreationView.php');
 }
 
