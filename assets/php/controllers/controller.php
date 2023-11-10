@@ -120,6 +120,7 @@ function account() {
 function disconnect() {
     $_SESSION['connected'] = false;
     unset($_SESSION['username']);
+    unset($_SESSION['userType']);
     welcome();
 }
 
@@ -170,7 +171,7 @@ function connectionForm() {
         require('./assets/php/views/connectionView.php');
         return;
     }
-    [$storedUsername, $storedPassword] = $returnedCredentials[0];
+    [$storedUsername, $storedPassword, $storedUserType] = $returnedCredentials[0];
     if (!password_verify($givenPassword, $storedPassword)) {
         $content .= "Mot de passe incorrect !";
         require('./assets/php/views/connectionView.php');
@@ -178,10 +179,11 @@ function connectionForm() {
     }
 
     $_SESSION['username'] = $storedUsername;
+    $_SESSION['userType'] = $storedUserType;
     $_SESSION['connected'] = true;
 
     $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
-    $content .= "<p>Connexion réussie. Bienvenue $storedUsername !</p>";
+    $content .= "<p>Connexion réussie. Bienvenue $storedUserType $storedUsername !</p>";
     require('./assets/php/views/accountView.php');
 }
 /*recipe creation controller*/
