@@ -208,6 +208,9 @@ function recipeModification() {
 }
 /*recipe deletion controller*/
 function recipeDeletion() {
-    require('./assets/php/views/recipeDeletionView.php');
+    if (empty($_GET['value'])) getAllRecipes();
+    $reci_id = strip_tags($_GET['value']);
+    deleteRecipe($reci_id);
+    getAllRecipes();
 }
 ?>
