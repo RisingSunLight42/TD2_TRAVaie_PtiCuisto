@@ -11,6 +11,10 @@
         Entrez le titre de la recette : <input type="text" name="re_title"/> <br/>
         Entrez le contenu de votre recette : <input type="text"  name="re_desc"/> <br/>
         Entrez un résumé de votre recette : <input type ="text" name="re_resume"/> <br/>
+        Ajoutez vos ingrédients : <br/>
+        <div class="autocomplete" style="width:300px;">
+                <input id="myInput" type="text" name="re_ing" placeholder="Ingredient...">
+        </div>
         Quel est la catégorie de votre recette ? 
         <input type="radio" name="re_cat" value="ENTREE"/>
         <label>Entrée</label>
@@ -24,5 +28,7 @@
         <label>BOISSON</label> <br/>
         <input type="submit" name="confirm" value="OK"/> 
     </form>
+
+    <script src="assets\js\autocompletion.js"></script>
 </body>
 </html>
