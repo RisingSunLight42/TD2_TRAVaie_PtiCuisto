@@ -1,3 +1,5 @@
+const eventItemSelected = new Event("itemSelected");
+
 function autocomplete(inp, arr) {
     /*the autocomplete function takes two arguments, the text field element and an array of possible autocompleted values:*/
     let currentFocus;
@@ -36,9 +38,10 @@ function autocomplete(inp, arr) {
                 b.addEventListener("click", function (e) {
                     /*insert the value for the autocomplete text field:*/
                     inp.value = this.getElementsByTagName("input")[0].value;
-                    /*close the list of autocompleted values,
-    (or any other open lists of autocompleted values:*/
+                    /*close the list of autocompleted values, (or any other open lists of autocompleted values:*/
                     closeAllLists();
+                    // Dispatch the event for other purposes
+                    inp.dispatchEvent(eventItemSelected);
                 });
                 a.appendChild(b);
             }
