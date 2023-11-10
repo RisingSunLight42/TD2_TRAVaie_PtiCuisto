@@ -41,7 +41,7 @@ function welcome() {
         $title = $recipe['reci_title'];
         $resume = $recipe['reci_resume'];
         $image = $recipe['reci_image'];
-        $content .= "<div class='card mb-3' style='max-width: 540px;'>";
+        $content .= "<div class='card mb-3' style='max-width: 680px;'>";
         $content .= "<div class='row g-0'>";
         $content .= "<div class='col-md-4'>";
         $content .= "<img src='$image' class='img-fluid rounded-start' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\"/>" ;

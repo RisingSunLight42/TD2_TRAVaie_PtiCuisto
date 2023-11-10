@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php 
+        require ("head.php");
+    ?>
     <title>PtiCuistot - Connexion</title>
 </head>
 <body>
-    <div id="menuButton">
-        <a href="index.php?action=welcome">Accueil</a>
-        <a href="index.php?action=allRecipes">Nos recettes</a>
-        <a href="index.php?action=filter">Filtrer</a>
-    </div>
+    <?php 
+        require ("header.php");
+    ?>
     <?php
     echo $content;
     ?>
@@ -21,5 +22,8 @@
         <input type="password" name="password" id="password" placeholder="******" required>
         <input type="submit" value="Connexion">
     </form>
+    <?php 
+        require ("footer.php");
+    ?>
 </body>
 </html>

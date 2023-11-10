@@ -3,9 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php 
+        require ("head.php");
+    ?>
     <title>Nouvelle Recette</title>
 </head>
 <body>
+    <?php 
+        require ("header.php");
+    ?>
     <h1>Nouvelle recette</h1>
     <form id="re_form" name="r_creation" method="post" action="index.php?action=recipeCreationHandling">
         Entrez le titre de la recette : <input type="text" name="re_title"/> <br/>
@@ -26,5 +32,8 @@
         <label>BOISSON</label> <br/>
         <input type="submit" name="confirm" value="OK"/> 
     </form>
+    <?php 
+        require ("footer.php");
+    ?>
 </body>
 </html>
