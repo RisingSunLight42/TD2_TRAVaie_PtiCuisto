@@ -4,7 +4,7 @@ require('./assets/php/model/model.php');
 /* The controller is the part of the MVC who will managed the information flow between the model and the view.
 When the user made action on the website, the controller will retrive this information and send it to the model to do treatments*/
 /*All recipes's page controller*/ 
-function getAllRecipes() {
+function getAllRecipes($textSupp="") {
     $number = 10;
     if (isset($_POST['number']) && is_numeric($_POST['number'])) $number = strip_tags(intval($_POST['number']));
     $recipes = getRecipes($number);
@@ -13,7 +13,7 @@ function getAllRecipes() {
         $deleteButton .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
     }
     $count = getRecipesCount();
-    $content = "";
+    $content = "$textSupp";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
         $recipe_id = $recipe['reci_id'];
@@ -211,6 +211,6 @@ function recipeDeletion() {
     if (empty($_GET['value'])) getAllRecipes();
     $reci_id = strip_tags($_GET['value']);
     deleteRecipe($reci_id);
-    getAllRecipes();
+    getAllRecipes("<p>La recette a bien été supprimée !</p>");
 }
 ?>
