@@ -70,6 +70,15 @@ function getLastEdito() {
     return $edito[0]['edi_text'];
 }
 
+function getIngredients() {
+    $bdd = dbConnect();
+    
+    $ingredientsRequest = "SELECT ing_id, ing_title
+    FROM ptic_ingredients";
+    LireDonneesPDO1($bdd, $ingredientsRequest, $ingredients);
+    return $ingredients;
+}
+
 function createRecipe() {
     $bdd = dbConnect();
     if(isset($_POST['re_title']) && isset($_POST['re_desc']) && isset($_POST['re_resume']) && isset($_POST['re_cat'])) {
