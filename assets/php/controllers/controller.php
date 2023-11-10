@@ -1,7 +1,9 @@
 <?php
 session_start();
 require('./assets/php/model/model.php');
-
+/* The controller is the part of the MVC who will managed the information flow between the model and the view.
+When the user made action on the website, the controller will retrive this information and send it to the model to do treatments*/
+/*All recipes's page controller*/ 
 function getAllRecipes() {
     $number = 10;
     if (isset($_POST['number']) && is_numeric($_POST['number'])) $number = strip_tags(intval($_POST['number']));
@@ -57,7 +59,7 @@ function welcome() {
     $content .= "<p>$editoText</p></section>";
     require('./assets/php/views/welcomeView.php');
 }
-
+/*recipe's page controller */
 function recipe() {
     if (empty($_GET['value'])) welcome();
     $reci_id = strip_tags($_GET['value']);
@@ -98,11 +100,11 @@ function recipe() {
     $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
     require('./assets/php/views/recipeView.php');
 }
-
+/*filter's page controller*/
 function filter() {
     require('./assets/php/views/filterView.php');
 }
-
+/*account's page controller*/
 function account() {
     $content = "";
     if (isset($_SESSION['connected']) && boolval($_SESSION['connected']) === true) {
@@ -141,7 +143,7 @@ function checkIfConnectionValuesExists(&$content) {
     }
     return $fieldsMissing;
 }
-
+/*Connection's page controller*/
 function connectionForm() {
     $content = "";
     $fieldsMissing = checkIfConnectionValuesExists($content);
@@ -172,7 +174,7 @@ function connectionForm() {
     $content .= "<p>Connexion réussie. Bienvenue $storedUsername !</p>";
     require('./assets/php/views/accountView.php');
 }
-
+/*recipe creation controller*/
 function recipeCreation() {
     require('./assets/php/views/recipeCreationView.php');
 }
@@ -180,11 +182,11 @@ function recipeCreation() {
 function recipeCreationHandling() {
     require('./assets/php/views/recipeCreationHandlingView.php');
 }
-
+/*recipe modification controller*/
 function recipeModification() {
     require('./assets/php/views/recipeModificationView.php');
 }
-
+/*recipe deletion controller*/
 function recipeDeletion() {
     require('./assets/php/views/recipeDeletionView.php');
 }
