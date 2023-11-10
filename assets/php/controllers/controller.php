@@ -174,13 +174,16 @@ function connectionForm() {
 }
 
 function recipeCreation() {
-    $ingredients = getIngredients();
-    $ingredientsList = "[";
-    for ($i= 0; $i < count($ingredients); $i++){
-        $ingredientsList .= '["'.$ingredients[$i]['ing_title'].'","'.$ingredients[$i]['ing_id'].'"],';
-    }
-    $ingredientsList .= "]";
     require('./assets/php/views/recipeCreationView.php');
+}
+
+function getAllIngredients() {
+    $ingredients = getIngredients();
+    $ingredientsList = "";
+    for ($i= 0; $i < count($ingredients); $i++){
+        $ingredientsList .= $ingredients[$i]['ing_title'].',';
+    }
+    echo $ingredientsList;
 }
 
 function recipeCreationHandling() {

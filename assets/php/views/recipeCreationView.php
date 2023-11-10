@@ -8,22 +8,17 @@
 </head>
 <body>
     <h1>Nouvelle recette</h1>
-    <form autocomplete="off" action="/action_page.php">
-        <div class="autocomplete" style="width:300px;">
-            <input id="myInput" type="text" name="myCountry" placeholder="Country">
-        </div>
-        <input type="submit">
-    </form>
 
     <form id="re_form" name="r_creation" method="post" action="index.php?action=recipeCreationHandling">
-        Entrez le titre de la recette : <input type="text" name="re_title"/> <br/>
-        Entrez le contenu de votre recette : <input type="text"  name="re_desc"/> <br/>
-        Entrez un résumé de votre recette : <input type ="text" name="re_resume"/> <br/>
-        Ajoutez vos ingrédients : <br/>
-        <!--<div class="autocomplete" style="width:300px;">
-                <input id="myInput" type="text" name="re_ing" placeholder="Ingredient...">
-        </div>-->
-        Quel est la catégorie de votre recette ? 
+        <label for="re_title">Entrez le titre de la recette :</label><input type="text" name="re_title"/>
+        <label for="re_title">Entrez le contenu de votre recette :</label><input type="text"  name="re_desc"/>
+        <label for="re_resume">Entrez un résumé de votre recette :</label><input type ="text" name="re_resume"/>
+        <label for="re_title">Ajoutez vos ingrédients :</label>
+        <div class="autocomplete" style="width:300px;">
+            <input id="ingredient1" type="text" name="ingredient1" placeholder="Ingrédient">
+        </div>
+        <br>
+        <label for="re_cat">Quel est la catégorie de votre recette ? </label>
         <input type="radio" name="re_cat" value="ENTREE"/>
         <label>Entrée</label>
         <input type="radio" name="re_cat" value="PLAT"/>
@@ -38,8 +33,6 @@
     </form>
 
     <script src="assets\js\autocompletion.js"></script>
-    <?php
-    echo "<script>const ingredients = $ingredientsList; autocomplete(document.getElementById('myInput'), ingredients);</script>";
-    ?>
+    <script src="assets\js\allIngredients.js"></script>
 </body>
 </html>
