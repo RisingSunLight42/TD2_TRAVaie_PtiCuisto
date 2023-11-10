@@ -3,18 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/style.css">
     <title>Nouvelle Recette</title>
 </head>
 <body>
     <h1>Nouvelle recette</h1>
+    <form autocomplete="off" action="/action_page.php">
+        <div class="autocomplete" style="width:300px;">
+            <input id="myInput" type="text" name="myCountry" placeholder="Country">
+        </div>
+        <input type="submit">
+    </form>
+
     <form id="re_form" name="r_creation" method="post" action="index.php?action=recipeCreationHandling">
         Entrez le titre de la recette : <input type="text" name="re_title"/> <br/>
         Entrez le contenu de votre recette : <input type="text"  name="re_desc"/> <br/>
         Entrez un résumé de votre recette : <input type ="text" name="re_resume"/> <br/>
         Ajoutez vos ingrédients : <br/>
-        <div class="autocomplete" style="width:300px;">
+        <!--<div class="autocomplete" style="width:300px;">
                 <input id="myInput" type="text" name="re_ing" placeholder="Ingredient...">
-        </div>
+        </div>-->
         Quel est la catégorie de votre recette ? 
         <input type="radio" name="re_cat" value="ENTREE"/>
         <label>Entrée</label>
@@ -30,5 +38,8 @@
     </form>
 
     <script src="assets\js\autocompletion.js"></script>
+    <?php
+    echo "<script>const ingredients = $ingredientsList; autocomplete(document.getElementById('myInput'), ingredients);</script>";
+    ?>
 </body>
 </html>
