@@ -116,6 +116,13 @@ function account() {
     require('./assets/php/views/connectionView.php');
 }
 
+/* */
+function disconnect() {
+    $_SESSION['connected'] = false;
+    unset($_SESSION['username']);
+    welcome();
+}
+
 function checkIfConnectionValuesExists(&$content) {
     /* Commented code, only works in PHP8+
     This code is usefull since it's more open/close than a basic if/else structure
@@ -148,7 +155,6 @@ function checkIfConnectionValuesExists(&$content) {
 /*Connection's page controller*/
 function connectionForm() {
     $content = "";
-    $unlogButton = "";
     $fieldsMissing = checkIfConnectionValuesExists($content);
     if ($fieldsMissing > 0) {
         require('./assets/php/views/connectionView.php');
@@ -174,6 +180,7 @@ function connectionForm() {
     $_SESSION['username'] = $storedUsername;
     $_SESSION['connected'] = true;
 
+    $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
     $content .= "<p>Connexion réussie. Bienvenue $storedUsername !</p>";
     require('./assets/php/views/accountView.php');
 }
