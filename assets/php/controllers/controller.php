@@ -107,7 +107,9 @@ function filter() {
 /*account's page controller*/
 function account() {
     $content = "";
+    $unlogButton = "";
     if (isset($_SESSION['connected']) && boolval($_SESSION['connected']) === true) {
+        $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
         require('./assets/php/views/accountView.php');
         return;
     }
@@ -146,6 +148,7 @@ function checkIfConnectionValuesExists(&$content) {
 /*Connection's page controller*/
 function connectionForm() {
     $content = "";
+    $unlogButton = "";
     $fieldsMissing = checkIfConnectionValuesExists($content);
     if ($fieldsMissing > 0) {
         require('./assets/php/views/connectionView.php');
