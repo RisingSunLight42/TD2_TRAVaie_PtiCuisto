@@ -8,13 +8,22 @@ function getAllRecipes($textSupp="") {
     $number = 10;
     if (isset($_POST['number']) && is_numeric($_POST['number'])) $number = strip_tags(intval($_POST['number']));
     $recipes = getRecipes($number);
+    $count = getRecipesCount();
+    $content = "$textSupp";
+    buildRecipeDisplayAllRecipes($content, $recipes);
+    if ($count > $number) {
+        $number += 10;
+        $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' value='Afficher plus' /></form>";
+    }
+    require('./assets/php/views/allRecipesView.php');
+}
+
+function buildRecipeDisplayAllRecipes(&$content, $recipes) {
     $optionalButtons = "";
     if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
         $optionalButtons .= "<button><a href='index.php?action=recipeEdition&value=RECI_ID'>Modification</a></button>";
         $optionalButtons .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
     }
-    $count = getRecipesCount();
-    $content = "$textSupp";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
         $recipe_id = $recipe['reci_id'];
@@ -31,11 +40,6 @@ function getAllRecipes($textSupp="") {
         $content .= str_replace("RECI_ID", $recipe_id, $optionalButtons);
         $content .= "</div>";           
     }
-    if ($count > $number) {
-        $number += 10;
-        $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' value='Afficher plus' /></form>";
-    }
-    require('./assets/php/views/allRecipesView.php');
 }
 
 function welcome() {
@@ -116,6 +120,7 @@ function recipe($reci_id="") {
 function filter() {
     $content = "";
     $action = strip_tags($_GET["action"]);
+    $recipes = "";
     if ($action === "filterRecipeName") {
         if (empty($_POST["title"])) {
             $content="Veuillez renseigner un titre pour réaliser un filtrage !";
@@ -124,15 +129,16 @@ function filter() {
         }
         $titleFilter = $_POST["title"];
         $recipes = getRecipesByTitle($titleFilter);
-        if (count($recipes) === 1) {
-            $reci_id = $recipes[0]["reci_id"];
-            return recipe($reci_id);
-        }
     } elseif ($action === "filterRecipeCategory") {
 
     } elseif ($action === "filterRecipeIngredients") {
 
     }
+    if (count($recipes) === 1) {
+        $reci_id = $recipes[0]["reci_id"];
+        return recipe($reci_id);
+    }
+    buildRecipeDisplayAllRecipes($content, $recipes);
     require('./assets/php/views/filterView.php');
 }
 /*account's page controller*/
