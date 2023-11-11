@@ -8,9 +8,10 @@ function getAllRecipes($textSupp="") {
     $number = 10;
     if (isset($_POST['number']) && is_numeric($_POST['number'])) $number = strip_tags(intval($_POST['number']));
     $recipes = getRecipes($number);
-    $deleteButton = "";
+    $optionalButtons = "";
     if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
-        $deleteButton .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
+        $optionalButtons .= "<button><a href='index.php?action=recipeEdition&value=RECI_ID'>Modification</a></button>";
+        $optionalButtons .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
     }
     $count = getRecipesCount();
     $content = "$textSupp";
@@ -27,7 +28,7 @@ function getAllRecipes($textSupp="") {
         $content .= "<h1 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
         $content .= "<h2>$type</h2>";
         $content .= "<p>$resume<p>";
-        $content .= str_replace("RECI_ID", $recipe_id, $deleteButton);
+        $content .= str_replace("RECI_ID", $recipe_id, $optionalButtons);
         $content .= "</div>";           
     }
     if ($count > $number) {
@@ -104,6 +105,7 @@ function recipe() {
     $content .= "<p>Édité pour la dernière fois le : $lastUpdateDate</p>";
     $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
     if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
+        $content .= "<button><a href='index.php?action=recipeEdition&value=$reci_id'>Modification</a></button>";
         $content .= "<button><a href='index.php?action=recipeDeletion&value=$reci_id'>Suppression</a></button>";
     }
     require('./assets/php/views/recipeView.php');
