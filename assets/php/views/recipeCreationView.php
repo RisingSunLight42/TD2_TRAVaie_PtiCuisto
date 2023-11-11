@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/style.css">
     <title>Nouvelle Recette</title>
+    <script
+            src="https://kit.fontawesome.com/908c130cac.js"
+            crossorigin="anonymous"
+        ></script>
 </head>
 <body>
     <h1>Nouvelle recette</h1>

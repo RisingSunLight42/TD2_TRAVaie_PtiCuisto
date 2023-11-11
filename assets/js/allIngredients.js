@@ -33,21 +33,25 @@ document
         target.id = `ingredient${ingredientNumber}`; // Met à jour l'id de l'input à choix pour correspondre au nouvel ingrédient à mettre
 
         // Stocke dans le formulaire l'ingrédient choisit et l'ajoute à l'affichage en statique pour l'utilisateur
+        const divForInputAndP = document.createElement("div");
         const inputHidden = document.createElement("input");
         inputHidden.setAttribute("id", ingredientInputId);
         inputHidden.setAttribute("name", ingredientInputId);
         inputHidden.setAttribute("type", "hidden");
         inputHidden.setAttribute("value", target.value);
-        target.parentNode.parentNode.insertBefore(
-            inputHidden,
-            target.parentNode,
-        );
+        divForInputAndP.appendChild(inputHidden);
         const pIngredientSelected = document.createElement("p");
         pIngredientSelected.setAttribute("id", `paragraph${ingredientInputId}`);
+        pIngredientSelected.setAttribute("class", `ingredient`);
         pIngredientSelected.textContent = target.value;
+        divForInputAndP.appendChild(pIngredientSelected);
+        const cross = document.createElement("em");
+        cross.setAttribute("class", `fa-solid fa-xmark fa-2x`);
+        divForInputAndP.appendChild(cross);
+        divForInputAndP.setAttribute("class", "div-ingredient")
         target.value = "";
         target.parentNode.parentNode.insertBefore(
-            pIngredientSelected,
+            divForInputAndP,
             target.parentNode,
         );
     });

@@ -47,3 +47,27 @@ input[type=submit] {
   background-color: DodgerBlue !important;
   color: #ffffff;
 }
+
+.ingredient {
+  width: fit-content;
+}
+
+.div-ingredient {
+  display: flex;
+}
+
+.div-ingredient:hover {
+  cursor: pointer;
+}
+
+.div-ingredient em {
+  margin: auto;
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+.div-ingredient em::before {
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
