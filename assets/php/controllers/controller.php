@@ -138,7 +138,16 @@ function filter() {
         $categoryFilter = $_POST["re_cat"];
         $recipes = getRecipesByCategory($categoryFilter);
     } elseif ($action === "filterRecipeIngredients") {
-
+        $ingredients = array();
+        foreach($_POST as $key => $value) {
+            if (preg_match('/ingredient\d+/', $key)) array_push($ingredients, strip_tags($value));
+        }
+        if(count($ingredients) === 0) {
+            $content = "Veuillez mettre au moins un ingrédient s'il vous plaît !";
+            require('./assets/php/views/filterView.php');
+            return;
+        }
+        $recipes = getRecipesByIngredients($ingredients);
     }
     if (count($recipes) === 1) {
         $reci_id = $recipes[0]["reci_id"];

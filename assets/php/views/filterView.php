@@ -13,7 +13,6 @@
 <body>
     <div id="menuButton">
         <a href="index.php">Accueil</a>
-        <a href ="index.php?action=recipe">Recette simple</a>
     </div>
     <form method="post" action="index.php?action=filterRecipeName">
         <label for="title">Titre :</label>
