@@ -5,11 +5,20 @@ let arrayOfIngredients = [];
 let ingredientNumber = 1;
 req.onload = (event) => {
     arrayOfIngredients = req.response.split(",");
+    arrayOfIngredients.sort();
     autocomplete(
         document.getElementById(`ingredient${ingredientNumber}`),
         arrayOfIngredients,
     );
 };
+
+function deleteAddedIngredient(event) {
+    const target = event.target.parentNode;
+    const input = target.querySelector("input");
+    arrayOfIngredients.push(input.value);
+    arrayOfIngredients.sort();
+    target.remove();
+}
 
 document
     .getElementById(`ingredient${ingredientNumber}`)
@@ -54,6 +63,7 @@ document
             divForInputAndP,
             target.parentNode,
         );
+        divForInputAndP.addEventListener("click", event => deleteAddedIngredient(event))
     });
 
 req.send(null);

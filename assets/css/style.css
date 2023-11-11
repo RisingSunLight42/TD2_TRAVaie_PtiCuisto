@@ -54,6 +54,7 @@ input[type=submit] {
 
 .div-ingredient {
   display: flex;
+  width: fit-content;
 }
 
 .div-ingredient:hover {
