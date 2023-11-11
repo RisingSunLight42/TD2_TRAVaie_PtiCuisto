@@ -31,7 +31,7 @@ function getRecipesCount() {
 function getOneRecipe($reci_id) {
     $bdd = dbConnect();
 
-    $preparedRecipeRequest = "SELECT reci_title, rtype_title, reci_image, reci_content, users_nickname,
+    $preparedRecipeRequest = "SELECT reci_title, rtype_title, reci_image, reci_content, users_nickname, reci_resume,
     DATE_FORMAT(reci_creation_date, '%d/%m/%Y') as reci_creation_date, DATE_FORMAT(reci_edit_date, '%d/%m/%Y') as reci_edit_date
     FROM ptic_recipes
     JOIN ptic_recipes_type USING (rtype_id)

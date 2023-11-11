@@ -247,8 +247,50 @@ function recipeCreationHandling() {
     getAllRecipes();
 }
 /*recipe modification controller*/
-function recipeModification() {
-    require('./assets/php/views/recipeModificationView.php');
+function recipeEdition() {
+    $content = "";
+    $reci_id = strip_tags($_GET['value']);
+    $recipe = getOneRecipe($reci_id);
+    $recipeIngredients = getRecipeIngredients($reci_id);
+    $title = $recipe[0]["reci_title"];
+    $description = $recipe[0]["reci_content"];
+    $img = $recipe[0]["reci_image"];
+    $resume = $recipe[0]["reci_resume"];
+    $ingredients = "";
+    $type = $recipe[0]["rtype_title"];
+    $entry = "";
+    $dish = "";
+    $dessert = "";
+    $aperitif = "";
+    $drink = "";
+    switch ($type) {
+        case "ENTREE":
+            $entry = "checked";
+            break;
+        case "PLAT":
+            $dish = "checked";
+            break;
+        case "DESSERT":
+            $dessert = "checked";
+            break;
+        case "APERITIF":
+            $aperitif = "checked";
+            break;
+        case "BOISSON":
+            $drink = "checked";
+            break;
+    }
+    for ($i=0; $i< count($recipeIngredients); $i++) {
+        $ing = $recipeIngredients[$i]['ing_title'];
+        $num = $i + 1;
+        $ingredients .= "<div class='div-ingredient'>";
+        $ingredients .= "<input id='ingredient$num' name='ingredient$num' type='hidden' value='$ing'>";
+        $ingredients .= "<p class='ingredient'>$ing</p>";
+        $ingredients .= "<em class='fa-solid fa-xmark fa-2x'></em>";
+        $ingredients .= "</div>";
+    }
+    $nbIngredients = count($recipeIngredients);
+    require('./assets/php/views/recipeEditionView.php');
 }
 /*recipe deletion controller*/
 function recipeDeletion() {
