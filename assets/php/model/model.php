@@ -120,6 +120,40 @@ function addRecipesIngredients($reci_id, $ingredients) {
         $preparedNeededIngredient->execute([$reci_id, $ingredients[$i]]);
     }
 }
+function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user) {
+    $bdd = dbConnect();
+    
+    $sql= "UPDATE ptic_recipes
+    SET reci_title = :title, reci_content = :descr, reci_resume = :resume, rtype_id = (
+            SELECT rtype_id
+            FROM ptic_recipes_type
+            WHERE UPPER(rtype_title) = UPPER(:cat)
+        ), reci_edit_date = sysdate(), reci_image = :img
+    WHERE users_id = (
+            SELECT users_id
+            FROM ptic_users
+            WHERE users_email = :user
+        ) AND reci_id = :reci_id";
+    $preparedCreateRecipe = $bdd->prepare($sql);
+    $preparedCreateRecipe->bindValue(':title', (string) $title, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':resume', (string) $resume, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':cat', (string) $categorize, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':img', (string) $img, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':user', (string) $user, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':reci_id', (int) $reci_id, PDO::PARAM_INT);
+    $preparedCreateRecipe->execute();
+    return $bdd->lastInsertId();
+}
+
+function editRecipesIngredients($reci_id, $ingredients) {
+    $bdd = dbConnect();
+    $deleteRecipeIngredientsSQL = "DELETE FROM ptic_needed_ingredients WHERE reci_id = ?";
+    $prepareDeleteRecipeIngredients = $bdd->prepare($deleteRecipeIngredientsSQL);
+    $prepareDeleteRecipeIngredients->execute([$reci_id]);
+
+    addRecipesIngredients($reci_id, $ingredients);
+}
 
 /* To delete a recipe */
 function deleteRecipe($reci_id) {

@@ -214,7 +214,7 @@ function getAllIngredients() {
 }
 
 function recipeCreationHandling() {
-    if(!isset($_POST['re_title']) || !isset($_POST['re_desc']) || !isset($_POST['re_resume']) || !isset($_POST['re_cat'])) {
+    if(empty($_POST['re_title']) || empty($_POST['re_desc']) || empty($_POST['re_resume']) || empty($_POST['re_cat'])) {
         $content = "Veuillez remplir tous les champs obligatoires !";
         require('./assets/php/views/recipeCreationView.php');
         return;
@@ -247,8 +247,8 @@ function recipeCreationHandling() {
     getAllRecipes();
 }
 /*recipe modification controller*/
-function recipeEdition() {
-    $content = "";
+function recipeEdition($text="") {
+    $content = "$text";
     $reci_id = strip_tags($_GET['value']);
     $recipe = getOneRecipe($reci_id);
     $recipeIngredients = getRecipeIngredients($reci_id);
@@ -292,6 +292,40 @@ function recipeEdition() {
     $nbIngredients = count($recipeIngredients);
     require('./assets/php/views/recipeEditionView.php');
 }
+
+function recipeEditionHandling() {
+    $reci_id = strip_tags($_GET['value']);
+    if(empty($_POST['re_title']) || empty($_POST['re_desc']) || empty($_POST['re_resume']) || empty($_POST['re_cat'])) {
+        $content = "Veuillez remplir tous les champs obligatoires !";
+        return recipeEdition($content);
+    }
+    $title = strip_tags($_POST['re_title']);
+    $desc = strip_tags($_POST['re_desc']);
+    $resume = strip_tags($_POST['re_resume']);
+    $categorize = strip_tags($_POST['re_cat']);
+    $image = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png";
+    if (!empty($_POST['re_img'])) {
+        if (preg_match('/(https?:\/\/.*\.(?:png|jpg|webp|jpeg))/i', $_POST['re_img'])) $image = strip_tags($_POST['re_img']);
+        elseif (preg_match('/\.\/assets\/images\/recette\/.*\.(?:png|jpg|webp|jpeg)/i', $_POST['re_img'])) $image = strip_tags($_POST['re_img']);
+        else {
+            $content = "Le lien que vous avez fourni est invalide. Les formats acceptés sont jpg/jpeg/png/webp.";
+            return recipeEdition($content);
+        }
+    }
+
+    $ingredients = array();
+    foreach($_POST as $key => $value) {
+        if (preg_match('/ingredient\d+/', $key)) array_push($ingredients, strip_tags($value));
+    }
+    if(count($ingredients) === 0) {
+        $content = "Veuillez mettre au moins un ingrédient s'il vous plaît !";
+        return recipeEdition($content);
+    }
+    editRecipe($reci_id, $title, $desc, $resume, $categorize, $image, $_SESSION["email"]);
+    editRecipesIngredients($reci_id, $ingredients);
+    getAllRecipes();
+}
+
 /*recipe deletion controller*/
 function recipeDeletion() {
     if (empty($_GET['value'])) getAllRecipes();
