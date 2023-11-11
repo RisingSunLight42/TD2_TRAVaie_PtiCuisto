@@ -18,11 +18,12 @@ function getAllRecipes($textSupp="") {
     require('./assets/php/views/allRecipesView.php');
 }
 
-function buildRecipeDisplayAllRecipes(&$content, $recipes) {
+function buildRecipeDisplayAllRecipes(&$content, $recipes, $isStash=false) {
     $optionalButtons = "";
+    $action = $isStash ? "recipeStash" : "recipe";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
-        if (checkCanEditOrDelete($recipe["users_nickname"])) {
+        if (!$isStash && checkCanEditOrDelete($recipe["users_nickname"])) {
             $optionalButtons .= "<button><a href='index.php?action=recipeEdition&value=RECI_ID'>Modification</a></button>";
             $optionalButtons .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
         }
@@ -33,8 +34,8 @@ function buildRecipeDisplayAllRecipes(&$content, $recipes) {
         $image = $recipe['reci_image'];
         $anchor = $i + 1;
         $content .= "<div id='$anchor'>";
-        $content .= "<img src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" width=50px height=50px/>" ;
-        $content .= "<h1 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
+        $content .= "<img src='$image' alt='image de recette' onclick=\"location.href='index.php?action=$action&value=$recipe_id'\" width=50px height=50px/>" ;
+        $content .= "<h1 onclick=\"location.href='index.php?action=$action&value=$recipe_id'\" >$title</h1>";
         $content .= "<h2>$type</h2>";
         $content .= "<p>$resume<p>";
         $content .= str_replace("RECI_ID", $recipe_id, $optionalButtons);
@@ -163,12 +164,17 @@ function account() {
     $unlogButton = "";
     if (isset($_SESSION['connected']) && boolval($_SESSION['connected']) === true) {
         $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
-        print_r($_SESSION);
         if (strcmp($_SESSION['userType'],"ADMINISTRATEUR") === 0) {
             $content .= "<h1>Modification de l'édito</h1>";
             $content .= "<form id='form_edito' name='edito' method='post' action='index.php?action=editoEdition'>";
             $content .= "<label for='edito'>Entrez le nouveau texte de l'édito :</label><textarea name='edito' rows='10' required></textarea>";
             $content .= "<input type='submit' name='confirm' value='OK'/></form>";
+            $content .= "<h1>Demandes d'ajout</h1>";
+            $recipesCreation = getWaitingForCreationRecipes();
+            buildRecipeDisplayAllRecipes($content, $recipesCreation, true);
+            $content .= "<h1>Demandes de modification</h1>";
+            $recipesEdition = getWaitingForModificationRecipes();
+            buildRecipeDisplayAllRecipes($content, $recipesEdition, true);
         }
         require('./assets/php/views/accountView.php');
         return;
@@ -254,6 +260,12 @@ function connectionForm() {
         $content .= "<form id='form_edito' name='edito' method='post' action='index.php?action=editoEdition'>";
         $content .= "<label for='edito'>Entrez le nouveau texte de l'édito :</label><textarea name='edito' rows='10' required></textarea>";
         $content .= "<input type='submit' name='confirm' value='OK'/></form>";
+        $content .= "<h1>Demandes de création</h1>";
+        $recipesCreation = getWaitingForCreationRecipes();
+        buildRecipeDisplayAllRecipes($content, $recipesCreation, true);
+        $content .= "<h1>Demandes de modification</h1>";
+        $recipesEdition = getWaitingForModificationRecipes();
+        buildRecipeDisplayAllRecipes($content, $recipesEdition, true);
     }
     require('./assets/php/views/accountView.php');
 }
@@ -301,8 +313,8 @@ function recipeCreationHandling() {
         require('./assets/php/views/recipeCreationView.php');
         return;
     }
-    $reci_id = createRecipe($title, $desc, $resume, $categorize, $image, $_SESSION["username"]);
-    addRecipesIngredients($reci_id, $ingredients);
+    $reci_id = createRecipe($title, $desc, $resume, $categorize, $image, $_SESSION["username"], strcmp($_SESSION["userType"], "ADMINISTRATEUR") === 0);
+    addRecipesIngredients($reci_id, $ingredients, strcmp($_SESSION["userType"], "ADMINISTRATEUR") === 0);
     getAllRecipes();
 }
 /*recipe modification controller*/
@@ -382,8 +394,8 @@ function recipeEditionHandling() {
         $content = "Veuillez mettre au moins un ingrédient s'il vous plaît !";
         return recipeEdition($content);
     }
-    editRecipe($reci_id, $title, $desc, $resume, $categorize, $image, $_SESSION["username"]);
-    editRecipesIngredients($reci_id, $ingredients);
+    editRecipe($reci_id, $title, $desc, $resume, $categorize, $image, $_SESSION["username"], strcmp($_SESSION["userType"], "ADMINISTRATEUR") === 0);
+    editRecipesIngredients($reci_id, $ingredients, strcmp($_SESSION["userType"], "ADMINISTRATEUR") === 0);
     getAllRecipes();
 }
 

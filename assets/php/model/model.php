@@ -152,7 +152,7 @@ function createRecipe($title, $desc, $resume, $categorize, $img, $user, $isAdmin
             WHERE users_nickname = :user
         ))";
     } else {
-        $sql= "INSERT INTO ptic_recipes_stash(reci_stash_title, reci__stash_content, reci_stash_resume,
+        $sql= "INSERT INTO ptic_recipes_stash(reci_stash_title, reci_stash_content, reci_stash_resume,
         rtype_id, reci_stash_creation_date, reci_stash_image, users_id, stash_type_id)
         VALUES (:title, :descr, :resume,(
             SELECT rtype_id
@@ -164,7 +164,6 @@ function createRecipe($title, $desc, $resume, $categorize, $img, $user, $isAdmin
             WHERE users_nickname = :user
         ), (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'CREATION'))";
     }
-    
     $preparedCreateRecipe = $bdd->prepare($sql);
     $preparedCreateRecipe->bindValue(':title', (string) $title, PDO::PARAM_STR);
     $preparedCreateRecipe->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
@@ -187,7 +186,7 @@ function addRecipesIngredients($reci_id, $ingredients, $isAdmin) {
             )
         )";
     } else {
-        $neededIngredient = "INSERT INTO ptic_needed_ingredients_stash (reci_id, ing_id) VALUES (?, (
+        $neededIngredient = "INSERT INTO ptic_needed_ingredients_stash (reci_stash_id, ing_id) VALUES (?, (
             SELECT ing_id
             FROM ptic_ingredients
             WHERE TRIM(UPPER(ing_title)) = TRIM(UPPER(?))
@@ -215,8 +214,8 @@ function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user, 
             WHERE users_nickname = :user
         ) AND reci_id = :reci_id";
     } else {
-        $sql= "INSERT INTO ptic_recipes_stash(reci_stash_title, reci__stash_content, reci_stash_resume,
-        rtype_id, reci_stash_creation_date, reci_stash_image, users_id, stash_type_id)
+        $sql= "INSERT INTO ptic_recipes_stash(reci_stash_title, reci_stash_content, reci_stash_resume,
+        rtype_id, reci_stash_creation_date, reci_stash_image, users_id, stash_type_id, reci_id)
         VALUES (:title, :descr, :resume,(
             SELECT rtype_id
             FROM ptic_recipes_type
@@ -225,7 +224,7 @@ function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user, 
             SELECT users_id
             FROM ptic_users
             WHERE users_nickname = :user
-        ), (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'MODIFICATION'))";
+        ), (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'MODIFICATION'), $reci_id)";
     }
     
     $preparedCreateRecipe = $bdd->prepare($sql);
@@ -235,7 +234,7 @@ function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user, 
     $preparedCreateRecipe->bindValue(':cat', (string) $categorize, PDO::PARAM_STR);
     $preparedCreateRecipe->bindValue(':img', (string) $img, PDO::PARAM_STR);
     $preparedCreateRecipe->bindValue(':user', (string) $user, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':reci_id', (int) $reci_id, PDO::PARAM_INT);
+    if ($isAdmin)$preparedCreateRecipe->bindValue(':reci_id', (int) $reci_id, PDO::PARAM_INT);
     $preparedCreateRecipe->execute();
     return $bdd->lastInsertId();
 }
@@ -285,7 +284,8 @@ function addEdito($edito) {
 function getWaitingForCreationRecipes(){
     $bdd = dbConnect();
     
-    $preparedRecipeRequest = "SELECT reci_stash_id, reci_stash_title, reci_stash_resume, rtype_stash_title, reci_stash_image, users_nickname
+    $preparedRecipeRequest = "SELECT reci_stash_id as reci_id, reci_stash_title as reci_title, reci_stash_resume as reci_resume, rtype_title,
+    reci_stash_image as reci_image, users_nickname
     FROM ptic_recipes_stash
     JOIN ptic_recipes_type USING (rtype_id)
     JOIN ptic_users USING (users_id)
@@ -300,11 +300,12 @@ function getWaitingForCreationRecipes(){
 function getWaitingForModificationRecipes(){
     $bdd = dbConnect();
     
-    $preparedRecipeRequest = "SELECT reci_stash_id, reci_stash_title, reci_stash_resume, rtype_stash_title, reci_stash_image, users_nickname
+    $preparedRecipeRequest = "SELECT reci_stash_id as reci_id, reci_stash_title as reci_title, reci_stash_resume as reci_resume, rtype_title,
+    reci_stash_image as reci_image, users_nickname
     FROM ptic_recipes_stash
     JOIN ptic_recipes_type USING (rtype_id)
     JOIN ptic_users USING (users_id)
-    WHERE stash_type_id = (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'CREATION')";
+    WHERE stash_type_id = (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'MODIFICATION')";
 
     $preparedRecipesGet = $bdd->prepare($preparedRecipeRequest);
     $preparedRecipesGet->execute();
