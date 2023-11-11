@@ -20,13 +20,13 @@ nav {
     font-family: var(--heading-font), cursive;
 }
 
-section {
+#welcomeSection {
     display: flex;
     justify-content: space-around;
     align-items: stretch;
 }
 
-article {
+#lastRecipes {
     border-color: var(--unknown-color);
     border: solid 1px;
     width: 48%;
@@ -42,8 +42,11 @@ article {
 
 }
 
-h2 {
+h1 {
+    font-family: var(--heading-font), cursive;    
+}
 
+h2 {
     font-family: var(--heading-font), cursive;
     padding: 20px;
 }
@@ -72,7 +75,7 @@ h2 {
 #edito {
     display: flex;
     flex-direction: column;
-    padding: 15px;
+    margin: 15px;
     justify-content: center;
     align-items: center;
     background-color: var(--main-color);
@@ -100,6 +103,8 @@ footer {
     justify-content: center;
     background-color: var(--main-color);
     height: 100px;
+    position: relative;
+    bottom: 0;
 }
 
 #socialLinks {
@@ -121,4 +126,52 @@ footer {
 
 p {
     font-family: var(--body-font), cursive;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+#allRecipesSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.recipeCard {
+    display: flex;
+    border: solid 1px;
+    margin: 2%
+}
+
+.recipePicture {
+    object-fit: cover;
+    width: 400px;
+    height: 300px;
+}
+
+#leftRecipeCard, #rightRecipeCard {
+    margin: 2%;
+}
+
+#rightRecipeCard {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#rightRecipeCard h2 {
+    padding: 0;
+}
+
+#plusButton {
+    background-color: var(--main-color);
+    padding: 5px 40px 5px 40px;
+    border-radius: 5px;
+    font-family: var(--body-font), cursive;
+    box-shadow: 4px 7px 5px var(--unknown-color);
+    color: var(--background-color);
+    font-size: 2em;
+    margin-bottom: 20px;
 }
