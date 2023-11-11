@@ -8,13 +8,22 @@ function getAllRecipes($textSupp="") {
     $number = 10;
     if (isset($_POST['number']) && is_numeric($_POST['number'])) $number = strip_tags(intval($_POST['number']));
     $recipes = getRecipes($number);
+    $count = getRecipesCount();
+    $content = "$textSupp";
+    buildRecipeDisplayAllRecipes($content, $recipes);
+    if ($count > $number) {
+        $number += 10;
+        $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' value='Afficher plus' /></form>";
+    }
+    require('./assets/php/views/allRecipesView.php');
+}
+
+function buildRecipeDisplayAllRecipes(&$content, $recipes) {
     $optionalButtons = "";
     if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
         $optionalButtons .= "<button><a href='index.php?action=recipeEdition&value=RECI_ID'>Modification</a></button>";
         $optionalButtons .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
     }
-    $count = getRecipesCount();
-    $content = "$textSupp";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
         $recipe_id = $recipe['reci_id'];
@@ -31,11 +40,6 @@ function getAllRecipes($textSupp="") {
         $content .= str_replace("RECI_ID", $recipe_id, $optionalButtons);
         $content .= "</div>";           
     }
-    if ($count > $number) {
-        $number += 10;
-        $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' value='Afficher plus' /></form>";
-    }
-    require('./assets/php/views/allRecipesView.php');
 }
 
 function welcome() {
@@ -66,9 +70,11 @@ function welcome() {
     require('./assets/php/views/welcomeView.php');
 }
 /*recipe's page controller */
-function recipe() {
-    if (empty($_GET['value'])) welcome();
-    $reci_id = strip_tags($_GET['value']);
+function recipe($reci_id="") {
+    if ($reci_id===""){
+        if (empty($_GET['value'])) welcome();
+        $reci_id = strip_tags($_GET['value']);
+    }
     if (!is_numeric($reci_id)) return getAllRecipes();
     if (intval($reci_id) < 1) return getAllRecipes();
     $recipe = getOneRecipe($reci_id);
@@ -112,6 +118,42 @@ function recipe() {
 }
 /*filter's page controller*/
 function filter() {
+    $content = "";
+    $action = strip_tags($_GET["action"]);
+    $recipes = array();
+    if ($action === "filterRecipeName") {
+        if (empty($_POST["title"])) {
+            $content="Veuillez renseigner un titre pour réaliser un filtrage !";
+            require('./assets/php/views/filterView.php');
+            return;
+        }
+        $titleFilter = $_POST["title"];
+        $recipes = getRecipesByTitle($titleFilter);
+    } elseif ($action === "filterRecipeCategory") {
+        if (empty($_POST["re_cat"])) {
+            $content="Veuillez renseigner une catégorie pour réaliser un filtrage !";
+            require('./assets/php/views/filterView.php');
+            return;
+        }
+        $categoryFilter = $_POST["re_cat"];
+        $recipes = getRecipesByCategory($categoryFilter);
+    } elseif ($action === "filterRecipeIngredients") {
+        $ingredients = array();
+        foreach($_POST as $key => $value) {
+            if (preg_match('/ingredient\d+/', $key)) array_push($ingredients, strip_tags($value));
+        }
+        if(count($ingredients) === 0) {
+            $content = "Veuillez mettre au moins un ingrédient s'il vous plaît !";
+            require('./assets/php/views/filterView.php');
+            return;
+        }
+        $recipes = getRecipesByIngredients($ingredients);
+    }
+    if (count($recipes) === 1) {
+        $reci_id = $recipes[0]["reci_id"];
+        return recipe($reci_id);
+    }
+    buildRecipeDisplayAllRecipes($content, $recipes);
     require('./assets/php/views/filterView.php');
 }
 /*account's page controller*/
