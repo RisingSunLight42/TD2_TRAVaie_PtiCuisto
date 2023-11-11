@@ -15,15 +15,15 @@
     <?php
     echo $content;
     ?>
-    <form action="index.php?action=connectionForm" method="post">
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" placeholder="jeanmarc666@gmail.com" required>
-        <label for="password">Mot de passe</label>
-        <input type="password" name="password" id="password" placeholder="******" required>
-        <input type="submit" value="Connexion">
-    </form>
-    <?php 
-        require ("footer.php");
-    ?>
+    <h1 id="welcomeBackMessage">Content de vous revoir !</h1>
+    <section id="formContent">
+        <form id="connectionContent" action="index.php?action=connectionForm" method="post">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" placeholder="Votre email" required>
+            <label for="password">Mot de passe</label>
+            <input type="password" name="password" id="password" placeholder="Votre mot de passe" required>
+            <input type="submit" id="connectionButton" class="button" value="Connexion">
+        </form>
+    </section>
 </body>
 </html>

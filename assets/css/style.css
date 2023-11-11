@@ -165,7 +165,7 @@ p {
     padding: 0;
 }
 
-#plusButton {
+.button {
     background-color: var(--main-color);
     padding: 5px 40px 5px 40px;
     border-radius: 5px;
@@ -174,4 +174,50 @@ p {
     color: var(--background-color);
     font-size: 2em;
     margin-bottom: 20px;
+}
+
+#formContent {
+    display: flex;
+    justify-content: center;
+    margin: 3%;
+}
+
+#connectionContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    border: solid 2px var(--navbar-color) ;
+    border-radius: 20px;
+    background-color:  var(--navbar-color);
+}
+
+label {
+    font-family: var(--body-font), cursive;
+    font-size: 2em;
+    padding: 10px 0 10px 0;
+}
+
+#email, #password {
+    border-radius: 20px;
+    text-align: center;
+    width: 23em;
+}
+
+#welcomeBackMessage {
+    font-family: var(--body-font), cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 3%;
+    font-size: 4em;
+}
+
+#connectionContent > div {
+    display: flex;
+    justify-content: space-between;
+}
+
+#connectionButton {
+    margin-top: 10px;
 }
