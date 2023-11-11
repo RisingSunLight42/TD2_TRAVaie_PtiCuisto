@@ -120,7 +120,7 @@ function recipe($reci_id="") {
 function filter() {
     $content = "";
     $action = strip_tags($_GET["action"]);
-    $recipes = "";
+    $recipes = array();
     if ($action === "filterRecipeName") {
         if (empty($_POST["title"])) {
             $content="Veuillez renseigner un titre pour réaliser un filtrage !";
