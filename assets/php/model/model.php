@@ -1,7 +1,11 @@
 <?php
 require_once("./assets/php/utils/connexion.php");
 include_once("./assets/php/utils/pdo_agile.php");
+/*The model is the treatment part of informations in the database. The controller will use the information to transfer them to the view. 
+The treatment was mainly componsed of database's treatment, with selection for the displaying for websites's pages
+and insertion for adding a new recipe or ingredient in the database*/ 
 
+/*Recipe retrievment*/
 function getRecipes($number) {
     $bdd = dbConnect();
     
@@ -16,14 +20,14 @@ function getRecipes($number) {
 
     return $preparedRecipesGet->fetchAll();
 }
-
+/*Get the number total of recipe*/
 function getRecipesCount() {
     $bdd = dbConnect();
     $countRequest = "SELECT COUNT(*) as count FROM ptic_recipes";
     LireDonneesPDO1($bdd, $countRequest, $count);
     return $count[0]['count'];
 }
-
+/*Retrive one recipe with it's id */
 function getOneRecipe($reci_id) {
     $bdd = dbConnect();
 
@@ -37,7 +41,7 @@ function getOneRecipe($reci_id) {
     $preparedRequestGet->execute([$reci_id]);
     return $preparedRequestGet->fetchAll();
 }
-
+/*Retrieve the ingredients of one recipe*/
 function getRecipeIngredients($reci_id) {
     $bdd = dbConnect();
 
@@ -49,7 +53,7 @@ function getRecipeIngredients($reci_id) {
     $preparedRequestGet->execute([$reci_id]);
     return $preparedRequestGet->fetchAll();
 }
-
+/*Retrieve the three last recipes published ont the website*/
 function getLastThreeRecipes() {
     $bdd = dbConnect();
     
@@ -59,7 +63,7 @@ function getLastThreeRecipes() {
     LireDonneesPDO1($bdd, $recipeRequest, $recipes);
     return $recipes;
 }
-
+/*Retrieve the last Edito published*/
 function getLastEdito() {
     $bdd = dbConnect();
     
@@ -120,10 +124,24 @@ function addRecipesIngredients($reci_id, $ingredients) {
     }
 }
 
+/* To delete a recipe */
+function deleteRecipe($reci_id) {
+    $bdd = dbConnect();
+
+    $deleteRecipeIngredientsSQL = "DELETE FROM ptic_needed_ingredients WHERE reci_id = ?";
+    $deleteRecipeSQL = "DELETE FROM ptic_recipes WHERE reci_id = ?";
+
+    $prepareDeleteRecipeIngredients = $bdd->prepare($deleteRecipeIngredientsSQL);
+    $prepareDeleteRecipe = $bdd->prepare($deleteRecipeSQL);
+
+    $prepareDeleteRecipeIngredients->execute([$reci_id]);
+    $prepareDeleteRecipe->execute([$reci_id]);
+}
+
 function getConnectionCredentials($email) {
     $bdd = dbConnect();
 
-    $getCredentialsRequest = "SELECT users_nickname, users_password FROM ptic_users WHERE users_email = ?";
+    $getCredentialsRequest = "SELECT users_nickname, users_password, utype_title FROM ptic_users JOIN ptic_users_type USING (utype_id) WHERE users_email = ?";
     $preparedRequestGet = $bdd->prepare($getCredentialsRequest);
     $preparedRequestGet->execute([$email]);
     return $preparedRequestGet->fetchAll();

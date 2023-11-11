@@ -14,6 +14,7 @@ if (isset($_GET['action'])) {
     elseif ($action == 'account') account();
     elseif ($action == 'connectionForm') connectionForm();
     elseif ($action == 'getAllIngredients') getAllIngredients();
+    elseif ($action == 'disconnect') disconnect();
     else welcome();
 }
 else {

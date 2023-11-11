@@ -1,13 +1,19 @@
 <?php
 session_start();
 require('./assets/php/model/model.php');
-
-function getAllRecipes() {
+/* The controller is the part of the MVC who will managed the information flow between the model and the view.
+When the user made action on the website, the controller will retrive this information and send it to the model to do treatments*/
+/*All recipes's page controller*/ 
+function getAllRecipes($textSupp="") {
     $number = 10;
     if (isset($_POST['number']) && is_numeric($_POST['number'])) $number = strip_tags(intval($_POST['number']));
     $recipes = getRecipes($number);
+    $deleteButton = "";
+    if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
+        $deleteButton .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
+    }
     $count = getRecipesCount();
-    $content = "";
+    $content = "$textSupp";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
         $recipe_id = $recipe['reci_id'];
@@ -21,6 +27,7 @@ function getAllRecipes() {
         $content .= "<h1 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
         $content .= "<h2>$type</h2>";
         $content .= "<p>$resume<p>";
+        $content .= str_replace("RECI_ID", $recipe_id, $deleteButton);
         $content .= "</div>";           
     }
     if ($count > $number) {
@@ -57,7 +64,7 @@ function welcome() {
     $content .= "<p>$editoText</p></section>";
     require('./assets/php/views/welcomeView.php');
 }
-
+/*recipe's page controller */
 function recipe() {
     if (empty($_GET['value'])) welcome();
     $reci_id = strip_tags($_GET['value']);
@@ -96,20 +103,33 @@ function recipe() {
     $content .= "<p>Créé le : $creationDate par $editorUsername</p>";
     $content .= "<p>Édité pour la dernière fois le : $lastUpdateDate</p>";
     $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
+    if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
+        $content .= "<button><a href='index.php?action=recipeDeletion&value=$reci_id'>Suppression</a></button>";
+    }
     require('./assets/php/views/recipeView.php');
 }
-
+/*filter's page controller*/
 function filter() {
     require('./assets/php/views/filterView.php');
 }
-
+/*account's page controller*/
 function account() {
     $content = "";
+    $unlogButton = "";
     if (isset($_SESSION['connected']) && boolval($_SESSION['connected']) === true) {
+        $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
         require('./assets/php/views/accountView.php');
         return;
     }
     require('./assets/php/views/connectionView.php');
+}
+
+/* */
+function disconnect() {
+    $_SESSION['connected'] = false;
+    unset($_SESSION['username']);
+    unset($_SESSION['userType']);
+    welcome();
 }
 
 function checkIfConnectionValuesExists(&$content) {
@@ -141,7 +161,7 @@ function checkIfConnectionValuesExists(&$content) {
     }
     return $fieldsMissing;
 }
-
+/*Connection's page controller*/
 function connectionForm() {
     $content = "";
     $fieldsMissing = checkIfConnectionValuesExists($content);
@@ -159,7 +179,7 @@ function connectionForm() {
         require('./assets/php/views/connectionView.php');
         return;
     }
-    [$storedUsername, $storedPassword] = $returnedCredentials[0];
+    [$storedUsername, $storedPassword, $storedUserType] = $returnedCredentials[0];
     if (!password_verify($givenPassword, $storedPassword)) {
         $content .= "Mot de passe incorrect !";
         require('./assets/php/views/connectionView.php');
@@ -167,12 +187,14 @@ function connectionForm() {
     }
 
     $_SESSION['username'] = $storedUsername;
+    $_SESSION['userType'] = $storedUserType;
     $_SESSION['connected'] = true;
 
-    $content .= "<p>Connexion réussie. Bienvenue $storedUsername !</p>";
+    $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
+    $content .= "<p>Connexion réussie. Bienvenue $storedUserType $storedUsername !</p>";
     require('./assets/php/views/accountView.php');
 }
-
+/*recipe creation controller*/
 function recipeCreation() {
     $content = "";
     require('./assets/php/views/recipeCreationView.php');
@@ -220,12 +242,15 @@ function recipeCreationHandling() {
     addRecipesIngredients($reci_id, $ingredients);
     getAllRecipes();
 }
-
+/*recipe modification controller*/
 function recipeModification() {
     require('./assets/php/views/recipeModificationView.php');
 }
-
+/*recipe deletion controller*/
 function recipeDeletion() {
-    require('./assets/php/views/recipeDeletionView.php');
+    if (empty($_GET['value'])) getAllRecipes();
+    $reci_id = strip_tags($_GET['value']);
+    deleteRecipe($reci_id);
+    getAllRecipes("<p>La recette a bien été supprimée !</p>");
 }
 ?>
