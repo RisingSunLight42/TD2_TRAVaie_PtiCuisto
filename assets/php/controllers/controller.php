@@ -66,9 +66,11 @@ function welcome() {
     require('./assets/php/views/welcomeView.php');
 }
 /*recipe's page controller */
-function recipe() {
-    if (empty($_GET['value'])) welcome();
-    $reci_id = strip_tags($_GET['value']);
+function recipe($reci_id="") {
+    if ($reci_id===""){
+        if (empty($_GET['value'])) welcome();
+        $reci_id = strip_tags($_GET['value']);
+    }
     if (!is_numeric($reci_id)) return getAllRecipes();
     if (intval($reci_id) < 1) return getAllRecipes();
     $recipe = getOneRecipe($reci_id);
@@ -112,6 +114,25 @@ function recipe() {
 }
 /*filter's page controller*/
 function filter() {
+    $content = "";
+    $action = strip_tags($_GET["action"]);
+    if ($action === "filterRecipeName") {
+        if (empty($_POST["title"])) {
+            $content="Veuillez renseigner un titre pour réaliser un filtrage !";
+            require('./assets/php/views/filterView.php');
+            return;
+        }
+        $titleFilter = $_POST["title"];
+        $recipes = getRecipesByTitle($titleFilter);
+        if (count($recipes) === 1) {
+            $reci_id = $recipes[0]["reci_id"];
+            return recipe($reci_id);
+        }
+    } elseif ($action === "filterRecipeCategory") {
+
+    } elseif ($action === "filterRecipeIngredients") {
+
+    }
     require('./assets/php/views/filterView.php');
 }
 /*account's page controller*/

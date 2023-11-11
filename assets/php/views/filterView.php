@@ -17,7 +17,7 @@
     </div>
     <form method="post" action="index.php?action=filterRecipeName">
         <label for="title">Titre :</label>
-        <input type="text" name="title" id="reci_title">
+        <input type="text" name="title" id="reci_title" required>
         <input type="submit" value="Filtrer">
     </form>
     <form method="post" action="index.php?action=filterRecipeCategory">
@@ -42,6 +42,11 @@
         <input type="hidden" id="nbIngredients" name="nbIngredients" value="0"/>
         <input type="submit" value="Filtrer">
     </form>
+    <section>
+        <?php
+            echo $content;
+        ?>
+    </section>
     <script src="assets\js\autocompletion.js"></script>
     <script src="assets\js\allIngredients.js"></script>
 </body>
