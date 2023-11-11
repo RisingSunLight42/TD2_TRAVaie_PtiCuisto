@@ -97,6 +97,20 @@ function createRecipe($title, $desc, $resume, $categorize) {
     return $bdd->lastInsertId();
 }
 
+function addRecipesIngredients($reci_id, $ingredients) {
+    $bdd = dbConnect();
+    $neededIngredient = "INSERT INTO ptic_needed_ingredients (reci_id, ing_id) VALUES (?, (
+        SELECT ing_id
+        FROM ptic_ingredients
+        WHERE TRIM(UPPER(ing_title)) = TRIM(UPPER(?))
+        )
+    )";
+    $preparedNeededIngredient = $bdd->prepare($neededIngredient);
+    for ($i= 0; $i < count($ingredients); $i++) {
+        $preparedNeededIngredient->execute([$reci_id, $ingredients[$i]]);
+    }
+}
+
 function getConnectionCredentials($email) {
     $bdd = dbConnect();
 

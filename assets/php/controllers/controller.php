@@ -208,6 +208,7 @@ function recipeCreationHandling() {
         return;
     }
     $reci_id = createRecipe($title, $desc, $resume, $categorize);
+    addRecipesIngredients($reci_id, $ingredients);
     require('./assets/php/views/recipeCreationHandlingView.php');
 }
 
