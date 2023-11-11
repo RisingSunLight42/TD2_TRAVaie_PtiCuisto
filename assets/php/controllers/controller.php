@@ -392,8 +392,8 @@ function recipeDeletion() {
     if (empty($_GET['value'])) getAllRecipes();
     $reci_id = strip_tags($_GET['value']);
     $recipe = getOneRecipe($reci_id);
-    if (count($recipe) === 0) getAllRecipes();
-    if (!checkCanEditOrDelete($recipe[0]['users_nickname'])) getAllRecipes();
+    if (count($recipe) === 0) return getAllRecipes();
+    if (!checkCanEditOrDelete($recipe[0]['users_nickname'])) return getAllRecipes();
     deleteRecipe($reci_id);
     getAllRecipes("<p>La recette a bien été supprimée !</p>");
 }
