@@ -7,7 +7,8 @@ if (isset($_GET['action'])) {
     elseif ($action == 'allRecipes') getAllRecipes();
     elseif ($action == 'recipeCreation') recipeCreation();
     elseif ($action == 'recipeCreationHandling') recipeCreationHandling();
-    elseif ($action == 'recipeModification') recipeModification();
+    elseif ($action == 'recipeEdition') recipeEdition();
+    elseif ($action == 'recipeEditionHandling') recipeEditionHandling();
     elseif ($action == 'recipeDeletion') recipeDeletion();
     elseif ($action == 'filter') filter();
     elseif ($action == 'recipe') recipe();

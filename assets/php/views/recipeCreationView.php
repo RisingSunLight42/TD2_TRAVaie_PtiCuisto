@@ -19,7 +19,7 @@
         <label for="re_title">Entrez le titre de la recette* :</label><input type="text" name="re_title" required/>
         <label for="re_desc">Entrez le contenu de votre recette* :</label><input type="text"  name="re_desc" required/>
         <label for="re_resume">Entrez un résumé de votre recette* :</label><input type ="text" name="re_resume" required/>
-        <label for="re_resume">Entrez un lien vers l'image de votre recette :</label><input type ="text" name="re_img" required/>
+        <label for="re_img">Entrez un lien vers l'image de votre recette :</label><input type ="text" name="re_img" required/>
         <label for="ingredient">Ajoutez vos ingrédients* :</label>
         <div class="autocomplete" style="width:300px;">
             <input id="ingredient" type="text" name="ingredient" placeholder="Ingrédient">

@@ -8,9 +8,10 @@ function getAllRecipes($textSupp="") {
     $number = 10;
     if (isset($_POST['number']) && is_numeric($_POST['number'])) $number = strip_tags(intval($_POST['number']));
     $recipes = getRecipes($number);
-    $deleteButton = "";
+    $optionalButtons = "";
     if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
-        $deleteButton .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
+        $optionalButtons .= "<button><a href='index.php?action=recipeEdition&value=RECI_ID'>Modification</a></button>";
+        $optionalButtons .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
     }
     $count = getRecipesCount();
     $content = "$textSupp";
@@ -27,7 +28,7 @@ function getAllRecipes($textSupp="") {
         $content .= "<h1 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
         $content .= "<h2>$type</h2>";
         $content .= "<p>$resume<p>";
-        $content .= str_replace("RECI_ID", $recipe_id, $deleteButton);
+        $content .= str_replace("RECI_ID", $recipe_id, $optionalButtons);
         $content .= "</div>";           
     }
     if ($count > $number) {
@@ -104,6 +105,7 @@ function recipe() {
     $content .= "<p>Édité pour la dernière fois le : $lastUpdateDate</p>";
     $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
     if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
+        $content .= "<button><a href='index.php?action=recipeEdition&value=$reci_id'>Modification</a></button>";
         $content .= "<button><a href='index.php?action=recipeDeletion&value=$reci_id'>Suppression</a></button>";
     }
     require('./assets/php/views/recipeView.php');
@@ -212,7 +214,7 @@ function getAllIngredients() {
 }
 
 function recipeCreationHandling() {
-    if(!isset($_POST['re_title']) || !isset($_POST['re_desc']) || !isset($_POST['re_resume']) || !isset($_POST['re_cat'])) {
+    if(empty($_POST['re_title']) || empty($_POST['re_desc']) || empty($_POST['re_resume']) || empty($_POST['re_cat'])) {
         $content = "Veuillez remplir tous les champs obligatoires !";
         require('./assets/php/views/recipeCreationView.php');
         return;
@@ -245,9 +247,85 @@ function recipeCreationHandling() {
     getAllRecipes();
 }
 /*recipe modification controller*/
-function recipeModification() {
-    require('./assets/php/views/recipeModificationView.php');
+function recipeEdition($text="") {
+    $content = "$text";
+    $reci_id = strip_tags($_GET['value']);
+    $recipe = getOneRecipe($reci_id);
+    $recipeIngredients = getRecipeIngredients($reci_id);
+    $title = $recipe[0]["reci_title"];
+    $description = $recipe[0]["reci_content"];
+    $img = $recipe[0]["reci_image"];
+    $resume = $recipe[0]["reci_resume"];
+    $ingredients = "";
+    $type = $recipe[0]["rtype_title"];
+    $entry = "";
+    $dish = "";
+    $dessert = "";
+    $aperitif = "";
+    $drink = "";
+    switch ($type) {
+        case "ENTREE":
+            $entry = "checked";
+            break;
+        case "PLAT":
+            $dish = "checked";
+            break;
+        case "DESSERT":
+            $dessert = "checked";
+            break;
+        case "APERITIF":
+            $aperitif = "checked";
+            break;
+        case "BOISSON":
+            $drink = "checked";
+            break;
+    }
+    for ($i=0; $i< count($recipeIngredients); $i++) {
+        $ing = $recipeIngredients[$i]['ing_title'];
+        $num = $i + 1;
+        $ingredients .= "<div class='div-ingredient'>";
+        $ingredients .= "<input id='ingredient$num' name='ingredient$num' type='hidden' value='$ing'>";
+        $ingredients .= "<p class='ingredient'>$ing</p>";
+        $ingredients .= "<em class='fa-solid fa-xmark fa-2x'></em>";
+        $ingredients .= "</div>";
+    }
+    $nbIngredients = count($recipeIngredients);
+    require('./assets/php/views/recipeEditionView.php');
 }
+
+function recipeEditionHandling() {
+    $reci_id = strip_tags($_GET['value']);
+    if(empty($_POST['re_title']) || empty($_POST['re_desc']) || empty($_POST['re_resume']) || empty($_POST['re_cat'])) {
+        $content = "Veuillez remplir tous les champs obligatoires !";
+        return recipeEdition($content);
+    }
+    $title = strip_tags($_POST['re_title']);
+    $desc = strip_tags($_POST['re_desc']);
+    $resume = strip_tags($_POST['re_resume']);
+    $categorize = strip_tags($_POST['re_cat']);
+    $image = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png";
+    if (!empty($_POST['re_img'])) {
+        if (preg_match('/(https?:\/\/.*\.(?:png|jpg|webp|jpeg))/i', $_POST['re_img'])) $image = strip_tags($_POST['re_img']);
+        elseif (preg_match('/\.\/assets\/images\/recette\/.*\.(?:png|jpg|webp|jpeg)/i', $_POST['re_img'])) $image = strip_tags($_POST['re_img']);
+        else {
+            $content = "Le lien que vous avez fourni est invalide. Les formats acceptés sont jpg/jpeg/png/webp.";
+            return recipeEdition($content);
+        }
+    }
+
+    $ingredients = array();
+    foreach($_POST as $key => $value) {
+        if (preg_match('/ingredient\d+/', $key)) array_push($ingredients, strip_tags($value));
+    }
+    if(count($ingredients) === 0) {
+        $content = "Veuillez mettre au moins un ingrédient s'il vous plaît !";
+        return recipeEdition($content);
+    }
+    editRecipe($reci_id, $title, $desc, $resume, $categorize, $image, $_SESSION["email"]);
+    editRecipesIngredients($reci_id, $ingredients);
+    getAllRecipes();
+}
+
 /*recipe deletion controller*/
 function recipeDeletion() {
     if (empty($_GET['value'])) getAllRecipes();
