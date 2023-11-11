@@ -147,7 +147,7 @@ function createRecipe($title, $desc, $resume, $categorize, $img, $user) {
         ), sysdate(), sysdate(), :img, (
             SELECT users_id
             FROM ptic_users
-            WHERE users_email = :user
+            WHERE users_nickname = :user
         ))";
     $preparedCreateRecipe = $bdd->prepare($sql);
     $preparedCreateRecipe->bindValue(':title', (string) $title, PDO::PARAM_STR);
@@ -185,7 +185,7 @@ function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user) 
     WHERE users_id = (
             SELECT users_id
             FROM ptic_users
-            WHERE users_email = :user
+            WHERE users_nickname = :user
         ) AND reci_id = :reci_id";
     $preparedCreateRecipe = $bdd->prepare($sql);
     $preparedCreateRecipe->bindValue(':title', (string) $title, PDO::PARAM_STR);
@@ -222,12 +222,12 @@ function deleteRecipe($reci_id) {
     $prepareDeleteRecipe->execute([$reci_id]);
 }
 
-function getConnectionCredentials($email) {
+function getConnectionCredentials($username) {
     $bdd = dbConnect();
 
-    $getCredentialsRequest = "SELECT users_nickname, users_password, utype_title, users_email FROM ptic_users JOIN ptic_users_type USING (utype_id) WHERE users_email = ?";
+    $getCredentialsRequest = "SELECT users_nickname, users_password, utype_title FROM ptic_users JOIN ptic_users_type USING (utype_id) WHERE users_nickname = ?";
     $preparedRequestGet = $bdd->prepare($getCredentialsRequest);
-    $preparedRequestGet->execute([$email]);
+    $preparedRequestGet->execute([$username]);
     return $preparedRequestGet->fetchAll();
 }
 

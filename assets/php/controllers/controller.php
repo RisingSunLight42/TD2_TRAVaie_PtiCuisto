@@ -179,7 +179,6 @@ function disconnect() {
     $_SESSION['connected'] = false;
     unset($_SESSION['username']);
     unset($_SESSION['userType']);
-    unset($_SESSION['email']);
     welcome();
 }
 
@@ -193,7 +192,7 @@ function checkIfConnectionValuesExists(&$content) {
     };
     $requiredFieldMissing = false;
     $requiredFieldMissing = match (true) {
-        (empty($_POST['email'])) => $errorMessageFunction($content, "<p>Email manquant !</p>"),
+        (empty($_POST['username'])) => $errorMessageFunction($content, "<p>username manquant !</p>"),
         (empty($_POST['password'])) => $errorMessageFunction($content, "<p>Mot de passe manquant !</p>"),
         default => false,
     };
@@ -202,8 +201,8 @@ function checkIfConnectionValuesExists(&$content) {
         return;
     }*/
     $fieldsMissing = 0;
-    if (empty($_POST['email'])) {
-        $content .= "<p>Email manquant !</p>";
+    if (empty($_POST['username'])) {
+        $content .= "<p>Nom d'utilisateur manquant !</p>";
         $fieldsMissing++;
     }
     if (empty($_POST['password'])) {
@@ -221,16 +220,16 @@ function connectionForm() {
         return;
     }
 
-    $givenEmail = strip_tags($_POST['email']);
+    $givenUsername = strip_tags($_POST['username']);
     $givenPassword = strip_tags($_POST['password']);
 
-    $returnedCredentials = getConnectionCredentials($givenEmail);
+    $returnedCredentials = getConnectionCredentials($givenUsername);
     if (empty($returnedCredentials)) {
-        $content .= "Email incorrect !";
+        $content .= "Nom d'utilisateur incorrect !";
         require('./assets/php/views/connectionView.php');
         return;
     }
-    [$storedUsername, $storedPassword, $storedUserType, $storedEmail] = $returnedCredentials[0];
+    [$storedUsername, $storedPassword, $storedUserType] = $returnedCredentials[0];
     if (!password_verify($givenPassword, $storedPassword)) {
         $content .= "Mot de passe incorrect !";
         require('./assets/php/views/connectionView.php');
@@ -239,7 +238,6 @@ function connectionForm() {
 
     $_SESSION['username'] = $storedUsername;
     $_SESSION['userType'] = $storedUserType;
-    $_SESSION['email'] = $storedEmail;
     $_SESSION['connected'] = true;
 
     $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
@@ -296,7 +294,7 @@ function recipeCreationHandling() {
         require('./assets/php/views/recipeCreationView.php');
         return;
     }
-    $reci_id = createRecipe($title, $desc, $resume, $categorize, $image, $_SESSION["email"]);
+    $reci_id = createRecipe($title, $desc, $resume, $categorize, $image, $_SESSION["username"]);
     addRecipesIngredients($reci_id, $ingredients);
     getAllRecipes();
 }
@@ -375,7 +373,7 @@ function recipeEditionHandling() {
         $content = "Veuillez mettre au moins un ingrédient s'il vous plaît !";
         return recipeEdition($content);
     }
-    editRecipe($reci_id, $title, $desc, $resume, $categorize, $image, $_SESSION["email"]);
+    editRecipe($reci_id, $title, $desc, $resume, $categorize, $image, $_SESSION["username"]);
     editRecipesIngredients($reci_id, $ingredients);
     getAllRecipes();
 }
