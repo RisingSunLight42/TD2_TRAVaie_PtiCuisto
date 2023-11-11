@@ -174,6 +174,7 @@ function connectionForm() {
 }
 
 function recipeCreation() {
+    $content = "";
     require('./assets/php/views/recipeCreationView.php');
 }
 
@@ -187,7 +188,26 @@ function getAllIngredients() {
 }
 
 function recipeCreationHandling() {
-    createRecipe();
+    if(!isset($_POST['re_title']) || !isset($_POST['re_desc']) || !isset($_POST['re_resume']) || !isset($_POST['re_cat'])) {
+        $content = "Veuillez remplir tous les champs obligatoires !";
+        require('./assets/php/views/recipeCreationView.php');
+        return;
+    }
+    $title = strip_tags($_POST['re_title']);
+    $desc = strip_tags($_POST['re_desc']);
+    $resume = strip_tags($_POST['re_resume']);
+    $categorize = strip_tags($_POST['re_cat']);
+
+    $ingredients = array();
+    foreach($_POST as $key => $value) {
+        if (preg_match('/ingredient\d+/', $key)) array_push($ingredients, strip_tags($value));
+    }
+    if(count($ingredients) === 0) {
+        $content = "Veuillez mettre au moins un ingrédient s'il vous plaît !";
+        require('./assets/php/views/recipeCreationView.php');
+        return;
+    }
+    $reci_id = createRecipe($title, $desc, $resume, $categorize);
     require('./assets/php/views/recipeCreationHandlingView.php');
 }
 

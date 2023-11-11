@@ -79,14 +79,9 @@ function getIngredients() {
     return $ingredients;
 }
 
-function createRecipe() {
+function createRecipe($title, $desc, $resume, $categorize) {
     $bdd = dbConnect();
-    if(isset($_POST['re_title']) && isset($_POST['re_desc']) && isset($_POST['re_resume']) && isset($_POST['re_cat'])) {
-        $title = $_POST['re_title'];
-        $desc = $_POST['re_desc'];
-        $resume = $_POST['re_resume'];
-        $categorize = $_POST['re_cat'];
-    }
+    
     $sql= "INSERT INTO ptic_recipes(reci_title, reci_content, reci_resume, rtype_id, reci_creation_date, reci_edit_date,users_id)
     VALUES (:title, :descr, :resume,(
             SELECT rtype_id
@@ -99,6 +94,7 @@ function createRecipe() {
     $preparedCreateRecipe->bindValue(':resume', (string) $resume, PDO::PARAM_STR);
     $preparedCreateRecipe->bindValue(':cat', (string) $categorize, PDO::PARAM_STR);
     $preparedCreateRecipe->execute();
+    return $bdd->lastInsertId();
 }
 
 function getConnectionCredentials($email) {

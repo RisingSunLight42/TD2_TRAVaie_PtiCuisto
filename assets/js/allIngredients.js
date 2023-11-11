@@ -7,7 +7,7 @@ req.onload = (event) => {
     arrayOfIngredients = req.response.split(",");
     arrayOfIngredients.sort();
     autocomplete(
-        document.getElementById(`ingredient${ingredientNumber}`),
+        document.getElementById(`ingredient`),
         arrayOfIngredients,
     );
 };
@@ -21,7 +21,7 @@ function deleteAddedIngredient(event) {
 }
 
 document
-    .getElementById(`ingredient${ingredientNumber}`)
+    .getElementById(`ingredient`)
     .addEventListener("itemSelected", (event) => {
         const target = event.target;
         try {
@@ -37,20 +37,17 @@ document
         }
         
         arrayOfIngredients.splice(arrayOfIngredients.indexOf(target.value), 1); // Retire l'ingrédient choisit de la liste des possibilités
-        const ingredientInputId = target.id; // Récupère l'id de l'input réalisé
-        ingredientNumber++; // Augmente le nombre d'ingrédients
-        target.id = `ingredient${ingredientNumber}`; // Met à jour l'id de l'input à choix pour correspondre au nouvel ingrédient à mettre
+        
 
         // Stocke dans le formulaire l'ingrédient choisit et l'ajoute à l'affichage en statique pour l'utilisateur
         const divForInputAndP = document.createElement("div");
         const inputHidden = document.createElement("input");
-        inputHidden.setAttribute("id", ingredientInputId);
-        inputHidden.setAttribute("name", ingredientInputId);
+        inputHidden.setAttribute("id", `ingredient${ingredientNumber}`);
+        inputHidden.setAttribute("name", `ingredient${ingredientNumber}`);
         inputHidden.setAttribute("type", "hidden");
         inputHidden.setAttribute("value", target.value);
         divForInputAndP.appendChild(inputHidden);
         const pIngredientSelected = document.createElement("p");
-        pIngredientSelected.setAttribute("id", `paragraph${ingredientInputId}`);
         pIngredientSelected.setAttribute("class", `ingredient`);
         pIngredientSelected.textContent = target.value;
         divForInputAndP.appendChild(pIngredientSelected);
@@ -63,6 +60,7 @@ document
             divForInputAndP,
             target.parentNode,
         );
+        ingredientNumber++; // Augmente le nombre d'ingrédients
         divForInputAndP.addEventListener("click", event => deleteAddedIngredient(event))
     });
 
