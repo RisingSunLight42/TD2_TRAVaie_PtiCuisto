@@ -95,6 +95,21 @@ function getOneRecipe($reci_id) {
     $preparedRequestGet->execute([$reci_id]);
     return $preparedRequestGet->fetchAll();
 }
+
+function getOneRecipeStash($reci_id) {
+    $bdd = dbConnect();
+
+    $preparedRecipeRequest = "SELECT reci_stash_title as reci_title, rtype_title, reci_stash_image as reci_image, reci_stash_content as reci_content,
+    users_nickname, reci_stash_resume as reci_resume, DATE_FORMAT(reci_stash_creation_date, '%d/%m/%Y') as reci_creation_date, DATE_FORMAT(reci_stash_creation_date, '%d/%m/%Y') as reci_edit_date, reci_id
+    FROM ptic_recipes_stash
+    JOIN ptic_recipes_type USING (rtype_id)
+    JOIN ptic_users USING (users_id)
+    WHERE reci_stash_id = ?";
+    $preparedRequestGet = $bdd->prepare($preparedRecipeRequest);
+    $preparedRequestGet->execute([$reci_id]);
+    return $preparedRequestGet->fetchAll();
+}
+
 /*Retrieve the ingredients of one recipe*/
 function getRecipeIngredients($reci_id) {
     $bdd = dbConnect();
@@ -103,6 +118,19 @@ function getRecipeIngredients($reci_id) {
     FROM ptic_needed_ingredients
     JOIN ptic_ingredients USING (ing_id)
     WHERE reci_id = ?";
+    $preparedRequestGet = $bdd->prepare($preparedIngredientsRequest);
+    $preparedRequestGet->execute([$reci_id]);
+    return $preparedRequestGet->fetchAll();
+}
+
+/*Retrieve the ingredients of one recipe*/
+function getRecipeStashIngredients($reci_id) {
+    $bdd = dbConnect();
+
+    $preparedIngredientsRequest = "SELECT ing_title
+    FROM ptic_needed_ingredients_stash
+    JOIN ptic_ingredients USING (ing_id)
+    WHERE reci_stash_id = ?";
     $preparedRequestGet = $bdd->prepare($preparedIngredientsRequest);
     $preparedRequestGet->execute([$reci_id]);
     return $preparedRequestGet->fetchAll();

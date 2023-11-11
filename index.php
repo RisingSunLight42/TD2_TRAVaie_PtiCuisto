@@ -13,6 +13,7 @@ if (isset($_GET['action'])) {
     elseif ($action == 'editoEdition') editoEdition();
     elseif (substr( $action, 0, 6) === 'filter') filter();
     elseif ($action == 'recipe') recipe();
+    elseif ($action == 'recipeStash') recipeStash();
     elseif ($action == 'account') account();
     elseif ($action == 'connectionForm') connectionForm();
     elseif ($action == 'getAllIngredients') getAllIngredients();

@@ -71,19 +71,8 @@ function welcome() {
     $content .= "<p>$editoText</p></section>";
     require('./assets/php/views/welcomeView.php');
 }
-/*recipe's page controller */
-function recipe($reci_id="") {
-    if ($reci_id===""){
-        if (empty($_GET['value'])) welcome();
-        $reci_id = strip_tags($_GET['value']);
-    }
-    if (!is_numeric($reci_id)) return getAllRecipes();
-    if (intval($reci_id) < 1) return getAllRecipes();
-    $recipe = getOneRecipe($reci_id);
-    if (empty($recipe)) getAllRecipes();
-    $recipe = $recipe[0];
-    $ingredients = getRecipeIngredients($reci_id);
 
+function buildRecipeDisplayOneRecipe($recipe, $ingredients, &$content) {
     // Ingredients building format
     $ingredientsHTML = "";
     if (!empty($ingredients)) {
@@ -105,17 +94,64 @@ function recipe($reci_id="") {
     $creationDate = $recipe['reci_creation_date'];
     $lastUpdateDate = $recipe['reci_edit_date'];
     $editorUsername = $recipe['users_nickname'];
-    $content = "<h1>$title</h1>";
+    $content .= "<h1>$title</h1>";
     $content .= "<p>$type</p>";
     $content .= $ingredientsHTML;
     $content .= "<h2>Recette</h2><p>$reci_content</p>";
     $content .= "<p>Créé le : $creationDate par $editorUsername</p>";
     $content .= "<p>Édité pour la dernière fois le : $lastUpdateDate</p>";
     $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
-    if (checkCanEditOrDelete($editorUsername)) {
+}
+
+/*recipe's page controller */
+function recipe($reci_id="") {
+    if ($reci_id===""){
+        if (empty($_GET['value'])) welcome();
+        $reci_id = strip_tags($_GET['value']);
+    }
+    if (!is_numeric($reci_id)) return getAllRecipes();
+    if (intval($reci_id) < 1) return getAllRecipes();
+    $recipe = getOneRecipe($reci_id);
+    if (empty($recipe)) getAllRecipes();
+    $recipe = $recipe[0];
+    $ingredients = getRecipeIngredients($reci_id);
+
+    buildRecipeDisplayOneRecipe($recipe, $ingredients, $content);
+    if (checkCanEditOrDelete($recipe['users_nickname'])) {
         $content .= "<button><a href='index.php?action=recipeEdition&value=$reci_id'>Modification</a></button>";
         $content .= "<button><a href='index.php?action=recipeDeletion&value=$reci_id'>Suppression</a></button>";
     }
+    require('./assets/php/views/recipeView.php');
+}
+
+/*recipe stash's page controller */
+function recipeStash($reci_stash_id="") {
+    $content = "<h1>Nouvelle recette</h1>";
+    if ($reci_stash_id===""){
+        if (empty($_GET['value'])) welcome();
+        $reci_stash_id = strip_tags($_GET['value']);
+    }
+    if (!is_numeric($reci_stash_id)) return getAllRecipes();
+    if (intval($reci_stash_id) < 1) return getAllRecipes();
+    $recipeStash = getOneRecipeStash($reci_stash_id);
+    if (empty($recipeStash)) getAllRecipes();
+    $recipeStash = $recipeStash[0];
+    $ingredientsStash = getRecipeStashIngredients($reci_stash_id);
+    buildRecipeDisplayOneRecipe($recipeStash, $ingredientsStash, $content);
+    
+
+    $reci_id = $recipeStash["reci_id"];
+    if (is_numeric($reci_id)) {
+        $content .= "<h1>Ancienne version de la recette</h1>";
+        $recipe = getOneRecipe($reci_id);
+        if (empty($recipe)) getAllRecipes();
+        $recipe = $recipe[0];
+        $ingredients = getRecipeIngredients($reci_id);
+        buildRecipeDisplayOneRecipe($recipe, $ingredients, $content);
+    }
+    
+    $content .= "<button><a href='index.php?action=validate&value=$reci_id'>Valider</a></button>";
+    $content .= "<button><a href='index.php?action=refuse&value=$reci_id'>Refuser</a></button>";
     require('./assets/php/views/recipeView.php');
 }
 /*filter's page controller*/
