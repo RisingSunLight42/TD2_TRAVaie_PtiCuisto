@@ -35,7 +35,7 @@ function getAllRecipes() {
     }
     if ($count > $number) {
         $number += 10;
-        $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' id='plusButton' value='Plus' /></form>";
+        $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' class='button' value='Plus' /></form>";
     }
     require('./assets/php/views/allRecipesView.php');
 }
