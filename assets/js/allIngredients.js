@@ -13,6 +13,7 @@ req.onload = (event) => {
 };
 
 function deleteAddedIngredient(event) {
+    // Remove the stored ingredient and put it in the list to make it available
     const target = event.target.parentNode;
     const input = target.querySelector("input");
     arrayOfIngredients.push(input.value);
@@ -36,10 +37,10 @@ document
             form.appendChild(nbIngredients);
         }
         
-        arrayOfIngredients.splice(arrayOfIngredients.indexOf(target.value), 1); // Retire l'ingrédient choisit de la liste des possibilités
+        arrayOfIngredients.splice(arrayOfIngredients.indexOf(target.value), 1); // Remove the ingredient in the list
         
 
-        // Stocke dans le formulaire l'ingrédient choisit et l'ajoute à l'affichage en statique pour l'utilisateur
+        // Store in the form the chosen ingredient
         const divForInputAndP = document.createElement("div");
         const inputHidden = document.createElement("input");
         inputHidden.setAttribute("id", `ingredient${ingredientNumber}`);
@@ -47,10 +48,14 @@ document
         inputHidden.setAttribute("type", "hidden");
         inputHidden.setAttribute("value", target.value);
         divForInputAndP.appendChild(inputHidden);
+
+        // Create a paragraph to display the ingredient taken to the user
         const pIngredientSelected = document.createElement("p");
         pIngredientSelected.setAttribute("class", `ingredient`);
         pIngredientSelected.textContent = target.value;
         divForInputAndP.appendChild(pIngredientSelected);
+
+        // Create the cross to discard the ingredient
         const cross = document.createElement("em");
         cross.setAttribute("class", `fa-solid fa-xmark fa-2x`);
         divForInputAndP.appendChild(cross);
@@ -60,7 +65,7 @@ document
             divForInputAndP,
             target.parentNode,
         );
-        ingredientNumber++; // Augmente le nombre d'ingrédients
+        ingredientNumber++; // Increaser ingredient number
         divForInputAndP.addEventListener("click", event => deleteAddedIngredient(event))
     });
 
