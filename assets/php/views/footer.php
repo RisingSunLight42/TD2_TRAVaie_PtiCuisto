@@ -12,8 +12,8 @@
                     </a>
                 </li>
                 <li>
-                    <a target="_blank">
-                        <img id="linkedin" src="assets/images/linkedin.png" alt="LinkedIn_icon">
+                    <a target="_blank" href="https://github.com/RisingSunLight42/TD2_TRAVaie_PtiCuisto">
+                        <img id="github" src="assets/images/github.png" alt="github_icon">
                     </a>
                 </li>
             </ul>
