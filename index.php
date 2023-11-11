@@ -10,6 +10,7 @@ if (isset($_GET['action'])) {
     elseif ($action == 'recipeEdition') recipeEdition();
     elseif ($action == 'recipeEditionHandling') recipeEditionHandling();
     elseif ($action == 'recipeDeletion') recipeDeletion();
+    elseif ($action == 'editoEdition') editoEdition();
     elseif ($action == 'filter') filter();
     elseif ($action == 'recipe') recipe();
     elseif ($action == 'account') account();
