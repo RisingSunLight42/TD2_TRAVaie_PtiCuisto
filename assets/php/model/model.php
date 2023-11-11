@@ -36,6 +36,21 @@ function getRecipesByTitle($title) {
     return $preparedRecipesGet->fetchAll();
 }
 
+function getRecipesByCategory($category) {
+    $bdd = dbConnect();
+    
+    $preparedRecipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image
+    FROM ptic_recipes
+    JOIN ptic_recipes_type USING (rtype_id)
+    WHERE rtype_title LIKE UPPER(?)
+    ORDER BY reci_id";
+
+    $preparedRecipesGet = $bdd->prepare($preparedRecipeRequest);
+    $preparedRecipesGet->execute(['%'.$category.'%']);
+
+    return $preparedRecipesGet->fetchAll();
+}
+
 /*Get the number total of recipe*/
 function getRecipesCount() {
     $bdd = dbConnect();

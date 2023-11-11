@@ -130,7 +130,13 @@ function filter() {
         $titleFilter = $_POST["title"];
         $recipes = getRecipesByTitle($titleFilter);
     } elseif ($action === "filterRecipeCategory") {
-
+        if (empty($_POST["re_cat"])) {
+            $content="Veuillez renseigner une catégorie pour réaliser un filtrage !";
+            require('./assets/php/views/filterView.php');
+            return;
+        }
+        $categoryFilter = $_POST["re_cat"];
+        $recipes = getRecipesByCategory($categoryFilter);
     } elseif ($action === "filterRecipeIngredients") {
 
     }
