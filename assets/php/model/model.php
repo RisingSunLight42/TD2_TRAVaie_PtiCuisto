@@ -178,4 +178,12 @@ function getConnectionCredentials($email) {
     return $preparedRequestGet->fetchAll();
 }
 
+function addEdito($edito) {
+    $bdd = dbConnect();
+
+    $editoRequest = "INSERT INTO ptic_edito (edi_text, edi_date) VALUES (?, sysdate())";
+    $editoRequestPrepared = $bdd->prepare($editoRequest);
+    $editoRequestPrepared->execute([$edito]);
+}
+
 ?>

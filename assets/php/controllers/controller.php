@@ -120,6 +120,12 @@ function account() {
     $unlogButton = "";
     if (isset($_SESSION['connected']) && boolval($_SESSION['connected']) === true) {
         $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
+        if ($_SESSION['userType'] === "ADMINISTRATEUR") {
+            $content .= "<h1>Modification de l'édito</h1>";
+            $content .= "<form id='form_edito' name='edito' method='post' action='index.php?action=editoEdition'>";
+            $content .= "<label for='edito'>Entrez le nouveau texte de l'édito :</label><textarea name='edito' rows='10' required></textarea>";
+            $content .= "<input type='submit' name='confirm' value='OK'/></form>";
+        }
         require('./assets/php/views/accountView.php');
         return;
     }
@@ -196,6 +202,12 @@ function connectionForm() {
 
     $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
     $content .= "<p>Connexion réussie. Bienvenue $storedUserType $storedUsername !</p>";
+    if ($_SESSION['userType'] === "ADMINISTRATEUR") {
+        $content .= "<h1>Modification de l'édito</h1>";
+        $content .= "<form id='form_edito' name='edito' method='post' action='index.php?action=editoEdition'>";
+        $content .= "<label for='edito'>Entrez le nouveau texte de l'édito :</label><textarea name='edito' rows='10' required></textarea>";
+        $content .= "<input type='submit' name='confirm' value='OK'/></form>";
+    }
     require('./assets/php/views/accountView.php');
 }
 /*recipe creation controller*/
@@ -332,5 +344,20 @@ function recipeDeletion() {
     $reci_id = strip_tags($_GET['value']);
     deleteRecipe($reci_id);
     getAllRecipes("<p>La recette a bien été supprimée !</p>");
+}
+
+function editoEdition() {
+    $content = "";
+    if (empty($_POST["edito"])) {
+        $content .= "Veuillez remplir le contenu de l'édito s'il vous plait.";
+        $content .= "<h1>Modification de l'édito</h1>";
+        $content .= "<form id='form_edito' name='edito' method='post' action='index.php?action=editoEdition'>";
+        $content .= "<label for='edito'>Entrez le nouveau texte de l'édito :</label><textarea name='edito' rows='10' required></textarea>";
+        $content .= "<input type='submit' name='confirm' value='OK'/></form>";
+        require('./assets/php/views/accountView.php');
+    }
+    $edito = strip_tags($_POST["edito"]);
+    addEdito($edito);
+    welcome();
 }
 ?>
