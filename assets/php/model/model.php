@@ -79,20 +79,29 @@ function getIngredients() {
     return $ingredients;
 }
 
-function createRecipe($title, $desc, $resume, $categorize) {
+function createRecipe($title, $desc, $resume, $categorize, $img/*, $user*/) {
     $bdd = dbConnect();
     
-    $sql= "INSERT INTO ptic_recipes(reci_title, reci_content, reci_resume, rtype_id, reci_creation_date, reci_edit_date,users_id)
+    $sql= "INSERT INTO ptic_recipes(reci_title, reci_content, reci_resume, rtype_id, reci_creation_date, reci_edit_date, reci_image, users_id)
     VALUES (:title, :descr, :resume,(
             SELECT rtype_id
             FROM ptic_recipes_type
             WHERE UPPER(rtype_title) = UPPER(:cat)
-        ), sysdate(), sysdate(),1)";
+        ), sysdate(), sysdate(), :img, 1)";
+        /*
+    (
+            SELECT users_id
+            FROM ptic_users
+            WHERE users_email = :user
+        )
+        */
     $preparedCreateRecipe = $bdd->prepare($sql);
     $preparedCreateRecipe->bindValue(':title', (string) $title, PDO::PARAM_STR);
     $preparedCreateRecipe->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
     $preparedCreateRecipe->bindValue(':resume', (string) $resume, PDO::PARAM_STR);
     $preparedCreateRecipe->bindValue(':cat', (string) $categorize, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':img', (string) $img, PDO::PARAM_STR);
+    //$preparedCreateRecipe->bindValue(':user', (string) $user, PDO::PARAM_STR);
     $preparedCreateRecipe->execute();
     return $bdd->lastInsertId();
 }

@@ -197,6 +197,15 @@ function recipeCreationHandling() {
     $desc = strip_tags($_POST['re_desc']);
     $resume = strip_tags($_POST['re_resume']);
     $categorize = strip_tags($_POST['re_cat']);
+    $image = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png";
+    if (!empty($_POST['re_img'])) {
+        if (preg_match('/(https?:\/\/.*\.(?:png|jpg|webp|jpeg))/i', $_POST['re_img'])) $image = strip_tags($_POST['re_img']);
+        else {
+            $content = "Le lien que vous avez fourni est invalide. Les formats acceptés sont jpg/jpeg/png/webp.";
+            require('./assets/php/views/recipeCreationView.php');
+            return;
+        }
+    }
 
     $ingredients = array();
     foreach($_POST as $key => $value) {
@@ -207,9 +216,9 @@ function recipeCreationHandling() {
         require('./assets/php/views/recipeCreationView.php');
         return;
     }
-    $reci_id = createRecipe($title, $desc, $resume, $categorize);
+    $reci_id = createRecipe($title, $desc, $resume, $categorize, $image);
     addRecipesIngredients($reci_id, $ingredients);
-    require('./assets/php/views/recipeCreationHandlingView.php');
+    getAllRecipes();
 }
 
 function recipeModification() {
