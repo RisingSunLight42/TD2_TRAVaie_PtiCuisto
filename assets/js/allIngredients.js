@@ -3,6 +3,18 @@ req.open("GET", "index.php?action=getAllIngredients", true);
 req.responseType = "text";
 let arrayOfIngredients = [];
 let ingredientNumber = 1;
+
+function checkExistingIngredients() {
+    const nbIngredientsInput = document.getElementById("nbIngredients");
+    if (parseInt(nbIngredientsInput.value) === 0) return;
+    ingredientNumber += parseInt(nbIngredientsInput.value);
+    for (let i=1; i<ingredientNumber; i++) {
+        const ingredient = document.getElementById(`ingredient${i}`);
+        arrayOfIngredients.splice(arrayOfIngredients.indexOf(ingredient.value), 1);
+        ingredient.parentNode.addEventListener("click", event => deleteAddedIngredient(event));
+    }
+}
+
 req.onload = (event) => {
     arrayOfIngredients = req.response.split(",");
     arrayOfIngredients.sort();
@@ -10,6 +22,7 @@ req.onload = (event) => {
         document.getElementById(`ingredient`),
         arrayOfIngredients,
     );
+    checkExistingIngredients();
 };
 
 function deleteAddedIngredient(event) {
@@ -66,7 +79,7 @@ document
             target.parentNode,
         );
         ingredientNumber++; // Increaser ingredient number
-        divForInputAndP.addEventListener("click", event => deleteAddedIngredient(event))
+        divForInputAndP.addEventListener("click", event => deleteAddedIngredient(event));
     });
 
 req.send(null);
