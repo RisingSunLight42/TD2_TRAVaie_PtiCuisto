@@ -13,7 +13,7 @@
         require ("header.php");
     ?>
     <main>
-        <section>
+        <section id="welcomeSection">
             <article id="lastRecipes">
                 <h2 id="titleLastRecipes" >LES DERNIÈRES RECETTES</h2>
                 <?php
@@ -30,6 +30,7 @@
             </article>
         </section>
     </main>    
+    <hr>
     <?php 
         require ("footer.php");
     ?>
