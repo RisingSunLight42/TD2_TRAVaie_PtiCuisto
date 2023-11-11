@@ -9,9 +9,10 @@ and insertion for adding a new recipe or ingredient in the database*/
 function getRecipes($number) {
     $bdd = dbConnect();
     
-    $preparedRecipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image
+    $preparedRecipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image, users_nickname
     FROM ptic_recipes
     JOIN ptic_recipes_type USING (rtype_id)
+    JOIN ptic_users USING (users_id)
     ORDER BY reci_id LIMIT :limit";
 
     $preparedRecipesGet = $bdd->prepare($preparedRecipeRequest);

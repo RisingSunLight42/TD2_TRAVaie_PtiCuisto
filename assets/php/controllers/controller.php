@@ -20,12 +20,12 @@ function getAllRecipes($textSupp="") {
 
 function buildRecipeDisplayAllRecipes(&$content, $recipes) {
     $optionalButtons = "";
-    if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
-        $optionalButtons .= "<button><a href='index.php?action=recipeEdition&value=RECI_ID'>Modification</a></button>";
-        $optionalButtons .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
-    }
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
+        if (checkCanEditOrDelete($recipe["users_nickname"])) {
+            $optionalButtons .= "<button><a href='index.php?action=recipeEdition&value=RECI_ID'>Modification</a></button>";
+            $optionalButtons .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
+        }
         $recipe_id = $recipe['reci_id'];
         $title = $recipe['reci_title'];
         $resume = $recipe['reci_resume'];
@@ -38,7 +38,8 @@ function buildRecipeDisplayAllRecipes(&$content, $recipes) {
         $content .= "<h2>$type</h2>";
         $content .= "<p>$resume<p>";
         $content .= str_replace("RECI_ID", $recipe_id, $optionalButtons);
-        $content .= "</div>";           
+        $content .= "</div>";
+        $optionalButtons = "";
     }
 }
 
@@ -110,7 +111,7 @@ function recipe($reci_id="") {
     $content .= "<p>Créé le : $creationDate par $editorUsername</p>";
     $content .= "<p>Édité pour la dernière fois le : $lastUpdateDate</p>";
     $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
-    if (isset($_SESSION["userType"]) && $_SESSION["userType"] = "ADMINISTRATEUR") {
+    if (checkCanEditOrDelete($editorUsername)) {
         $content .= "<button><a href='index.php?action=recipeEdition&value=$reci_id'>Modification</a></button>";
         $content .= "<button><a href='index.php?action=recipeDeletion&value=$reci_id'>Suppression</a></button>";
     }
@@ -162,7 +163,8 @@ function account() {
     $unlogButton = "";
     if (isset($_SESSION['connected']) && boolval($_SESSION['connected']) === true) {
         $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
-        if ($_SESSION['userType'] === "ADMINISTRATEUR") {
+        print_r($_SESSION);
+        if (strcmp($_SESSION['userType'],"ADMINISTRATEUR") === 0) {
             $content .= "<h1>Modification de l'édito</h1>";
             $content .= "<form id='form_edito' name='edito' method='post' action='index.php?action=editoEdition'>";
             $content .= "<label for='edito'>Entrez le nouveau texte de l'édito :</label><textarea name='edito' rows='10' required></textarea>";
@@ -172,6 +174,11 @@ function account() {
         return;
     }
     require('./assets/php/views/connectionView.php');
+}
+
+function checkCanEditOrDelete($username) {
+    return (isset($_SESSION["userType"]) && strcmp($_SESSION["userType"],"ADMINISTRATEUR") === 0) ||
+    (isset($_SESSION["username"]) && strcmp($_SESSION["username"], $username) === 0 && $_SESSION["userType"] = "EDITEUR");
 }
 
 /* */
@@ -242,7 +249,7 @@ function connectionForm() {
 
     $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
     $content .= "<p>Connexion réussie. Bienvenue $storedUserType $storedUsername !</p>";
-    if ($_SESSION['userType'] === "ADMINISTRATEUR") {
+    if (strcmp($_SESSION['userType'],"ADMINISTRATEUR") === 0) {
         $content .= "<h1>Modification de l'édito</h1>";
         $content .= "<form id='form_edito' name='edito' method='post' action='index.php?action=editoEdition'>";
         $content .= "<label for='edito'>Entrez le nouveau texte de l'édito :</label><textarea name='edito' rows='10' required></textarea>";
@@ -303,6 +310,8 @@ function recipeEdition($text="") {
     $content = "$text";
     $reci_id = strip_tags($_GET['value']);
     $recipe = getOneRecipe($reci_id);
+    if (count($recipe) === 0) return welcome();
+    if (!checkCanEditOrDelete($recipe[0]["users_nickname"])) return welcome(); 
     $recipeIngredients = getRecipeIngredients($reci_id);
     $title = $recipe[0]["reci_title"];
     $description = $recipe[0]["reci_content"];
@@ -382,6 +391,9 @@ function recipeEditionHandling() {
 function recipeDeletion() {
     if (empty($_GET['value'])) getAllRecipes();
     $reci_id = strip_tags($_GET['value']);
+    $recipe = getOneRecipe($reci_id);
+    if (count($recipe) === 0) getAllRecipes();
+    if (!checkCanEditOrDelete($recipe[0]['users_nickname'])) getAllRecipes();
     deleteRecipe($reci_id);
     getAllRecipes("<p>La recette a bien été supprimée !</p>");
 }
