@@ -73,17 +73,55 @@ function getLastEdito() {
     LireDonneesPDO1($bdd, $editoRequest, $edito);
     return $edito[0]['edi_text'];
 }
-/*Treatment of recipe creation*/
-function createRecipe() {
+
+function getIngredients() {
     $bdd = dbConnect();
-    if(isset($_POST['re_title']) && isset($_POST['re_desc']) && isset($_POST['re_resume']) && isset($_POST['re_cat'])) {
-        $title = $_POST['re_title'];
-        $desc = $_POST['re_desc'];
-        $resume = $_POST['re_resume'];
-        $categorize = $_POST['re_cat'];
+    
+    $ingredientsRequest = "SELECT ing_id, ing_title
+    FROM ptic_ingredients";
+    LireDonneesPDO1($bdd, $ingredientsRequest, $ingredients);
+    return $ingredients;
+}
+
+function createRecipe($title, $desc, $resume, $categorize, $img/*, $user*/) {
+    $bdd = dbConnect();
+    
+    $sql= "INSERT INTO ptic_recipes(reci_title, reci_content, reci_resume, rtype_id, reci_creation_date, reci_edit_date, reci_image, users_id)
+    VALUES (:title, :descr, :resume,(
+            SELECT rtype_id
+            FROM ptic_recipes_type
+            WHERE UPPER(rtype_title) = UPPER(:cat)
+        ), sysdate(), sysdate(), :img, 1)";
+        /*
+    (
+            SELECT users_id
+            FROM ptic_users
+            WHERE users_email = :user
+        )
+        */
+    $preparedCreateRecipe = $bdd->prepare($sql);
+    $preparedCreateRecipe->bindValue(':title', (string) $title, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':resume', (string) $resume, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':cat', (string) $categorize, PDO::PARAM_STR);
+    $preparedCreateRecipe->bindValue(':img', (string) $img, PDO::PARAM_STR);
+    //$preparedCreateRecipe->bindValue(':user', (string) $user, PDO::PARAM_STR);
+    $preparedCreateRecipe->execute();
+    return $bdd->lastInsertId();
+}
+
+function addRecipesIngredients($reci_id, $ingredients) {
+    $bdd = dbConnect();
+    $neededIngredient = "INSERT INTO ptic_needed_ingredients (reci_id, ing_id) VALUES (?, (
+        SELECT ing_id
+        FROM ptic_ingredients
+        WHERE TRIM(UPPER(ing_title)) = TRIM(UPPER(?))
+        )
+    )";
+    $preparedNeededIngredient = $bdd->prepare($neededIngredient);
+    for ($i= 0; $i < count($ingredients); $i++) {
+        $preparedNeededIngredient->execute([$reci_id, $ingredients[$i]]);
     }
-    $sql= "insert into ptic_recipes(reci_title, reci_content, reci_resume, rtype_id, reci_creation_date, reci_edit_date,users_id) values ('".$title."'".","."'".$desc."'".","."'".$resume."'".",".$categorize.", sysdate(), sysdate(),1)";
-    preparerRequetePDO($bdd,$sql);
 }
 
 /* To delete a recipe */

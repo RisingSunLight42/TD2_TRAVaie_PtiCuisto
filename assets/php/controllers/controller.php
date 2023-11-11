@@ -196,11 +196,51 @@ function connectionForm() {
 }
 /*recipe creation controller*/
 function recipeCreation() {
+    $content = "";
     require('./assets/php/views/recipeCreationView.php');
 }
 
+function getAllIngredients() {
+    $ingredients = getIngredients();
+    $ingredientsList = "";
+    for ($i= 0; $i < count($ingredients); $i++){
+        $ingredientsList .= $ingredients[$i]['ing_title'].',';
+    }
+    echo $ingredientsList;
+}
+
 function recipeCreationHandling() {
-    require('./assets/php/views/recipeCreationHandlingView.php');
+    if(!isset($_POST['re_title']) || !isset($_POST['re_desc']) || !isset($_POST['re_resume']) || !isset($_POST['re_cat'])) {
+        $content = "Veuillez remplir tous les champs obligatoires !";
+        require('./assets/php/views/recipeCreationView.php');
+        return;
+    }
+    $title = strip_tags($_POST['re_title']);
+    $desc = strip_tags($_POST['re_desc']);
+    $resume = strip_tags($_POST['re_resume']);
+    $categorize = strip_tags($_POST['re_cat']);
+    $image = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/1200px-No_image_available.svg.png";
+    if (!empty($_POST['re_img'])) {
+        if (preg_match('/(https?:\/\/.*\.(?:png|jpg|webp|jpeg))/i', $_POST['re_img'])) $image = strip_tags($_POST['re_img']);
+        else {
+            $content = "Le lien que vous avez fourni est invalide. Les formats acceptés sont jpg/jpeg/png/webp.";
+            require('./assets/php/views/recipeCreationView.php');
+            return;
+        }
+    }
+
+    $ingredients = array();
+    foreach($_POST as $key => $value) {
+        if (preg_match('/ingredient\d+/', $key)) array_push($ingredients, strip_tags($value));
+    }
+    if(count($ingredients) === 0) {
+        $content = "Veuillez mettre au moins un ingrédient s'il vous plaît !";
+        require('./assets/php/views/recipeCreationView.php');
+        return;
+    }
+    $reci_id = createRecipe($title, $desc, $resume, $categorize, $image);
+    addRecipesIngredients($reci_id, $ingredients);
+    getAllRecipes();
 }
 /*recipe modification controller*/
 function recipeModification() {
