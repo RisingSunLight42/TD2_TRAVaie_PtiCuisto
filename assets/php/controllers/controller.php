@@ -16,16 +16,26 @@ function getAllRecipes() {
         $type = $recipe['rtype_title'];
         $image = $recipe['reci_image'];
         $anchor = $i + 1;
-        $content .= "<div id='$anchor'>";
-        $content .= "<img src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" width=50px height=50px/>" ;
-        $content .= "<h1 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
+
+        $content .= "<article id='$anchor' class='recipeCard'>";
+        $content .= "<div id='leftRecipeCard'>";
+        $content .= "<div id='recipePicture'>";
+        $content .= "<img class='pointer recipePicture' src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\"/>";
+        $content .= "</div>";
+        $content .= "<div id='tags'>";
+        $content .= "</div>";
+        $content .= "</div>";
+        $content .= "<div id='rightRecipeCard'>";
+        $content .= "<h1 class='pointer' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
         $content .= "<h2>$type</h2>";
-        $content .= "<p>$resume<p>";
-        $content .= "</div>";           
+        $content .= "<h2>Résumé</h2>";
+        $content .= "<p>$resume</p>";
+        $content .= "</div>";
+        $content .= "</article>";           
     }
     if ($count > $number) {
         $number += 10;
-        $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' value='Afficher plus' /></form>";
+        $content .= "<form action='' method='post'><input type='hidden' id='number' name='number' value='$number' /><input type='submit' id='plusButton' value='Plus' /></form>";
     }
     require('./assets/php/views/allRecipesView.php');
 }
@@ -44,11 +54,11 @@ function welcome() {
         $content .= "<div class='card mb-3' style='max-width: 680px;'>";
         $content .= "<div class='row g-0'>";
         $content .= "<div class='col-md-4'>";
-        $content .= "<img src='$image' class='img-fluid rounded-start' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\"/>" ;
+        $content .= "<img src='$image' class='img-fluid rounded-start pointer' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\"/>" ;
         $content .= "</div>";
         $content .= "<div class='col-md-8'>";
         $content .= "<div class='card-body'>";
-        $content .= "<h5 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h5>";
+        $content .= "<h5 class='pointer' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h5>";
         $content .= "<p>$resume<p>";
         $content .= "</div>";
         $content .= "</div>";
