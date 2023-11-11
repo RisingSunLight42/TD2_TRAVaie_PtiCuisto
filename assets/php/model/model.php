@@ -137,11 +137,12 @@ function getIngredients() {
     return $ingredients;
 }
 
-function createRecipe($title, $desc, $resume, $categorize, $img, $user) {
+function createRecipe($title, $desc, $resume, $categorize, $img, $user, $isAdmin) {
     $bdd = dbConnect();
-    
-    $sql= "INSERT INTO ptic_recipes(reci_title, reci_content, reci_resume, rtype_id, reci_creation_date, reci_edit_date, reci_image, users_id)
-    VALUES (:title, :descr, :resume,(
+    $sql = "";
+    if ($isAdmin) {
+        $sql= "INSERT INTO ptic_recipes(reci_title, reci_content, reci_resume, rtype_id, reci_creation_date, reci_edit_date, reci_image, users_id)
+        VALUES (:title, :descr, :resume,(
             SELECT rtype_id
             FROM ptic_recipes_type
             WHERE UPPER(rtype_title) = UPPER(:cat)
@@ -150,6 +151,20 @@ function createRecipe($title, $desc, $resume, $categorize, $img, $user) {
             FROM ptic_users
             WHERE users_nickname = :user
         ))";
+    } else {
+        $sql= "INSERT INTO ptic_recipes_stash(reci_stash_title, reci__stash_content, reci_stash_resume,
+        rtype_id, reci_stash_creation_date, reci_stash_image, users_id, stash_type_id)
+        VALUES (:title, :descr, :resume,(
+            SELECT rtype_id
+            FROM ptic_recipes_type
+            WHERE UPPER(rtype_title) = UPPER(:cat)
+        ), sysdate(), :img, (
+            SELECT users_id
+            FROM ptic_users
+            WHERE users_nickname = :user
+        ), (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'CREATION'))";
+    }
+    
     $preparedCreateRecipe = $bdd->prepare($sql);
     $preparedCreateRecipe->bindValue(':title', (string) $title, PDO::PARAM_STR);
     $preparedCreateRecipe->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
@@ -161,33 +176,58 @@ function createRecipe($title, $desc, $resume, $categorize, $img, $user) {
     return $bdd->lastInsertId();
 }
 
-function addRecipesIngredients($reci_id, $ingredients) {
+function addRecipesIngredients($reci_id, $ingredients, $isAdmin) {
     $bdd = dbConnect();
-    $neededIngredient = "INSERT INTO ptic_needed_ingredients (reci_id, ing_id) VALUES (?, (
-        SELECT ing_id
-        FROM ptic_ingredients
-        WHERE TRIM(UPPER(ing_title)) = TRIM(UPPER(?))
-        )
-    )";
+    $neededIngredient = "";
+    if ($isAdmin) {
+        $neededIngredient = "INSERT INTO ptic_needed_ingredients (reci_id, ing_id) VALUES (?, (
+            SELECT ing_id
+            FROM ptic_ingredients
+            WHERE TRIM(UPPER(ing_title)) = TRIM(UPPER(?))
+            )
+        )";
+    } else {
+        $neededIngredient = "INSERT INTO ptic_needed_ingredients_stash (reci_id, ing_id) VALUES (?, (
+            SELECT ing_id
+            FROM ptic_ingredients
+            WHERE TRIM(UPPER(ing_title)) = TRIM(UPPER(?))
+            )
+        )";
+    }
     $preparedNeededIngredient = $bdd->prepare($neededIngredient);
     for ($i= 0; $i < count($ingredients); $i++) {
         $preparedNeededIngredient->execute([$reci_id, $ingredients[$i]]);
     }
 }
-function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user) {
+function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user, $isAdmin) {
     $bdd = dbConnect();
-    
-    $sql= "UPDATE ptic_recipes
-    SET reci_title = :title, reci_content = :descr, reci_resume = :resume, rtype_id = (
+    $sql = "";
+    if ($isAdmin) {
+        $sql= "UPDATE ptic_recipes
+        SET reci_title = :title, reci_content = :descr, reci_resume = :resume, rtype_id = (
             SELECT rtype_id
             FROM ptic_recipes_type
             WHERE UPPER(rtype_title) = UPPER(:cat)
         ), reci_edit_date = sysdate(), reci_image = :img
-    WHERE users_id = (
+        WHERE users_id = (
             SELECT users_id
             FROM ptic_users
             WHERE users_nickname = :user
         ) AND reci_id = :reci_id";
+    } else {
+        $sql= "INSERT INTO ptic_recipes_stash(reci_stash_title, reci__stash_content, reci_stash_resume,
+        rtype_id, reci_stash_creation_date, reci_stash_image, users_id, stash_type_id)
+        VALUES (:title, :descr, :resume,(
+            SELECT rtype_id
+            FROM ptic_recipes_type
+            WHERE UPPER(rtype_title) = UPPER(:cat)
+        ), sysdate(), :img, (
+            SELECT users_id
+            FROM ptic_users
+            WHERE users_nickname = :user
+        ), (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'MODIFICATION'))";
+    }
+    
     $preparedCreateRecipe = $bdd->prepare($sql);
     $preparedCreateRecipe->bindValue(':title', (string) $title, PDO::PARAM_STR);
     $preparedCreateRecipe->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
@@ -200,13 +240,15 @@ function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user) 
     return $bdd->lastInsertId();
 }
 
-function editRecipesIngredients($reci_id, $ingredients) {
+function editRecipesIngredients($reci_id, $ingredients, $isAdmin) {
     $bdd = dbConnect();
-    $deleteRecipeIngredientsSQL = "DELETE FROM ptic_needed_ingredients WHERE reci_id = ?";
-    $prepareDeleteRecipeIngredients = $bdd->prepare($deleteRecipeIngredientsSQL);
-    $prepareDeleteRecipeIngredients->execute([$reci_id]);
+    if ($isAdmin) {
+        $deleteRecipeIngredientsSQL = "DELETE FROM ptic_needed_ingredients WHERE reci_id = ?";
+        $prepareDeleteRecipeIngredients = $bdd->prepare($deleteRecipeIngredientsSQL);
+        $prepareDeleteRecipeIngredients->execute([$reci_id]);
+    }
 
-    addRecipesIngredients($reci_id, $ingredients);
+    addRecipesIngredients($reci_id, $ingredients, $isAdmin);
 }
 
 /* To delete a recipe */
@@ -240,4 +282,33 @@ function addEdito($edito) {
     $editoRequestPrepared->execute([$edito]);
 }
 
+function getWaitingForCreationRecipes(){
+    $bdd = dbConnect();
+    
+    $preparedRecipeRequest = "SELECT reci_stash_id, reci_stash_title, reci_stash_resume, rtype_stash_title, reci_stash_image, users_nickname
+    FROM ptic_recipes_stash
+    JOIN ptic_recipes_type USING (rtype_id)
+    JOIN ptic_users USING (users_id)
+    WHERE stash_type_id = (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'CREATION')";
+
+    $preparedRecipesGet = $bdd->prepare($preparedRecipeRequest);
+    $preparedRecipesGet->execute();
+
+    return $preparedRecipesGet->fetchAll();
+}
+
+function getWaitingForModificationRecipes(){
+    $bdd = dbConnect();
+    
+    $preparedRecipeRequest = "SELECT reci_stash_id, reci_stash_title, reci_stash_resume, rtype_stash_title, reci_stash_image, users_nickname
+    FROM ptic_recipes_stash
+    JOIN ptic_recipes_type USING (rtype_id)
+    JOIN ptic_users USING (users_id)
+    WHERE stash_type_id = (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'CREATION')";
+
+    $preparedRecipesGet = $bdd->prepare($preparedRecipeRequest);
+    $preparedRecipesGet->execute();
+
+    return $preparedRecipesGet->fetchAll();
+}
 ?>
