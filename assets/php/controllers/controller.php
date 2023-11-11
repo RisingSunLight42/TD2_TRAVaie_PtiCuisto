@@ -129,6 +129,7 @@ function disconnect() {
     $_SESSION['connected'] = false;
     unset($_SESSION['username']);
     unset($_SESSION['userType']);
+    unset($_SESSION['email']);
     welcome();
 }
 
@@ -179,7 +180,7 @@ function connectionForm() {
         require('./assets/php/views/connectionView.php');
         return;
     }
-    [$storedUsername, $storedPassword, $storedUserType] = $returnedCredentials[0];
+    [$storedUsername, $storedPassword, $storedUserType, $storedEmail] = $returnedCredentials[0];
     if (!password_verify($givenPassword, $storedPassword)) {
         $content .= "Mot de passe incorrect !";
         require('./assets/php/views/connectionView.php');
@@ -188,6 +189,7 @@ function connectionForm() {
 
     $_SESSION['username'] = $storedUsername;
     $_SESSION['userType'] = $storedUserType;
+    $_SESSION['email'] = $storedEmail;
     $_SESSION['connected'] = true;
 
     $unlogButton = '<button><a href="index.php?action=disconnect">Déconnexion</a></button>';
@@ -238,7 +240,7 @@ function recipeCreationHandling() {
         require('./assets/php/views/recipeCreationView.php');
         return;
     }
-    $reci_id = createRecipe($title, $desc, $resume, $categorize, $image);
+    $reci_id = createRecipe($title, $desc, $resume, $categorize, $image, $_SESSION["email"]);
     addRecipesIngredients($reci_id, $ingredients);
     getAllRecipes();
 }
