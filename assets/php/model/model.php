@@ -1,12 +1,12 @@
 <?php
 require_once("./assets/php/utils/connexion.php");
 require_once("./assets/php/model/RecipesModel.php");
-require_once("./assets/php/model/NeededIngredients.php");
+require_once("./assets/php/model/NeededIngredientsModel.php");
 require_once("./assets/php/model/RecipesStashModel.php");
-require_once("./assets/php/model/NeededIngredientsStash.php");
+require_once("./assets/php/model/NeededIngredientsStashModel.php");
 require_once("./assets/php/model/EditoModel.php");
 require_once("./assets/php/model/IngredientsModel.php");
-include_once("./assets/php/utils/pdo_agile.php");
+
 /*The model is the treatment part of informations in the database. The controller will use the information to transfer them to the view. 
 The treatment was mainly componsed of database's treatment, with selection for the displaying for websites's pages
 and insertion for adding a new recipe or ingredient in the database*/ 
@@ -51,13 +51,13 @@ function getRecipeStashById($reci_id) {
 
 /*Retrieve the ingredients of one recipe*/
 function getRecipeIngredients($reci_id) {
-    $neededIngredientsModel = new NeededIngredients(false);
+    $neededIngredientsModel = new NeededIngredientsModel(false);
     return $neededIngredientsModel->getRecipeIngredients($reci_id);
 }
 
 /*Retrieve the ingredients of one recipe*/
 function getRecipeStashIngredients($reci_id) {
-    $neededIngredientsStashModel = new NeededIngredientsStash(false);
+    $neededIngredientsStashModel = new NeededIngredientsStashModel(false);
     return $neededIngredientsStashModel->getRecipeStashIngredients($reci_id);
 }
 
@@ -84,7 +84,7 @@ function createRecipe($title, $desc, $resume, $categorize, $img, $user, $isAdmin
 }
 
 function addRecipesIngredients($reci_id, $ingredients, $isAdmin) {
-    $neededIngredientsModel = new NeededIngredients($isAdmin);
+    $neededIngredientsModel = new NeededIngredientsModel($isAdmin);
     $neededIngredientsModel->addRecipesIngredients($reci_id, $ingredients);
 }
 
@@ -94,7 +94,7 @@ function editRecipe($reci_id, $title, $desc, $resume, $category, $img, $user, $i
 }
 
 function editRecipesIngredients($reci_id, $ingredients, $isAdmin) {
-    $neededIngredientsModel = new NeededIngredients($isAdmin);
+    $neededIngredientsModel = new NeededIngredientsModel($isAdmin);
     $neededIngredientsModel->editRecipesIngredients($reci_id, $ingredients);
 }
 

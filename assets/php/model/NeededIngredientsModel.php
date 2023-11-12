@@ -1,7 +1,7 @@
 <?php
 require_once("./assets/php/model/BaseModel.php");
-require_once("./assets/php/model/NeededIngredientsStash.php");
-class NeededIngredients extends BaseModel {
+require_once("./assets/php/model/NeededIngredientsStashModel.php");
+class NeededIngredientsModel extends BaseModel {
     private PDOStatement $preparedGetRecipeIngredientsRequest;
     private PDOStatement $preparedAddRecipesIngredientsRequest;
     private PDOStatement $preparedDeleteRecipesIngredientsRequest;
@@ -78,7 +78,7 @@ class NeededIngredients extends BaseModel {
             }
             return;
         }
-        $neededIngredientsStashModel = new NeededIngredientsStash($this->isAdmin, $this->connection);
+        $neededIngredientsStashModel = new NeededIngredientsStashModel($this->isAdmin, $this->connection);
         $neededIngredientsStashModel->addRecipesStashIngredients($reci_id, $ingredients);
     }
 

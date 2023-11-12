@@ -1,6 +1,6 @@
 <?php
 require_once("./assets/php/model/BaseModel.php");
-class NeededIngredientsStash extends BaseModel {
+class NeededIngredientsStashModel extends BaseModel {
     private PDOStatement $preparedGetRecipeStashIngredientsRequest;
     private PDOStatement $preparedAddRecipesStashIngredientsRequest;
     private PDOStatement $preparedDeleteStashRecipesIngredientsRequest;
