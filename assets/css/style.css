@@ -13,6 +13,10 @@
     padding: 0;
 }
 
+main {
+    margin: 0 5px;
+}
+
 nav {
     background-color: var(--navbar-color);
     font-family: var(--heading-font), cursive;
@@ -102,6 +106,7 @@ footer {
     height: 100px;
     position: relative;
     bottom: 0;
+    margin-top: 5px;
 }
 
 #socialLinks {
