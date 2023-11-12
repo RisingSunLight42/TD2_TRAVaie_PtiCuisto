@@ -25,8 +25,8 @@ function buildRecipeDisplayAllRecipes(&$content, $recipes, $isStash=false) {
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
         if (!$isStash && checkCanEditOrDelete($recipe["users_nickname"])) {
-            $optionalButtons .= "<button><a href='index.php?action=recipeEdition&value=RECI_ID'>Modification</a></button>";
-            $optionalButtons .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button>";
+            $optionalButtons .= "<div class='editButton'><button><a href='index.php?action=recipeEdition&value=RECI_ID'>Modification</a></button>";
+            $optionalButtons .= "<button><a href='index.php?action=recipeDeletion&value=RECI_ID'>Suppression</a></button></div>";
         }
         $recipe_id = $recipe['reci_id'];
         $title = $recipe['reci_title'];
@@ -59,17 +59,16 @@ function welcome() {
 
     // Latest recipes building
     $content = "<section id='lastestRecipes'>";
-    $content .= "<h1>Les dernières recettes</h1>";
     for ($i= 0; $i < count($recipes); $i++){
         $recipe = $recipes[$i];
         $recipe_id = $recipe['reci_id'];
         $title = $recipe['reci_title'];
         $resume = $recipe['reci_resume'];
         $image = $recipe['reci_image'];
-        $content .= "<div class='card mb-3' style='max-width: 680px;'>";
+        $content .= "<div class='card mb-3'>";
         $content .= "<div class='row g-0'>";
         $content .= "<div class='col-md-4'>";
-        $content .= "<img src='$image' class='img-fluid rounded-start pointer' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\"/>" ;
+        $content .= "<img src='$image' class='img-recipes img-fluid rounded pointer' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\"/>" ;
         $content .= "</div>";
         $content .= "<div class='col-md-8'>";
         $content .= "<div class='card-body'>";
@@ -134,8 +133,8 @@ function recipe($reci_id="") {
 
     buildRecipeDisplayOneRecipe($recipe, $ingredients, $content);
     if (checkCanEditOrDelete($recipe['users_nickname'])) {
-        $content .= "<button><a href='index.php?action=recipeEdition&value=$reci_id'>Modification</a></button>";
-        $content .= "<button><a href='index.php?action=recipeDeletion&value=$reci_id'>Suppression</a></button>";
+        $content .= "<div class='editButton'><button><a href='index.php?action=recipeEdition&value=$reci_id'>Modification</a></button>";
+        $content .= "<button><a href='index.php?action=recipeDeletion&value=$reci_id'>Suppression</a></button></div>";
     }
     require('./assets/php/views/recipeView.php');
 }

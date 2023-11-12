@@ -33,13 +33,6 @@ ul {
     align-items: stretch;
 }
 
-#lastRecipes {
-    border-color: var(--unknown-color);
-    border: solid 1px;
-    width: 48%;
-    margin: 1%;
-}
-
 #websiteLinks {
     justify-content: end;
     font-size: 1.5em;
@@ -67,6 +60,10 @@ h2 {
 }
 
 #lastRecipes {
+    flex: 1 1 0;
+    border-color: var(--unknown-color);
+    border: solid 1px;
+    margin: 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -74,13 +71,18 @@ h2 {
 }
 
 #edito {
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
+    padding: 5px;
     margin: 15px;
-    justify-content: center;
     align-items: center;
     background-color: var(--main-color);
     color: var(--background-color);
+}
+
+.col-md-4 {
+    padding: 5px;
 }
 
 #imgEdito {
@@ -123,7 +125,8 @@ footer {
 }
 
 .card {
-    font-family: var(--body-font), cursive;    
+    font-family: var(--body-font), cursive;
+    margin: 5px;
 }
 
 p {
@@ -255,7 +258,7 @@ textarea {
 
 input[type=text] {
   background-color: #f1f1f1;
-  width: 100%;
+  width: 50%;
 }
 
 .autocomplete-items {
@@ -311,6 +314,29 @@ input[type=text] {
   display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@media (max-width: 1000px) {
+    .recipeCard, #welcomeSection, .row {
+        flex-direction: column;
+    }
+
+    #edito, #lastRecipes {
+        flex: unset;
+    }
+
+    .col-md-4 {
+        flex: unset;
+        width: unset;
+    }
+     
+}
+
+@media (max-width: 500px) {
+    #logo {
+        width: 125px;
+    }
+     
 }
 
 .no-shadow {
