@@ -26,9 +26,10 @@ function getRecipes($number) {
 function getRecipesByTitle($title) {
     $bdd = dbConnect();
     
-    $preparedRecipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image
+    $preparedRecipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image, users_nickname
     FROM ptic_recipes
     JOIN ptic_recipes_type USING (rtype_id)
+    JOIN ptic_users USING (users_id)
     WHERE reci_title LIKE UPPER(?)
     ORDER BY reci_id";
 
@@ -41,9 +42,10 @@ function getRecipesByTitle($title) {
 function getRecipesByCategory($category) {
     $bdd = dbConnect();
     
-    $preparedRecipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image
+    $preparedRecipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image, users_nickname
     FROM ptic_recipes
     JOIN ptic_recipes_type USING (rtype_id)
+    JOIN ptic_users USING (users_id)
     WHERE rtype_title LIKE UPPER(?)
     ORDER BY reci_id";
 
@@ -56,9 +58,10 @@ function getRecipesByCategory($category) {
 function getRecipesByIngredients($ingredients) {
     $bdd = dbConnect();
     
-    $recipeRequest = "SELECT DISTINCT reci_id, reci_title, reci_resume, rtype_title, reci_image
+    $recipeRequest = "SELECT DISTINCT reci_id, reci_title, reci_resume, rtype_title, reci_image, users_nickname
     FROM ptic_recipes
     JOIN ptic_recipes_type USING (rtype_id)
+    JOIN ptic_users USING (users_id)
     JOIN ptic_needed_ingredients USING (reci_id)
     JOIN ptic_ingredients USING (ing_id)
     WHERE ing_title = UPPER(:ingredient0)";

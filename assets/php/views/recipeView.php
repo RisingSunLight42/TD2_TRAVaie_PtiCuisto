@@ -21,6 +21,6 @@
 
     <?php 
         require ("footer.php");
-    ?>1
+    ?>
 </body>
 </html>

@@ -37,13 +37,13 @@ function buildRecipeDisplayAllRecipes(&$content, $recipes, $isStash=false) {
         $content .= "<article id='$anchor' class='recipeCard'>";
         $content .= "<div id='leftRecipeCard'>";
         $content .= "<div id='recipePicture'>";
-        $content .= "<img class='pointer recipePicture' src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\"/>";
+        $content .= "<img class='pointer recipePicture' src='$image' alt='image de recette' onclick=\"location.href='index.php?action=$action&value=$recipe_id'\"/>";
         $content .= "</div>";
         $content .= "<div id='tags'>";
         $content .= "</div>";
         $content .= "</div>";
         $content .= "<div id='rightRecipeCard'>";
-        $content .= "<h1 class='pointer' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
+        $content .= "<h1 class='pointer' onclick=\"location.href='index.php?action=$action&value=$recipe_id'\" >$title</h1>";
         $content .= "<h2>$type</h2>";
         $content .= "<h2>Résumé</h2>";
         $content .= "<p>$resume</p>";
@@ -52,7 +52,6 @@ function buildRecipeDisplayAllRecipes(&$content, $recipes, $isStash=false) {
         $content .= "</article>";
         $optionalButtons = "";
     }
-    require('./assets/php/views/allRecipesView.php');
 }
 
 function welcome() {

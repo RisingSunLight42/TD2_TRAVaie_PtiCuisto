@@ -199,7 +199,8 @@ label {
     padding: 10px 0 10px 0;
 }
 
-#email, #password {
+#connectionContent > input[type="password"],
+#connectionContent >input[type="text"] {
     border-radius: 20px;
     text-align: center;
     width: 23em;
