@@ -5,6 +5,7 @@ require_once("./assets/php/model/NeededIngredients.php");
 require_once("./assets/php/model/RecipesStashModel.php");
 require_once("./assets/php/model/NeededIngredientsStash.php");
 require_once("./assets/php/model/EditoModel.php");
+require_once("./assets/php/model/IngredientsModel.php");
 include_once("./assets/php/utils/pdo_agile.php");
 /*The model is the treatment part of informations in the database. The controller will use the information to transfer them to the view. 
 The treatment was mainly componsed of database's treatment, with selection for the displaying for websites's pages
@@ -73,12 +74,8 @@ function getLastEdito() {
 }
 
 function getIngredients() {
-    $bdd = dbConnect();
-    
-    $ingredientsRequest = "SELECT ing_id, ing_title
-    FROM ptic_ingredients";
-    LireDonneesPDO1($bdd, $ingredientsRequest, $ingredients);
-    return $ingredients;
+    $ingredientsModel = new IngredientsModel(false);
+    return $ingredientsModel->getIngredients();
 }
 
 function createRecipe($title, $desc, $resume, $categorize, $img, $user, $isAdmin) {
