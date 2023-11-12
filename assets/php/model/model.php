@@ -94,14 +94,8 @@ function editRecipe($reci_id, $title, $desc, $resume, $category, $img, $user, $i
 }
 
 function editRecipesIngredients($reci_id, $ingredients, $isAdmin) {
-    $bdd = dbConnect();
-    if ($isAdmin) {
-        $deleteRecipeIngredientsSQL = "DELETE FROM ptic_needed_ingredients WHERE reci_id = ?";
-        $prepareDeleteRecipeIngredients = $bdd->prepare($deleteRecipeIngredientsSQL);
-        $prepareDeleteRecipeIngredients->execute([$reci_id]);
-    }
-
-    addRecipesIngredients($reci_id, $ingredients, $isAdmin);
+    $neededIngredientsModel = new NeededIngredients($isAdmin);
+    $neededIngredientsModel->editRecipesIngredients($reci_id, $ingredients);
 }
 
 /* To delete a recipe */

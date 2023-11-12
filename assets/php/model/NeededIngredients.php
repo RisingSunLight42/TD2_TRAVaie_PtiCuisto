@@ -4,11 +4,13 @@ require_once("./assets/php/model/NeededIngredientsStash.php");
 class NeededIngredients extends BaseModel {
     private PDOStatement $preparedGetRecipeIngredientsRequest;
     private PDOStatement $preparedAddRecipesIngredientsRequest;
+    private PDOStatement $preparedDeleteRecipesIngredientsRequest;
 
     public function __construct($isAdmin, $connection = null) {
         parent::__construct($isAdmin, $connection);
         $this->prepareGetRecipeIngredients();
         $this->prepareAddRecipesIngredients();
+        $this->prepareDeleteRecipesIngredients();
     }
     
     /**
@@ -37,6 +39,16 @@ class NeededIngredients extends BaseModel {
             )
         )";
         $this->preparedAddRecipesIngredientsRequest = $this->connection->prepare($addRecipesIngredientsRequest);
+    }
+
+    /**
+     * Method prepareAddRecipesIngredients
+     * Method to prepare the request to add the ingredients of a recipe.
+     * @return void
+     */
+    final private function prepareDeleteRecipesIngredients() {
+        $deleteRecipesIngredientsRequest = "DELETE FROM ptic_needed_ingredients WHERE reci_id = ?";
+        $this->preparedDeleteRecipesIngredientsRequest = $this->connection->prepare($deleteRecipesIngredientsRequest);
     }
 
     /**
@@ -69,4 +81,31 @@ class NeededIngredients extends BaseModel {
         $neededIngredientsStashModel = new NeededIngredientsStash($this->isAdmin, $this->connection);
         $neededIngredientsStashModel->addRecipesStashIngredients($reci_id, $ingredients);
     }
+
+    /**
+     * Method addRecipesIngredients
+     * Method to call the prepared request to add recipe's ingredients.
+     * @param string $reci_id Recipe's id
+     * @param array $ingredients List of the ingredients to add
+     *
+     * @return void
+     */
+    final public function deleteRecipesIngredients($reci_id) {
+        $this->preparedDeleteRecipesIngredientsRequest->execute([$reci_id]);
+    }
+
+    /**
+     * Method addRecipesIngredients
+     * Method to call the prepared request to add recipe's ingredients.
+     * @param string $reci_id Recipe's id
+     * @param array $ingredients List of the ingredients to add
+     *
+     * @return void
+     */
+    final public function editRecipesIngredients($reci_id, $ingredients) {
+        if ($this->isAdmin) $this->preparedDeleteRecipesIngredientsRequest->execute([$reci_id]);
+        $this->addRecipesIngredients($reci_id, $ingredients);
+    }
+
+
 }
