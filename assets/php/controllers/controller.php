@@ -148,7 +148,7 @@ function recipeStash($reci_stash_id="") {
     }
     if (!is_numeric($reci_stash_id)) return getAllRecipes();
     if (intval($reci_stash_id) < 1) return getAllRecipes();
-    $recipeStash = getOneRecipeStash($reci_stash_id);
+    $recipeStash = getRecipeStashById($reci_stash_id);
     if (empty($recipeStash)) getAllRecipes();
     $recipeStash = $recipeStash[0];
     $ingredientsStash = getRecipeStashIngredients($reci_stash_id);
@@ -186,7 +186,7 @@ function validate() {
     if (strcmp($_SESSION['userType'],"ADMINISTRATEUR") != 0) return welcome();
     if (empty($_GET['value'])) account();
     $reci_stash_id = strip_tags($_GET['value']);
-    $recipeStash = getOneRecipeStash($reci_stash_id);
+    $recipeStash = getRecipeStashById($reci_stash_id);
     $recipeStash = $recipeStash[0];
     if ($recipeStash["stash_type_value"] === "CREATION") {
         $reci_id = createRecipe($recipeStash["reci_title"], $recipeStash["reci_content"],

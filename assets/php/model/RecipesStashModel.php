@@ -2,10 +2,12 @@
 require_once("./assets/php/model/BaseModel.php");
 class RecipesStashModel extends BaseModel {
     private PDOStatement $preparedCreateRecipeStashRequest;
+    private PDOStatement $preparedGetRecipesStashByIdRequest;
 
     public function __construct($isAdmin, $connection = null) {
         parent::__construct($isAdmin, $connection);
         $this->prepareCreateRecipeStash();
+        $this->prepareGetRecipesStashById();
     }
     
     /**
@@ -29,6 +31,25 @@ class RecipesStashModel extends BaseModel {
     }
 
     /**
+     * Method prepareGetRecipesStashById
+     * Method to prepare the request to get stash recipe by its id.
+     * @return void
+     */
+    final private function prepareGetRecipesStashById() {
+        $getRecipesStashByIdRequest = "SELECT reci_stash_title as reci_title, rtype_title, reci_stash_image as reci_image,
+        reci_stash_content as reci_content, stash_type_value,
+        users_nickname, reci_stash_resume as reci_resume,
+        DATE_FORMAT(reci_stash_creation_date, '%d/%m/%Y à %H:%i:%S') as reci_creation_date,
+        DATE_FORMAT(reci_stash_creation_date, '%d/%m/%Y à %H:%i:%S') as reci_edit_date, reci_id
+        FROM ptic_recipes_stash
+        JOIN ptic_recipes_type USING (rtype_id)
+        JOIN ptic_users USING (users_id)
+        JOIN ptic_stash_type USING (stash_type_id)
+        WHERE reci_stash_id = ?";
+        $this->preparedGetRecipesStashByIdRequest = $this->connection->prepare($getRecipesStashByIdRequest);
+    }
+
+    /**
      * Method createRecipeStash
      * Method to call the prepared request to create a stash recipe.
      * @param string $title Stash Recipe's title
@@ -49,6 +70,17 @@ class RecipesStashModel extends BaseModel {
         $this->preparedCreateRecipeStashRequest->bindValue(':user', (string) $user, PDO::PARAM_STR);
         $this->preparedCreateRecipeStashRequest->execute();
         return $this->connection->lastInsertId();
+    }
+
+    /**
+     * Method getRecipeStashById
+     * Method to call the prepared request to get the stash recipe by its id.
+     *
+     * @return array
+     */
+    final public function getRecipeStashById($reci_stash_id) {
+        $this->preparedGetRecipesStashByIdRequest->execute([$reci_stash_id]);
+        return $this->preparedGetRecipesStashByIdRequest->fetchAll();
     }
     
 }

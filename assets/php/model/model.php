@@ -1,6 +1,7 @@
 <?php
 require_once("./assets/php/utils/connexion.php");
 require_once("./assets/php/model/RecipesModel.php");
+require_once("./assets/php/model/RecipesStashModel.php");
 include_once("./assets/php/utils/pdo_agile.php");
 /*The model is the treatment part of informations in the database. The controller will use the information to transfer them to the view. 
 The treatment was mainly componsed of database's treatment, with selection for the displaying for websites's pages
@@ -39,19 +40,9 @@ function getRecipeById($reci_id) {
     return $recipesModel->getRecipeById($reci_id);
 }
 
-function getOneRecipeStash($reci_id) {
-    $bdd = dbConnect();
-
-    $preparedRecipeRequest = "SELECT reci_stash_title as reci_title, rtype_title, reci_stash_image as reci_image, reci_stash_content as reci_content, stash_type_value,
-    users_nickname, reci_stash_resume as reci_resume, DATE_FORMAT(reci_stash_creation_date, '%d/%m/%Y') as reci_creation_date, DATE_FORMAT(reci_stash_creation_date, '%d/%m/%Y') as reci_edit_date, reci_id
-    FROM ptic_recipes_stash
-    JOIN ptic_recipes_type USING (rtype_id)
-    JOIN ptic_users USING (users_id)
-    JOIN ptic_stash_type USING (stash_type_id)
-    WHERE reci_stash_id = ?";
-    $preparedRequestGet = $bdd->prepare($preparedRecipeRequest);
-    $preparedRequestGet->execute([$reci_id]);
-    return $preparedRequestGet->fetchAll();
+function getRecipeStashById($reci_id) {
+    $recipesStashModel = new RecipesStashModel(false);
+    return $recipesStashModel->getRecipeStashById($reci_id);
 }
 
 /*Retrieve the ingredients of one recipe*/

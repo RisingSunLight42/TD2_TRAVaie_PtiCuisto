@@ -228,7 +228,7 @@ class RecipesModel extends BaseModel {
     final public function getLastNRecipes($number) {
         $this->preparedGetLastNRecipesRequest->bindValue(":num", (int) $number, PDO::PARAM_INT);
         $this->preparedGetLastNRecipesRequest->execute();
-    return $this->preparedGetLastNRecipesRequest->fetchAll();
+        return $this->preparedGetLastNRecipesRequest->fetchAll();
     }
 
         
