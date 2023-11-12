@@ -6,7 +6,7 @@
     <?php require("head.php")?>
     <title>Modification de recette</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <?php require("header.php")?>
     <main>
         <h1>Modification de recette</h1>
