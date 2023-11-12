@@ -6,6 +6,7 @@ require_once("./assets/php/model/RecipesStashModel.php");
 require_once("./assets/php/model/NeededIngredientsStashModel.php");
 require_once("./assets/php/model/EditoModel.php");
 require_once("./assets/php/model/IngredientsModel.php");
+require_once("./assets/php/model/UsersModel.php");
 
 /*The model is the treatment part of informations in the database. The controller will use the information to transfer them to the view. 
 The treatment was mainly componsed of database's treatment, with selection for the displaying for websites's pages
@@ -111,12 +112,8 @@ function deleteStashRecipe($reci_stash_id) {
 }
 
 function getConnectionCredentials($username) {
-    $bdd = dbConnect();
-
-    $getCredentialsRequest = "SELECT users_nickname, users_password, utype_title FROM ptic_users JOIN ptic_users_type USING (utype_id) WHERE users_nickname = ?";
-    $preparedRequestGet = $bdd->prepare($getCredentialsRequest);
-    $preparedRequestGet->execute([$username]);
-    return $preparedRequestGet->fetchAll();
+    $usersModel = new UsersModel(false);
+    return $usersModel->getConnectionCredentials($username);
 }
 
 function addEdito($edito) {
