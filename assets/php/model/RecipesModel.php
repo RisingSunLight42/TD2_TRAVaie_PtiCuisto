@@ -230,8 +230,7 @@ class RecipesModel extends BaseModel {
         $this->preparedGetLastNRecipesRequest->execute();
         return $this->preparedGetLastNRecipesRequest->fetchAll();
     }
-
-        
+    
     /**
      * Method createRecipe
      * Method to call the prepared request to create a recipe.

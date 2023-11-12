@@ -84,27 +84,8 @@ function createRecipe($title, $desc, $resume, $categorize, $img, $user, $isAdmin
 }
 
 function addRecipesIngredients($reci_id, $ingredients, $isAdmin) {
-    $bdd = dbConnect();
-    $neededIngredient = "";
-    if ($isAdmin) {
-        $neededIngredient = "INSERT INTO ptic_needed_ingredients (reci_id, ing_id) VALUES (?, (
-            SELECT ing_id
-            FROM ptic_ingredients
-            WHERE TRIM(UPPER(ing_title)) = TRIM(UPPER(?))
-            )
-        )";
-    } else {
-        $neededIngredient = "INSERT INTO ptic_needed_ingredients_stash (reci_stash_id, ing_id) VALUES (?, (
-            SELECT ing_id
-            FROM ptic_ingredients
-            WHERE TRIM(UPPER(ing_title)) = TRIM(UPPER(?))
-            )
-        )";
-    }
-    $preparedNeededIngredient = $bdd->prepare($neededIngredient);
-    for ($i= 0; $i < count($ingredients); $i++) {
-        $preparedNeededIngredient->execute([$reci_id, $ingredients[$i]]);
-    }
+    $neededIngredientsModel = new NeededIngredients($isAdmin);
+    $neededIngredientsModel->addRecipesIngredients($reci_id, $ingredients);
 }
 function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user, $isAdmin) {
     $bdd = dbConnect();
