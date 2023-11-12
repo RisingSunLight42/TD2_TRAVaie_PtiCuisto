@@ -8,22 +8,23 @@
     ?>
     <title>PtiCuistot - Compte</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <?php 
         require ("header.php");
     ?>
-
-    <div>
-        <button><a href="index.php?action=recipeCreation">Creation</a></button>
-        <?php
-            echo $unlogButton
-        ?>
-    </div>
-    <section>
-        <?php
-        echo $content;
-        ?>
-    </section>
+    <main>
+        <div>
+            <button><a href="index.php?action=recipeCreation">Creation</a></button>
+            <?php
+                echo $unlogButton
+            ?>
+        </div>
+        <section>
+            <?php
+            echo $content;
+            ?>
+        </section>
+    </main>
     <?php 
         require ("footer.php");
     ?>
