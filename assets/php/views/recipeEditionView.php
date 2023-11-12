@@ -16,10 +16,10 @@
     echo $content;
     ?>
     <form id="re_form" name="r_creation" method="post" action="index.php?action=recipeEditionHandling&value=<?php echo $reci_id; ?>">
-        <label for="re_title">Entrez le titre de la recette* :</label><input type="text" name="re_title" value=<?php echo $title; ?> required/>
+        <label for="re_title">Entrez le titre de la recette* :</label><input type="text" name="re_title" value=<?php echo '"'.$title.'"'; ?> required/>
         <label for="re_desc">Entrez le contenu de votre recette* :</label><textarea name="re_desc" rows="10" required><?php echo $description; ?></textarea><br>
         <label for="re_resume">Entrez un résumé de votre recette* :</label><textarea name="re_resume" rows="5" required><?php echo $resume; ?></textarea><br>
-        <label for="re_img">Entrez un lien vers l'image de votre recette :</label><input type ="text" name="re_img" value=<?php echo $img; ?> required/>
+        <label for="re_img">Entrez un lien vers l'image de votre recette :</label><input type ="text" name="re_img" value=<?php echo $img; ?> />
         <label for="ingredient">Ajoutez vos ingrédients* :</label>
         <?php echo $ingredients; ?>
         <div class="autocomplete" style="width:300px;">
