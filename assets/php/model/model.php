@@ -81,14 +81,9 @@ function getRecipeStashIngredients($reci_id) {
 }
 
 /*Retrieve the three last recipes published ont the website*/
-function getLastThreeRecipes() {
-    $bdd = dbConnect();
-    
-    $recipeRequest = "SELECT reci_id, reci_title, reci_resume, reci_image
-    FROM ptic_recipes
-    ORDER BY reci_creation_date DESC LIMIT 3";
-    LireDonneesPDO1($bdd, $recipeRequest, $recipes);
-    return $recipes;
+function getLastNRecipes($number) {
+    $recipesModel = new RecipesModel();
+    return $recipesModel->getLastNRecipes($number);
 }
 
 /*Retrieve the last Edito published*/

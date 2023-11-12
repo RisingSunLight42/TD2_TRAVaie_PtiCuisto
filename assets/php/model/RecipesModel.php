@@ -6,6 +6,7 @@ class RecipesModel extends BaseModel {
     private PDOStatement $preparedGetRecipesByCategoryRequest;
     private PDOStatement $preparedGetRecipesCount;
     private PDOStatement $preparedGetRecipesByIdRequest;
+    private PDOStatement $preparedGetLastNRecipesRequest;
 
     public function __construct() {
         parent::__construct();
@@ -14,6 +15,7 @@ class RecipesModel extends BaseModel {
         $this->prepareGetRecipesByCategory();
         $this->prepareGetRecipesCount();
         $this->prepareGetRecipesById();
+        $this->prepareGetLastNRecipes();
     }
     
     /**
@@ -105,6 +107,19 @@ class RecipesModel extends BaseModel {
         WHERE reci_id = ?";
         $this->preparedGetRecipesByIdRequest = $this->connection->prepare($getRecipesByIdRequest);
     }
+
+    /**
+     * Method prepareGetLastNRecipes
+     * Method to prepare the request to get n latest recipes.
+     * @return void
+     */
+    final private function prepareGetLastNRecipes() {
+        $getLastNRecipesRequest = "SELECT reci_id, reci_title, reci_resume, reci_image
+        FROM ptic_recipes
+        ORDER BY reci_creation_date DESC
+        LIMIT :num";
+        $this->preparedGetLastNRecipesRequest = $this->connection->prepare($getLastNRecipesRequest);
+    }
     
     /**
      * Method getRecipes
@@ -180,5 +195,17 @@ class RecipesModel extends BaseModel {
         $this->preparedGetRecipesByIdRequest->execute([$reci_id]);
         return $this->preparedGetRecipesByIdRequest->fetchAll();
     }
+
+    /**
+     * Method getRecipeById
+     * Method to call the prepared request to get the recipe by its id.
+     *
+     * @return array
+     */
+    final public function getLastNRecipes($number) {
+        $this->preparedGetLastNRecipesRequest->bindValue(":num", (int) $number, PDO::PARAM_INT);
+        $this->preparedGetLastNRecipesRequest->execute();
+    return $this->preparedGetLastNRecipesRequest->fetchAll();
+}
     
 }

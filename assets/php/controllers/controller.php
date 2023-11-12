@@ -55,7 +55,7 @@ function buildRecipeDisplayAllRecipes(&$content, $recipes, $isStash=false) {
 }
 
 function welcome() {
-    $recipes = getLastThreeRecipes();
+    $recipes = getLastNRecipes(3);
 
     // Latest recipes building
     $content = "<section id='lastestRecipes'>";
