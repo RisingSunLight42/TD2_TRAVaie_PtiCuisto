@@ -8,34 +8,34 @@ and insertion for adding a new recipe or ingredient in the database*/
 
 /*Recipe retrievment*/
 function getRecipes($number) {
-    $recipesModel = new RecipesModel();
+    $recipesModel = new RecipesModel(false);
     return $recipesModel->getRecipes($number);
 }
 
 function getRecipesByTitle($title) {
-    $recipesModel = new RecipesModel();
+    $recipesModel = new RecipesModel(false);
     return $recipesModel->getRecipesByTitle($title);
 }
 
 function getRecipesByCategory($category) {
-    $recipesModel = new RecipesModel();
+    $recipesModel = new RecipesModel(false);
     return $recipesModel->getRecipesByCategory($category);
 }
 
 function getRecipesByIngredients($ingredients) {
-    $recipesModel = new RecipesModel();
+    $recipesModel = new RecipesModel(false);
     return $recipesModel->getRecipesByIngredients($ingredients);
 }
 
 /*Get the number total of recipe*/
 function getRecipesCount() {
-    $recipesModel = new RecipesModel();
+    $recipesModel = new RecipesModel(false);
     return $recipesModel->getRecipesCount();
 }
 
 /*Retrive one recipe with its id */
 function getRecipeById($reci_id) {
-    $recipesModel = new RecipesModel();
+    $recipesModel = new RecipesModel(false);
     return $recipesModel->getRecipeById($reci_id);
 }
 
@@ -82,7 +82,7 @@ function getRecipeStashIngredients($reci_id) {
 
 /*Retrieve the three last recipes published ont the website*/
 function getLastNRecipes($number) {
-    $recipesModel = new RecipesModel();
+    $recipesModel = new RecipesModel(false);
     return $recipesModel->getLastNRecipes($number);
 }
 
@@ -107,41 +107,8 @@ function getIngredients() {
 }
 
 function createRecipe($title, $desc, $resume, $categorize, $img, $user, $isAdmin) {
-    $bdd = dbConnect();
-    $sql = "";
-    if ($isAdmin) {
-        $sql= "INSERT INTO ptic_recipes(reci_title, reci_content, reci_resume, rtype_id, reci_creation_date, reci_edit_date, reci_image, users_id)
-        VALUES (:title, :descr, :resume,(
-            SELECT rtype_id
-            FROM ptic_recipes_type
-            WHERE UPPER(rtype_title) = UPPER(:cat)
-        ), sysdate(), sysdate(), :img, (
-            SELECT users_id
-            FROM ptic_users
-            WHERE users_nickname = :user
-        ))";
-    } else {
-        $sql= "INSERT INTO ptic_recipes_stash(reci_stash_title, reci_stash_content, reci_stash_resume,
-        rtype_id, reci_stash_creation_date, reci_stash_image, users_id, stash_type_id)
-        VALUES (:title, :descr, :resume,(
-            SELECT rtype_id
-            FROM ptic_recipes_type
-            WHERE UPPER(rtype_title) = UPPER(:cat)
-        ), sysdate(), :img, (
-            SELECT users_id
-            FROM ptic_users
-            WHERE users_nickname = :user
-        ), (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'CREATION'))";
-    }
-    $preparedCreateRecipe = $bdd->prepare($sql);
-    $preparedCreateRecipe->bindValue(':title', (string) $title, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':resume', (string) $resume, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':cat', (string) $categorize, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':img', (string) $img, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':user', (string) $user, PDO::PARAM_STR);
-    $preparedCreateRecipe->execute();
-    return $bdd->lastInsertId();
+    $recipesModel = new RecipesModel($isAdmin);
+    return $recipesModel->createRecipe($title, $desc, $resume, $categorize, $img, $user);
 }
 
 function addRecipesIngredients($reci_id, $ingredients, $isAdmin) {
@@ -176,7 +143,7 @@ function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user, 
             SELECT rtype_id
             FROM ptic_recipes_type
             WHERE UPPER(rtype_title) = UPPER(:cat)
-        ), reci_edit_date = sysdate(), reci_image = :img
+        ), reci_edit_date = NOW(), reci_image = :img
         WHERE users_id = (
             SELECT users_id
             FROM ptic_users
@@ -189,7 +156,7 @@ function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user, 
             SELECT rtype_id
             FROM ptic_recipes_type
             WHERE UPPER(rtype_title) = UPPER(:cat)
-        ), sysdate(), :img, (
+        ), NOW(), :img, (
             SELECT users_id
             FROM ptic_users
             WHERE users_nickname = :user
@@ -259,7 +226,7 @@ function getConnectionCredentials($username) {
 function addEdito($edito) {
     $bdd = dbConnect();
 
-    $editoRequest = "INSERT INTO ptic_edito (edi_text, edi_date) VALUES (?, sysdate())";
+    $editoRequest = "INSERT INTO ptic_edito (edi_text, edi_date) VALUES (?, NOW())";
     $editoRequestPrepared = $bdd->prepare($editoRequest);
     $editoRequestPrepared->execute([$edito]);
 }

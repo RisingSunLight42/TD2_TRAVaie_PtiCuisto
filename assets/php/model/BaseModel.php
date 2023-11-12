@@ -2,6 +2,7 @@
 class BaseModel
 {
     protected PDO $connection;
+    protected bool $isAdmin;
 
     final protected function dbConnect() {
         $dotenv = parse_ini_file(".env");
@@ -18,7 +19,9 @@ class BaseModel
         }
     }
 
-    public function __construct() {
-        $this->dbConnect();
+    public function __construct($isAdmin, $connection) {
+        $this->isAdmin = $isAdmin;
+        if ($connection === null) $this->dbConnect();
+        else $this->connection = $connection;
     }
 }

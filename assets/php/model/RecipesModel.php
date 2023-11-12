@@ -1,5 +1,6 @@
 <?php
 require_once("./assets/php/model/BaseModel.php");
+require_once("./assets/php/model/RecipesStashModel.php");
 class RecipesModel extends BaseModel {
     private PDOStatement $preparedGetRecipesRequest;
     private PDOStatement $preparedGetRecipeByTitleRequest;
@@ -7,15 +8,17 @@ class RecipesModel extends BaseModel {
     private PDOStatement $preparedGetRecipesCount;
     private PDOStatement $preparedGetRecipesByIdRequest;
     private PDOStatement $preparedGetLastNRecipesRequest;
+    private PDOStatement $preparedCreateRecipeRequest;
 
-    public function __construct() {
-        parent::__construct();
+    public function __construct($isAdmin) {
+        parent::__construct($isAdmin, null);
         $this->prepareGetRecipes();
         $this->prepareGetRecipesByTitle();
         $this->prepareGetRecipesByCategory();
         $this->prepareGetRecipesCount();
         $this->prepareGetRecipesById();
         $this->prepareGetLastNRecipes();
+        $this->prepareCreateRecipe();
     }
     
     /**
@@ -106,6 +109,26 @@ class RecipesModel extends BaseModel {
         JOIN ptic_users USING (users_id)
         WHERE reci_id = ?";
         $this->preparedGetRecipesByIdRequest = $this->connection->prepare($getRecipesByIdRequest);
+    }
+
+    /**
+     * Method prepareCreateRecipe
+     * Method to prepare the request to create a recipe.
+     * @return void
+     */
+    final private function prepareCreateRecipe() {
+        $createRecipeRequest = "INSERT INTO ptic_recipes (
+        reci_title, reci_content, reci_resume, rtype_id, reci_creation_date, reci_edit_date, reci_image, users_id)
+        VALUES (:title, :descr, :resume,(
+            SELECT rtype_id
+            FROM ptic_recipes_type
+            WHERE UPPER(rtype_title) = UPPER(:cat)
+        ), NOW(), NOW(), :img, (
+            SELECT users_id
+            FROM ptic_users
+            WHERE users_nickname = :user
+        ))";
+        $this->preparedCreateRecipeRequest = $this->connection->prepare($createRecipeRequest);
     }
 
     /**
@@ -206,6 +229,33 @@ class RecipesModel extends BaseModel {
         $this->preparedGetLastNRecipesRequest->bindValue(":num", (int) $number, PDO::PARAM_INT);
         $this->preparedGetLastNRecipesRequest->execute();
     return $this->preparedGetLastNRecipesRequest->fetchAll();
-}
-    
+    }
+
+        
+    /**
+     * Method createRecipe
+     * Method to call the prepared request to create a recipe.
+     * @param string $title Recipe's title
+     * @param string $desc Recipe's description
+     * @param string $resume Recipe's resume
+     * @param string $category Recipe's category
+     * @param string $img Recipe's image link
+     * @param string $user Recipe's user nickname
+     *
+     * @return number Inserted recipe's id
+     */
+    final public function createRecipe($title, $desc, $resume, $category, $img, $user) {
+        if ($this->isAdmin) {
+            $this->preparedCreateRecipeRequest->bindValue(':title', (string) $title, PDO::PARAM_STR);
+            $this->preparedCreateRecipeRequest->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
+            $this->preparedCreateRecipeRequest->bindValue(':resume', (string) $resume, PDO::PARAM_STR);
+            $this->preparedCreateRecipeRequest->bindValue(':cat', (string) $category, PDO::PARAM_STR);
+            $this->preparedCreateRecipeRequest->bindValue(':img', (string) $img, PDO::PARAM_STR);
+            $this->preparedCreateRecipeRequest->bindValue(':user', (string) $user, PDO::PARAM_STR);
+            $this->preparedCreateRecipeRequest->execute();
+            return $this->connection->lastInsertId();
+        }
+        $recipesStashModel = new RecipesStashModel($this->isAdmin, $this->connection);
+        return $recipesStashModel->createRecipeStash($title, $desc, $resume, $category, $img, $user);
+    }
 }
