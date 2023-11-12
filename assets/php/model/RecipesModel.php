@@ -3,11 +3,13 @@ require_once("./assets/php/model/BaseModel.php");
 class RecipesModel extends BaseModel {
     private PDOStatement $preparedGetRecipesRequest;
     private PDOStatement $preparedGetRecipeByTitleRequest;
+    private PDOStatement $preparedGetRecipesByCategoryRequest;
 
     public function __construct() {
         parent::__construct();
         $this->prepareGetRecipes();
         $this->prepareGetRecipesByTitle();
+        $this->prepareGetRecipesByCategory();
     }
     
     /**
@@ -26,7 +28,7 @@ class RecipesModel extends BaseModel {
 
     /**
      * Method prepareGetRecipes
-     * Method to prepare the request to get recipes matching the title given.s
+     * Method to prepare the request to get recipes matching the title given.
      * @return void
      */
     final private function prepareGetRecipesByTitle() {
@@ -39,6 +41,22 @@ class RecipesModel extends BaseModel {
     
         $this->preparedGetRecipeByTitleRequest = $this->connection->prepare($getRecipeByTitleRequest);
     }
+    
+    /**
+     * Method prepareGetRecipesByCategory
+     * Method to prepare the request to get recipes matching the category given.
+     * @return void
+     */
+    final private function prepareGetRecipesByCategory() {
+        $getRecipesByCategoryRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image, users_nickname
+        FROM ptic_recipes
+        JOIN ptic_recipes_type USING (rtype_id)
+        JOIN ptic_users USING (users_id)
+        WHERE rtype_title LIKE UPPER(?)
+        ORDER BY reci_id";
+        $this->preparedGetRecipesByCategoryRequest = $this->connection->prepare($getRecipesByCategoryRequest);
+    }
+    
     
     /**
      * Method getRecipes
@@ -64,5 +82,18 @@ class RecipesModel extends BaseModel {
         $this->preparedGetRecipeByTitleRequest->execute(['%'.$title.'%']);
         return $this->preparedGetRecipeByTitleRequest->fetchAll();
     }
+
+    /**
+     * Method getRecipesByTitle
+     * Method to call the prepared request to get all recipes matching the given category
+     * @param $category $category The category to match
+     *
+     * @return array
+     */
+    final public function getRecipesByCategory($category) {
+        $this->preparedGetRecipesByCategoryRequest->execute(['%'.$category.'%']);
+        return $this->preparedGetRecipesByCategoryRequest->fetchAll();
+    }
+    
     
 }
