@@ -173,6 +173,8 @@ function recipeStash($reci_stash_id="") {
 
 /* To refuse a stash*/
 function refuse() {
+    if (empty($_SESSION["connected"]) || $_SESSION["connected"] = false) return welcome();
+    if (strcmp($_SESSION['userType'],"ADMINISTRATEUR") != 0) return welcome();
     if (empty($_GET['value'])) account();
     $reci_stash_id = strip_tags($_GET['value']);
     deleteRecipeStash($reci_stash_id);
@@ -181,6 +183,8 @@ function refuse() {
 
 /* To validate a stash */
 function validate() {
+    if (empty($_SESSION["connected"]) || $_SESSION["connected"] = false) return welcome();
+    if (strcmp($_SESSION['userType'],"ADMINISTRATEUR") != 0) return welcome();
     if (empty($_GET['value'])) account();
     $reci_stash_id = strip_tags($_GET['value']);
     $recipeStash = getOneRecipeStash($reci_stash_id);
