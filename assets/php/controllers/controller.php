@@ -111,11 +111,11 @@ function buildRecipeDisplayOneRecipe($recipe, $ingredients, &$content) {
 
     $content .= "<h1>$title</h1>";
     $content .= "<p>$type</p>";
+    $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
     $content .= $ingredientsHTML;
     $content .= "<h2>Recette</h2><p>$reci_content</p>";
     $content .= "<p>Créé le : $creationDate par $editorUsername</p>";
     $content .= "<p>Édité pour la dernière fois le : $lastUpdateDate</p>";
-    $content .= "<img src='$image' alt='image de recette' width=200px height=200px/>" ;
 }
 
 /*recipe's page controller */

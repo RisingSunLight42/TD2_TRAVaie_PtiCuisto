@@ -152,7 +152,7 @@ p {
 
 .recipePicture {
     object-fit: cover;
-    width: 100%;
+    width: 400px;
     height: 300px;
 }
 
@@ -328,6 +328,10 @@ input[type=text] {
     .col-md-4 {
         flex: unset;
         width: unset;
+    }
+
+    .recipePicture {
+        width: 100%;
     }
      
 }
