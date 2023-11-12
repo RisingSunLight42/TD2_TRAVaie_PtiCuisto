@@ -117,11 +117,8 @@ function getConnectionCredentials($username) {
 }
 
 function addEdito($edito) {
-    $bdd = dbConnect();
-
-    $editoRequest = "INSERT INTO ptic_edito (edi_text, edi_date) VALUES (?, NOW())";
-    $editoRequestPrepared = $bdd->prepare($editoRequest);
-    $editoRequestPrepared->execute([$edito]);
+    $editoModel = new EditoModel(false);
+    $editoModel->addEdito($edito);
 }
 
 function getWaitingForCreationRecipes(){
