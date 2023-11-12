@@ -3,11 +3,13 @@ require_once("./assets/php/model/BaseModel.php");
 class RecipesStashModel extends BaseModel {
     private PDOStatement $preparedCreateRecipeStashRequest;
     private PDOStatement $preparedGetRecipesStashByIdRequest;
+    private PDOStatement $preparedEditStashRecipeRequest;
 
     public function __construct($isAdmin, $connection = null) {
         parent::__construct($isAdmin, $connection);
         $this->prepareCreateRecipeStash();
         $this->prepareGetRecipesStashById();
+        $this->prepareEditStashRecipe();
     }
     
     /**
@@ -50,6 +52,26 @@ class RecipesStashModel extends BaseModel {
     }
 
     /**
+     * Method prepareEditStashRecipe
+     * Method to prepare the request to edit a recipe.
+     * @return void
+     */
+    final private function prepareEditStashRecipe() {
+        $editStashRecipeRequest = "INSERT INTO ptic_recipes_stash(reci_stash_title, reci_stash_content, reci_stash_resume,
+        rtype_id, reci_stash_creation_date, reci_stash_image, users_id, stash_type_id, reci_id)
+        VALUES (:title, :descr, :resume,(
+            SELECT rtype_id
+            FROM ptic_recipes_type
+            WHERE UPPER(rtype_title) = UPPER(:cat)
+        ), NOW(), :img, (
+            SELECT users_id
+            FROM ptic_users
+            WHERE users_nickname = :user
+        ), (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'MODIFICATION'), :reci_id)";
+        $this->preparedEditStashRecipeRequest = $this->connection->prepare($editStashRecipeRequest);
+    }
+
+    /**
      * Method createRecipeStash
      * Method to call the prepared request to create a stash recipe.
      * @param string $title Stash Recipe's title
@@ -82,5 +104,16 @@ class RecipesStashModel extends BaseModel {
         $this->preparedGetRecipesStashByIdRequest->execute([$reci_stash_id]);
         return $this->preparedGetRecipesStashByIdRequest->fetchAll();
     }
-    
+
+    final public function editStashRecipe($reci_id, $title, $desc, $resume, $category, $img, $user) {
+        $this->preparedEditStashRecipeRequest->bindValue(':title', (string) $title, PDO::PARAM_STR);
+        $this->preparedEditStashRecipeRequest->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
+        $this->preparedEditStashRecipeRequest->bindValue(':resume', (string) $resume, PDO::PARAM_STR);
+        $this->preparedEditStashRecipeRequest->bindValue(':cat', (string) $category, PDO::PARAM_STR);
+        $this->preparedEditStashRecipeRequest->bindValue(':img', (string) $img, PDO::PARAM_STR);
+        $this->preparedEditStashRecipeRequest->bindValue(':user', (string) $user, PDO::PARAM_STR);
+        $this->preparedEditStashRecipeRequest->bindValue(':reci_id', (int) $reci_id, PDO::PARAM_INT);
+        $this->preparedEditStashRecipeRequest->execute();
+        return $this->connection->lastInsertId();
+    }
 }

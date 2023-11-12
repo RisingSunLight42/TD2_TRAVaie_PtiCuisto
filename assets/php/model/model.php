@@ -87,45 +87,10 @@ function addRecipesIngredients($reci_id, $ingredients, $isAdmin) {
     $neededIngredientsModel = new NeededIngredients($isAdmin);
     $neededIngredientsModel->addRecipesIngredients($reci_id, $ingredients);
 }
-function editRecipe($reci_id, $title, $desc, $resume, $categorize, $img, $user, $isAdmin) {
-    $bdd = dbConnect();
-    $sql = "";
-    if ($isAdmin) {
-        $sql= "UPDATE ptic_recipes
-        SET reci_title = :title, reci_content = :descr, reci_resume = :resume, rtype_id = (
-            SELECT rtype_id
-            FROM ptic_recipes_type
-            WHERE UPPER(rtype_title) = UPPER(:cat)
-        ), reci_edit_date = NOW(), reci_image = :img
-        WHERE users_id = (
-            SELECT users_id
-            FROM ptic_users
-            WHERE users_nickname = :user
-        ) AND reci_id = :reci_id";
-    } else {
-        $sql= "INSERT INTO ptic_recipes_stash(reci_stash_title, reci_stash_content, reci_stash_resume,
-        rtype_id, reci_stash_creation_date, reci_stash_image, users_id, stash_type_id, reci_id)
-        VALUES (:title, :descr, :resume,(
-            SELECT rtype_id
-            FROM ptic_recipes_type
-            WHERE UPPER(rtype_title) = UPPER(:cat)
-        ), NOW(), :img, (
-            SELECT users_id
-            FROM ptic_users
-            WHERE users_nickname = :user
-        ), (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'MODIFICATION'), $reci_id)";
-    }
-    
-    $preparedCreateRecipe = $bdd->prepare($sql);
-    $preparedCreateRecipe->bindValue(':title', (string) $title, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':resume', (string) $resume, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':cat', (string) $categorize, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':img', (string) $img, PDO::PARAM_STR);
-    $preparedCreateRecipe->bindValue(':user', (string) $user, PDO::PARAM_STR);
-    if ($isAdmin)$preparedCreateRecipe->bindValue(':reci_id', (int) $reci_id, PDO::PARAM_INT);
-    $preparedCreateRecipe->execute();
-    return $bdd->lastInsertId();
+
+function editRecipe($reci_id, $title, $desc, $resume, $category, $img, $user, $isAdmin) {
+    $recipesModel = new RecipesModel($isAdmin);
+    return $recipesModel->editRecipe($reci_id, $title, $desc, $resume, $category, $img, $user);
 }
 
 function editRecipesIngredients($reci_id, $ingredients, $isAdmin) {

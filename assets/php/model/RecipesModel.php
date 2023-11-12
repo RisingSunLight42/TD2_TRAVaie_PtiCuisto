@@ -9,6 +9,7 @@ class RecipesModel extends BaseModel {
     private PDOStatement $preparedGetRecipesByIdRequest;
     private PDOStatement $preparedGetLastNRecipesRequest;
     private PDOStatement $preparedCreateRecipeRequest;
+    private PDOStatement $preparedEditRecipeRequest;
 
     public function __construct($isAdmin) {
         parent::__construct($isAdmin, null);
@@ -19,6 +20,7 @@ class RecipesModel extends BaseModel {
         $this->prepareGetRecipesById();
         $this->prepareGetLastNRecipes();
         $this->prepareCreateRecipe();
+        $this->prepareEditRecipe();
     }
     
     /**
@@ -112,6 +114,19 @@ class RecipesModel extends BaseModel {
     }
 
     /**
+     * Method prepareGetLastNRecipes
+     * Method to prepare the request to get n latest recipes.
+     * @return void
+     */
+    final private function prepareGetLastNRecipes() {
+        $getLastNRecipesRequest = "SELECT reci_id, reci_title, reci_resume, reci_image
+        FROM ptic_recipes
+        ORDER BY reci_creation_date DESC
+        LIMIT :num";
+        $this->preparedGetLastNRecipesRequest = $this->connection->prepare($getLastNRecipesRequest);
+    }
+
+    /**
      * Method prepareCreateRecipe
      * Method to prepare the request to create a recipe.
      * @return void
@@ -132,16 +147,23 @@ class RecipesModel extends BaseModel {
     }
 
     /**
-     * Method prepareGetLastNRecipes
-     * Method to prepare the request to get n latest recipes.
+     * Method prepareEditRecipe
+     * Method to prepare the request to edit a recipe.
      * @return void
      */
-    final private function prepareGetLastNRecipes() {
-        $getLastNRecipesRequest = "SELECT reci_id, reci_title, reci_resume, reci_image
-        FROM ptic_recipes
-        ORDER BY reci_creation_date DESC
-        LIMIT :num";
-        $this->preparedGetLastNRecipesRequest = $this->connection->prepare($getLastNRecipesRequest);
+    final private function prepareEditRecipe() {
+        $editRecipeRequest = "UPDATE ptic_recipes
+        SET reci_title = :title, reci_content = :descr, reci_resume = :resume, rtype_id = (
+            SELECT rtype_id
+            FROM ptic_recipes_type
+            WHERE UPPER(rtype_title) = UPPER(:cat)
+        ), reci_edit_date = NOW(), reci_image = :img
+        WHERE users_id = (
+            SELECT users_id
+            FROM ptic_users
+            WHERE users_nickname = :user
+        ) AND reci_id = :reci_id";
+        $this->preparedEditRecipeRequest = $this->connection->prepare($editRecipeRequest);
     }
     
     /**
@@ -256,5 +278,21 @@ class RecipesModel extends BaseModel {
         }
         $recipesStashModel = new RecipesStashModel($this->isAdmin, $this->connection);
         return $recipesStashModel->createRecipeStash($title, $desc, $resume, $category, $img, $user);
+    }
+
+    final public function editRecipe($reci_id, $title, $desc, $resume, $category, $img, $user) {
+        if ($this->isAdmin) {
+            $this->preparedEditRecipeRequest->bindValue(':title', (string) $title, PDO::PARAM_STR);
+            $this->preparedEditRecipeRequest->bindValue(':descr', (string) $desc, PDO::PARAM_STR);
+            $this->preparedEditRecipeRequest->bindValue(':resume', (string) $resume, PDO::PARAM_STR);
+            $this->preparedEditRecipeRequest->bindValue(':cat', (string) $category, PDO::PARAM_STR);
+            $this->preparedEditRecipeRequest->bindValue(':img', (string) $img, PDO::PARAM_STR);
+            $this->preparedEditRecipeRequest->bindValue(':user', (string) $user, PDO::PARAM_STR);
+            $this->preparedEditRecipeRequest->bindValue(':reci_id', (int) $reci_id, PDO::PARAM_INT);
+            $this->preparedEditRecipeRequest->execute();
+            return $this->connection->lastInsertId();
+        }
+        $recipesStashModel = new RecipesStashModel($this->isAdmin, $this->connection);
+        return $recipesStashModel->editStashRecipe($reci_id, $title, $desc, $resume, $category, $img, $user);
     }
 }
