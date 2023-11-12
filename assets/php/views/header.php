@@ -18,7 +18,8 @@
                         <a class="nav-link" href="index.php?action=filter">Filtres</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php?action=account">Connexion</a>
+                        <a class="nav-link" href="index.php?action=account"><?php
+                        echo (!empty($_SESSION["connected"]) && boolval($_SESSION["connected"])) ? "Compte" : "Connection" ?></a>
 
                     </li>
                 </ul>
