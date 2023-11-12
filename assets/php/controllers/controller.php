@@ -180,6 +180,17 @@ function validate() {
         addRecipesIngredients($reci_id, $ingredients, true);
         deleteRecipeStash($reci_stash_id);
         account();
+    } elseif ($recipeStash["stash_type_value"] === "MODIFICATION") {
+        editRecipe($recipeStash["reci_id"], $recipeStash["reci_title"], $recipeStash["reci_content"],
+        $recipeStash["reci_resume"], $recipeStash["rtype_title"], $recipeStash["reci_image"], $recipeStash["users_nickname"], true);
+        $ingredientsStash = getRecipeStashIngredients($reci_stash_id);
+        $ingredients = array();
+        foreach($ingredientsStash as $key => $value) {
+            array_push($ingredients,$value["ing_title"]);
+        }
+        editRecipesIngredients($recipeStash["reci_id"], $ingredients, true);
+        deleteRecipeStash($reci_stash_id);
+        account();
     }
 }
 
@@ -459,8 +470,14 @@ function recipeEditionHandling() {
         $content = "Veuillez mettre au moins un ingrédient s'il vous plaît !";
         return recipeEdition($content);
     }
-    editRecipe($reci_id, $title, $desc, $resume, $categorize, $image, $_SESSION["username"], strcmp($_SESSION["userType"], "ADMINISTRATEUR") === 0);
-    editRecipesIngredients($reci_id, $ingredients, strcmp($_SESSION["userType"], "ADMINISTRATEUR") === 0);
+    if (strcmp($_SESSION["userType"], "ADMINISTRATEUR") === 0) {
+        editRecipe($reci_id, $title, $desc, $resume, $categorize, $image, $_SESSION["username"], true);
+        editRecipesIngredients($reci_id, $ingredients, true);
+    } else {
+        $reci_stash_id = editRecipe($reci_id, $title, $desc, $resume, $categorize, $image, $_SESSION["username"], false);
+        editRecipesIngredients($reci_stash_id, $ingredients, false);
+    }
+    
     getAllRecipes();
 }
 
