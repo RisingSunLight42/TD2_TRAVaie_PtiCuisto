@@ -19,3 +19,4 @@
             </ul>
         </div>
     </footer>
+    <script src="assets\js\bootstrap.js"></script>

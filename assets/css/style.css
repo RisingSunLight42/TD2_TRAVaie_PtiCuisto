@@ -8,17 +8,19 @@
     --body-font: 'Pacifico';
 }
 
-* {
+*, ul {
     margin: 0;
     padding: 0;
 }
 
 nav {
     background-color: var(--navbar-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     font-family: var(--heading-font), cursive;
+}
+
+ul {
+    margin-left: 5px;
+    width: 100%;
 }
 
 #welcomeSection {
@@ -35,12 +37,12 @@ nav {
 }
 
 #websiteLinks {
-    display: flex;
-    justify-content: space-between;
-    width: fit-content;
-    margin: 1.2em;
+    justify-content: end;
     font-size: 1.5em;
+}
 
+#websiteLinks li a {
+    text-align: center;
 }
 
 h1 {
@@ -58,12 +60,6 @@ h2 {
 
 #titleEdito {
     color: var(--background-color);
-}
-
-#websiteLinks li {
-    list-style-type: none;
-    padding-left: 50px;
-
 }
 
 #lastRecipes {
