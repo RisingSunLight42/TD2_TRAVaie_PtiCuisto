@@ -190,6 +190,7 @@ body button, input[type=submit] {
 }
 
 #connectionContent {
+    width: 350px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -201,15 +202,15 @@ body button, input[type=submit] {
 
 label {
     font-family: var(--body-font), cursive;
-    font-size: 2em;
+    font-size: 1.5em;
     padding: 10px 0 10px 0;
 }
 
 #connectionContent > input[type="password"],
-#connectionContent >input[type="text"] {
+#connectionContent > input[type="text"] {
     border-radius: 20px;
     text-align: center;
-    width: 23em;
+    width: 100%;
 }
 
 #welcomeBackMessage {
@@ -229,9 +230,7 @@ label {
 #connectionButton {
     margin-top: 10px;
     background-color: var(--main-color);
-    padding: 5px 40px 5px 40px;
     font-size: 2em;
-    margin-bottom: 20px;
     width: unset;
     height: unset;
 }
@@ -337,6 +336,10 @@ input[type=text] {
 }
 
 @media (max-width: 500px) {
+    #welcomeBackMessage {
+        font-size: 2em;
+    }
+
     #logo {
         width: 125px;
     }
