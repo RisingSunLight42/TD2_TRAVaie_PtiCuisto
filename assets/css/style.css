@@ -168,7 +168,7 @@ p {
 }
 
 
-input[type=submit] {
+body button, input[type=submit] {
     background-color: var(--main-color);
     box-shadow: 5px 5px 5px rgba(53, 93, 204, 0.753);
     font-family: var(--body-font), cursive;
@@ -177,7 +177,7 @@ input[type=submit] {
     height: 50px;
     border-radius: 5px;
     color: #fff;
-    margin-bottom: 10px;
+    margin: 10px;
 }
 
 #formContent {
@@ -311,4 +311,8 @@ input[type=text] {
   display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.no-shadow {
+    box-shadow: none;
 }
