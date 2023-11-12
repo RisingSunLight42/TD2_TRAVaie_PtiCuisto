@@ -55,15 +55,8 @@ function getRecipeIngredients($reci_id) {
 
 /*Retrieve the ingredients of one recipe*/
 function getRecipeStashIngredients($reci_id) {
-    $bdd = dbConnect();
-
-    $preparedIngredientsRequest = "SELECT ing_title
-    FROM ptic_needed_ingredients_stash
-    JOIN ptic_ingredients USING (ing_id)
-    WHERE reci_stash_id = ?";
-    $preparedRequestGet = $bdd->prepare($preparedIngredientsRequest);
-    $preparedRequestGet->execute([$reci_id]);
-    return $preparedRequestGet->fetchAll();
+    $neededIngredientsStashModel = new NeededIngredientsStash(false);
+    return $neededIngredientsStashModel->getRecipeStashIngredients($reci_id);
 }
 
 /*Retrieve the three last recipes published ont the website*/

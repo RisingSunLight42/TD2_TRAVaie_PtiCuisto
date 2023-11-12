@@ -23,7 +23,7 @@ class NeededIngredients extends BaseModel {
 
     /**
      * Method getRecipeIngredients
-     * Method to call the prepared request to gret recipe's ingredients.
+     * Method to call the prepared request to get recipe's ingredients.
      * @param string $reci_id Recipe's id
      *
      * @return array
