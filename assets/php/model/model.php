@@ -122,34 +122,12 @@ function addEdito($edito) {
 }
 
 function getWaitingForCreationRecipes(){
-    $bdd = dbConnect();
-    
-    $preparedRecipeRequest = "SELECT reci_stash_id as reci_id, reci_stash_title as reci_title, reci_stash_resume as reci_resume, rtype_title,
-    reci_stash_image as reci_image, users_nickname
-    FROM ptic_recipes_stash
-    JOIN ptic_recipes_type USING (rtype_id)
-    JOIN ptic_users USING (users_id)
-    WHERE stash_type_id = (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'CREATION')";
-
-    $preparedRecipesGet = $bdd->prepare($preparedRecipeRequest);
-    $preparedRecipesGet->execute();
-
-    return $preparedRecipesGet->fetchAll();
+    $recipesStashModel = new RecipesStashModel(false);
+    return $recipesStashModel->getWaitingForCreationRecipes();
 }
 
 function getWaitingForModificationRecipes(){
-    $bdd = dbConnect();
-    
-    $preparedRecipeRequest = "SELECT reci_stash_id as reci_id, reci_stash_title as reci_title, reci_stash_resume as reci_resume, rtype_title,
-    reci_stash_image as reci_image, users_nickname
-    FROM ptic_recipes_stash
-    JOIN ptic_recipes_type USING (rtype_id)
-    JOIN ptic_users USING (users_id)
-    WHERE stash_type_id = (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'MODIFICATION')";
-
-    $preparedRecipesGet = $bdd->prepare($preparedRecipeRequest);
-    $preparedRecipesGet->execute();
-
-    return $preparedRecipesGet->fetchAll();
+    $recipesStashModel = new RecipesStashModel(false);
+    return $recipesStashModel->getWaitingForModificationRecipes();
 }
 ?>

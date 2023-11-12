@@ -310,7 +310,7 @@ class RecipesModel extends BaseModel {
     }
 
     final public function deleteRecipe($reci_id) {
-        $neededIngredientsModel = new NeededIngredients(false);
+        $neededIngredientsModel = new NeededIngredientsModel(false);
         $neededIngredientsModel->deleteRecipesIngredients($reci_id);
         $recipesStashModel = new RecipesStashModel(false);
         $recipesStashModel->deleteReference($reci_id);

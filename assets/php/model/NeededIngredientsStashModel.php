@@ -87,6 +87,5 @@ class NeededIngredientsStashModel extends BaseModel {
      */
     final public function deleteStashRecipesIngredients($reci_id) {
         $this->preparedDeleteStashRecipesIngredientsRequest->execute([$reci_id]);
-    }
-    
+    }    
 }

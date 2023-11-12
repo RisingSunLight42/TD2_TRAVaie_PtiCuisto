@@ -6,6 +6,8 @@ class RecipesStashModel extends BaseModel {
     private PDOStatement $preparedEditStashRecipeRequest;
     private PDOStatement $preparedGetStashByReferenceRequest;
     private PDOStatement $preparedDeleteStashRecipeRequest;
+    private PDOStatement $preparedGetWaitingForCreationRecipesRequest;
+    private PDOStatement $preparedGetWaitingForModificationRecipesRequest;
 
     public function __construct($isAdmin, $connection = null) {
         parent::__construct($isAdmin, $connection);
@@ -14,6 +16,8 @@ class RecipesStashModel extends BaseModel {
         $this->prepareEditStashRecipe();
         $this->prepareGetStashByReference();
         $this->prepareDeleteStashRecipe();
+        $this->prepareGetWaitingForCreationRecipes();
+        $this->prepareGetWaitingForModificationRecipes();
     }
     
     /**
@@ -119,6 +123,36 @@ class RecipesStashModel extends BaseModel {
     }
 
     /**
+     * Method prepareGetWaitingForCreationRecipes
+     * Method to prepare the request to add the ingredients of a recipe.
+     * @return void
+     */
+    final private function prepareGetWaitingForCreationRecipes() {
+        $getWaitingForCreationRecipesRequest = "SELECT reci_stash_id as reci_id, reci_stash_title as reci_title, reci_stash_resume as reci_resume, rtype_title,
+        reci_stash_image as reci_image, users_nickname
+        FROM ptic_recipes_stash
+        JOIN ptic_recipes_type USING (rtype_id)
+        JOIN ptic_users USING (users_id)
+        WHERE stash_type_id = (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'CREATION')";
+        $this->preparedGetWaitingForCreationRecipesRequest = $this->connection->prepare($getWaitingForCreationRecipesRequest);
+    }
+
+    /**
+     * Method prepareAddRecipesIngredients
+     * Method to prepare the request to add the ingredients of a recipe.
+     * @return void
+     */
+    final private function prepareGetWaitingForModificationRecipes() {
+        $getWaitingForModificationRecipesRequest = "SELECT reci_stash_id as reci_id, reci_stash_title as reci_title, reci_stash_resume as reci_resume, rtype_title,
+        reci_stash_image as reci_image, users_nickname
+        FROM ptic_recipes_stash
+        JOIN ptic_recipes_type USING (rtype_id)
+        JOIN ptic_users USING (users_id)
+        WHERE stash_type_id = (SELECT stash_type_id FROM ptic_stash_type WHERE UPPER(stash_type_value) = 'CREATION')";
+        $this->preparedGetWaitingForModificationRecipesRequest = $this->connection->prepare($getWaitingForModificationRecipesRequest);
+    }
+
+    /**
      * Method getRecipeStashById
      * Method to call the prepared request to get the stash recipe by its id.
      *
@@ -142,7 +176,7 @@ class RecipesStashModel extends BaseModel {
     }
 
     final public function deleteStashRecipe($reci_stash_id) {
-        $neededIngredientsStashModel = new NeededIngredientsStash(false);
+        $neededIngredientsStashModel = new NeededIngredientsStashModel(false);
         $neededIngredientsStashModel->deleteStashRecipesIngredients($reci_stash_id);
         $this->preparedDeleteStashRecipeRequest->execute([$reci_stash_id]);
     }
@@ -157,5 +191,15 @@ class RecipesStashModel extends BaseModel {
         for ($i=0; $i<count($stashRecipesReferencingRecipe); $i++) {
             $this->deleteStashRecipe($stashRecipesReferencingRecipe[$i]['reci_stash_id']);
         }
+    }
+
+    final public function getWaitingForCreationRecipes(){
+        $this->preparedGetWaitingForCreationRecipesRequest->execute();
+        return $this->preparedGetWaitingForCreationRecipesRequest->fetchAll();
+    }
+
+    final public function getWaitingForModificationRecipes(){
+        $this->preparedGetWaitingForModificationRecipesRequest->execute();
+        return $this->preparedGetWaitingForModificationRecipesRequest->fetchAll();
     }
 }
