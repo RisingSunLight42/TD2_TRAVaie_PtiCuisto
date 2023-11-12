@@ -29,10 +29,8 @@ function getRecipesByIngredients($ingredients) {
 
 /*Get the number total of recipe*/
 function getRecipesCount() {
-    $bdd = dbConnect();
-    $countRequest = "SELECT COUNT(*) as count FROM ptic_recipes";
-    LireDonneesPDO1($bdd, $countRequest, $count);
-    return $count[0]['count'];
+    $recipesModel = new RecipesModel();
+    return $recipesModel->getRecipesCount();
 }
 
 /*Retrive one recipe with its id */

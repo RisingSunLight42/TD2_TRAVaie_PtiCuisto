@@ -4,12 +4,14 @@ class RecipesModel extends BaseModel {
     private PDOStatement $preparedGetRecipesRequest;
     private PDOStatement $preparedGetRecipeByTitleRequest;
     private PDOStatement $preparedGetRecipesByCategoryRequest;
+    private PDOStatement $preparedGetRecipesCount;
 
     public function __construct() {
         parent::__construct();
         $this->prepareGetRecipes();
         $this->prepareGetRecipesByTitle();
         $this->prepareGetRecipesByCategory();
+        $this->prepareGetRecipesCount();
     }
     
     /**
@@ -57,6 +59,16 @@ class RecipesModel extends BaseModel {
         $this->preparedGetRecipesByCategoryRequest = $this->connection->prepare($getRecipesByCategoryRequest);
     }
     
+    /**
+     * Method prepareGetRecipesCount
+     * Method to prepare the request to get the number of recipes existing in the database.
+     * @return void
+     */
+    final private function prepareGetRecipesCount() {
+        $getRecipesCount = "SELECT COUNT(*) as count FROM ptic_recipes";
+        $this->preparedGetRecipesCount = $this->connection->prepare($getRecipesCount);
+    }
+
     /**
      * Method prepareGetRecipesByIngredients
      * Method to prepare the request to get recipes matching the ingredients given.
@@ -128,6 +140,17 @@ class RecipesModel extends BaseModel {
         }
         $preparedGetRecipesByIngredientsRequest->execute();
         return $preparedGetRecipesByIngredientsRequest->fetchAll();
+    }
+
+    /**
+     * Method getRecipesCount
+     * Method to call the prepared request to get the number of recipes in the database.
+     *
+     * @return int
+     */
+    final public function getRecipesCount() {
+        $this->preparedGetRecipesCount->execute();
+        return intval($this->preparedGetRecipesCount->fetchAll()[0]['count']);
     }
     
 }
