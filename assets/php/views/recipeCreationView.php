@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/css/style.css">
-    <title>Nouvelle Recette</title>
+    <?php 
+        require ("head.php");
+    ?>
+  <title>Nouvelle Recette</title>
     <script
             src="https://kit.fontawesome.com/908c130cac.js"
             crossorigin="anonymous"
         ></script>
+    <title>Nouvelle Recette</title>
 </head>
 <body>
+    <?php 
+        require ("header.php");
+    ?>
     <h1>Nouvelle recette</h1>
     <?php
     echo $content;
@@ -40,6 +46,10 @@
         <input type="hidden" id="nbIngredients" name="nbIngredients" value="0"/>
     </form>
 
+    
+    <?php 
+        require ("footer.php");
+    ?>
     <script src="assets\js\autocompletion.js"></script>
     <script src="assets\js\allIngredients.js"></script>
 </body>

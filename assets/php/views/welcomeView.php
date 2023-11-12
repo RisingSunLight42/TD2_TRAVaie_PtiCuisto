@@ -3,17 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php 
+        require ("head.php");
+    ?>
     <title>PtiCuistot - Accueil</title>
 </head>
 <body>
-    <div id="menuButton">
-        <a href="index.php?action=welcome">Accueil</a>
-        <a href="index.php?action=allRecipes">Nos recettes</a>
-        <a href="index.php?action=filter">Filtrer</a>
-        <a href="index.php?action=account">Connexion</a>
-    </div>
-    <?php
-        echo $content;
+    <?php 
+        require ("header.php");
     ?>
+    <main>
+        <section id="welcomeSection">
+            <article id="lastRecipes">
+                <h2 id="titleLastRecipes" >LES DERNIÈRES RECETTES</h2>
+                <?php
+                echo $content;
+                ?>
+            </article>
+            <article id="edito">
+                <img id="imgEdito" src="assets/images/Pticuisto.png" class="img-fluid rounded-start" alt="...">
+                <h2 id="titleEdito">Edito</h2>
+                
+                <?php
+                echo $edito;
+                ?>
+            </article>
+        </section>
+    </main>    
+    <hr>
+    <?php 
+        require ("footer.php");
+    ?>
+    <script src="assets/scripts/bootstrap.js" type="text/javascrit"></script>
 </body>
 </html>

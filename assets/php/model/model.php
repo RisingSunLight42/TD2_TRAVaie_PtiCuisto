@@ -22,6 +22,7 @@ function getRecipes($number) {
     return $preparedRecipesGet->fetchAll();
 }
 
+
 function getRecipesByTitle($title) {
     $bdd = dbConnect();
     
@@ -81,7 +82,8 @@ function getRecipesCount() {
     LireDonneesPDO1($bdd, $countRequest, $count);
     return $count[0]['count'];
 }
-/*Retrive one recipe with it's id */
+
+/*Retrive one recipe with its id */
 function getOneRecipe($reci_id) {
     $bdd = dbConnect();
 
@@ -136,6 +138,7 @@ function getRecipeStashIngredients($reci_id) {
     $preparedRequestGet->execute([$reci_id]);
     return $preparedRequestGet->fetchAll();
 }
+
 /*Retrieve the three last recipes published ont the website*/
 function getLastThreeRecipes() {
     $bdd = dbConnect();
@@ -146,6 +149,7 @@ function getLastThreeRecipes() {
     LireDonneesPDO1($bdd, $recipeRequest, $recipes);
     return $recipes;
 }
+
 /*Retrieve the last Edito published*/
 function getLastEdito() {
     $bdd = dbConnect();

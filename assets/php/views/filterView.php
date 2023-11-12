@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <?php 
+        require ("head.php");
+    ?>
     <script
             src="https://kit.fontawesome.com/908c130cac.js"
             crossorigin="anonymous"
@@ -11,6 +13,9 @@
     <title>Filtres</title>
 </head>
 <body>
+    <?php 
+        require ("header.php");
+    ?>
     <div id="menuButton">
         <a href="index.php">Accueil</a>
     </div>
@@ -46,6 +51,9 @@
             echo $content;
         ?>
     </section>
+    <?php 
+        require ("footer.php");
+    ?>
     <script src="assets\js\autocompletion.js"></script>
     <script src="assets\js\allIngredients.js"></script>
 </body>

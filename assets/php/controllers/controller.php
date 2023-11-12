@@ -1,6 +1,7 @@
 <?php
 session_start();
 require('./assets/php/model/model.php');
+
 /* The controller is the part of the MVC who will managed the information flow between the model and the view.
 When the user made action on the website, the controller will retrive this information and send it to the model to do treatments*/
 /*All recipes's page controller*/ 
@@ -33,15 +34,25 @@ function buildRecipeDisplayAllRecipes(&$content, $recipes, $isStash=false) {
         $type = $recipe['rtype_title'];
         $image = $recipe['reci_image'];
         $anchor = $i + 1;
-        $content .= "<div id='$anchor'>";
-        $content .= "<img src='$image' alt='image de recette' onclick=\"location.href='index.php?action=$action&value=$recipe_id'\" width=50px height=50px/>" ;
-        $content .= "<h1 onclick=\"location.href='index.php?action=$action&value=$recipe_id'\" >$title</h1>";
-        $content .= "<h2>$type</h2>";
-        $content .= "<p>$resume<p>";
-        $content .= str_replace("RECI_ID", $recipe_id, $optionalButtons);
+        $content .= "<article id='$anchor' class='recipeCard'>";
+        $content .= "<div id='leftRecipeCard'>";
+        $content .= "<div id='recipePicture'>";
+        $content .= "<img class='pointer recipePicture' src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\"/>";
         $content .= "</div>";
+        $content .= "<div id='tags'>";
+        $content .= "</div>";
+        $content .= "</div>";
+        $content .= "<div id='rightRecipeCard'>";
+        $content .= "<h1 class='pointer' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h1>";
+        $content .= "<h2>$type</h2>";
+        $content .= "<h2>Résumé</h2>";
+        $content .= "<p>$resume</p>";
+        $content .= "</div>";
+        $content .= str_replace("RECI_ID", $recipe_id, $optionalButtons);
+        $content .= "</article>";
         $optionalButtons = "";
     }
+    require('./assets/php/views/allRecipesView.php');
 }
 
 function welcome() {
@@ -56,19 +67,24 @@ function welcome() {
         $title = $recipe['reci_title'];
         $resume = $recipe['reci_resume'];
         $image = $recipe['reci_image'];
-        $content .= "<div>";
-        $content .= "<img src='$image' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" width=200px height=200px/>" ;
-        $content .= "<h2 onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h2>";
+        $content .= "<div class='card mb-3' style='max-width: 680px;'>";
+        $content .= "<div class='row g-0'>";
+        $content .= "<div class='col-md-4'>";
+        $content .= "<img src='$image' class='img-fluid rounded-start pointer' alt='image de recette' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\"/>" ;
+        $content .= "</div>";
+        $content .= "<div class='col-md-8'>";
+        $content .= "<div class='card-body'>";
+        $content .= "<h5 class='pointer' onclick=\"location.href='index.php?action=recipe&value=$recipe_id'\" >$title</h5>";
         $content .= "<p>$resume<p>";
-        $content .= "</div>";           
+        $content .= "</div>";
+        $content .= "</div>";
+        $content .= "</div>";         
+        $content .= "</div>";         
     }
-    $content .= "</section>";
 
     // Edito building
     $editoText = str_replace("\n", "<br>", getLastEdito());
-    $content .= "<section id='edito'>";
-    $content .= "<h1>Edito</h1>";
-    $content .= "<p>$editoText</p></section>";
+    $edito = "<p>$editoText</p>";
     require('./assets/php/views/welcomeView.php');
 }
 
@@ -94,6 +110,7 @@ function buildRecipeDisplayOneRecipe($recipe, $ingredients, &$content) {
     $creationDate = $recipe['reci_creation_date'];
     $lastUpdateDate = $recipe['reci_edit_date'];
     $editorUsername = $recipe['users_nickname'];
+
     $content .= "<h1>$title</h1>";
     $content .= "<p>$type</p>";
     $content .= $ingredientsHTML;
@@ -258,6 +275,7 @@ function account() {
     require('./assets/php/views/connectionView.php');
 }
 
+
 function checkCanEditOrDelete($username) {
     return (isset($_SESSION["userType"]) && strcmp($_SESSION["userType"],"ADMINISTRATEUR") === 0) ||
     (isset($_SESSION["username"]) && strcmp($_SESSION["username"], $username) === 0 && $_SESSION["userType"] = "EDITEUR");
@@ -300,6 +318,7 @@ function checkIfConnectionValuesExists(&$content) {
     }
     return $fieldsMissing;
 }
+
 /*Connection's page controller*/
 function connectionForm() {
     $content = "";

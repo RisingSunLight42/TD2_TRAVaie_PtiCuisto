@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./assets/css/style.css">
+    <?php 
+        require ("head.php");
+    ?>
     <title>PtiCuistot - Compte</title>
 </head>
 <body>
-    <div id="menuButton">
-        <a href="index.php">Accueil</a>
-        <a href="index.php?action=allRecipes">Nos recettes</a>
-        <a href="index.php?action=filter">Filtrer</a>
-    </div>
+    <?php 
+        require ("header.php");
+    ?>
+
     <div>
         <button><a href="index.php?action=recipeCreation">Creation</a></button>
         <?php
@@ -20,8 +21,11 @@
     </div>
     <section>
         <?php
-            echo $content;
+        echo $content;
         ?>
     </section>
+    <?php 
+        require ("footer.php");
+    ?>
 </body>
 </html>
