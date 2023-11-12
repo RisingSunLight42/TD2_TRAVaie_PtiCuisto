@@ -1,5 +1,6 @@
 <?php
 require_once("./assets/php/utils/connexion.php");
+require_once("./assets/php/model/RecipesModel.php");
 include_once("./assets/php/utils/pdo_agile.php");
 /*The model is the treatment part of informations in the database. The controller will use the information to transfer them to the view. 
 The treatment was mainly componsed of database's treatment, with selection for the displaying for websites's pages
@@ -7,36 +8,14 @@ and insertion for adding a new recipe or ingredient in the database*/
 
 /*Recipe retrievment*/
 function getRecipes($number) {
-    $bdd = dbConnect();
-    
-    $preparedRecipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image, users_nickname
-    FROM ptic_recipes
-    JOIN ptic_recipes_type USING (rtype_id)
-    JOIN ptic_users USING (users_id)
-    ORDER BY reci_id LIMIT :limit";
-
-    $preparedRecipesGet = $bdd->prepare($preparedRecipeRequest);
-    $preparedRecipesGet->bindValue(':limit', (int) $number, PDO::PARAM_INT);
-    $preparedRecipesGet->execute();
-
-    return $preparedRecipesGet->fetchAll();
+    $recipesModel = new RecipesModel();
+    return $recipesModel->getRecipes($number);
 }
 
 
 function getRecipesByTitle($title) {
-    $bdd = dbConnect();
-    
-    $preparedRecipeRequest = "SELECT reci_id, reci_title, reci_resume, rtype_title, reci_image, users_nickname
-    FROM ptic_recipes
-    JOIN ptic_recipes_type USING (rtype_id)
-    JOIN ptic_users USING (users_id)
-    WHERE reci_title LIKE UPPER(?)
-    ORDER BY reci_id";
-
-    $preparedRecipesGet = $bdd->prepare($preparedRecipeRequest);
-    $preparedRecipesGet->execute(['%'.$title.'%']);
-
-    return $preparedRecipesGet->fetchAll();
+    $recipesModel = new RecipesModel();
+    return $recipesModel->getRecipesByTitle($title);
 }
 
 function getRecipesByCategory($category) {
