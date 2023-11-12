@@ -1,7 +1,9 @@
 <?php
 require_once("./assets/php/utils/connexion.php");
 require_once("./assets/php/model/RecipesModel.php");
+require_once("./assets/php/model/NeededIngredients.php");
 require_once("./assets/php/model/RecipesStashModel.php");
+require_once("./assets/php/model/NeededIngredientsStash.php");
 include_once("./assets/php/utils/pdo_agile.php");
 /*The model is the treatment part of informations in the database. The controller will use the information to transfer them to the view. 
 The treatment was mainly componsed of database's treatment, with selection for the displaying for websites's pages
@@ -47,15 +49,8 @@ function getRecipeStashById($reci_id) {
 
 /*Retrieve the ingredients of one recipe*/
 function getRecipeIngredients($reci_id) {
-    $bdd = dbConnect();
-
-    $preparedIngredientsRequest = "SELECT ing_title
-    FROM ptic_needed_ingredients
-    JOIN ptic_ingredients USING (ing_id)
-    WHERE reci_id = ?";
-    $preparedRequestGet = $bdd->prepare($preparedIngredientsRequest);
-    $preparedRequestGet->execute([$reci_id]);
-    return $preparedRequestGet->fetchAll();
+    $neededIngredientsModel = new NeededIngredients(false);
+    return $neededIngredientsModel->getRecipeIngredients($reci_id);
 }
 
 /*Retrieve the ingredients of one recipe*/
