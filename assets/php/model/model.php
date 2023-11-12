@@ -292,6 +292,20 @@ function deleteRecipe($reci_id) {
     $prepareDeleteRecipe->execute([$reci_id]);
 }
 
+/* To delete a recipe */
+function deleteRecipeStash($reci_stash_id) {
+    $bdd = dbConnect();
+
+    $deleteRecipeIngredientsSQL = "DELETE FROM ptic_needed_ingredients_stash WHERE reci_stash_id = ?";
+    $deleteRecipeSQL = "DELETE FROM ptic_recipes_stash WHERE reci_stash_id = ?";
+
+    $prepareDeleteRecipeIngredients = $bdd->prepare($deleteRecipeIngredientsSQL);
+    $prepareDeleteRecipe = $bdd->prepare($deleteRecipeSQL);
+
+    $prepareDeleteRecipeIngredients->execute([$reci_stash_id]);
+    $prepareDeleteRecipe->execute([$reci_stash_id]);
+}
+
 function getConnectionCredentials($username) {
     $bdd = dbConnect();
 

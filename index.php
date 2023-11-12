@@ -18,6 +18,8 @@ if (isset($_GET['action'])) {
     elseif ($action == 'connectionForm') connectionForm();
     elseif ($action == 'getAllIngredients') getAllIngredients();
     elseif ($action == 'disconnect') disconnect();
+    elseif ($action == 'refuse') refuse();
+    elseif ($action == 'validate') validate();
     else welcome();
 }
 else {

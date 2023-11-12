@@ -150,10 +150,24 @@ function recipeStash($reci_stash_id="") {
         buildRecipeDisplayOneRecipe($recipe, $ingredients, $content);
     }
     
-    $content .= "<button><a href='index.php?action=validate&value=$reci_id'>Valider</a></button>";
-    $content .= "<button><a href='index.php?action=refuse&value=$reci_id'>Refuser</a></button>";
+    $content .= "<button><a href='index.php?action=validate&value=$reci_stash_id'>Valider</a></button>";
+    $content .= "<button><a href='index.php?action=refuse&value=$reci_stash_id'>Refuser</a></button>";
     require('./assets/php/views/recipeView.php');
 }
+
+/* To refuse a stash*/
+function refuse() {
+    if (empty($_GET['value'])) account();
+    $reci_stash_id = strip_tags($_GET['value']);
+    deleteRecipeStash($reci_stash_id);
+    account();
+}
+
+/* To validate a stash */
+function validate() {
+
+}
+
 /*filter's page controller*/
 function filter() {
     $content = "";
