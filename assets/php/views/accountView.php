@@ -15,8 +15,9 @@
 
     <div>
         <button><a href="index.php?action=recipeCreation">Creation</a></button>
-        <button><a href="index.php?action=recipeModification">Modification</a></button>
-        <button><a href="index.php?action=recipeDeletion">Suppresion</a></button>
+        <?php
+            echo $unlogButton
+        ?>
     </div>
     <section>
         <?php

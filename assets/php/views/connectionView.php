@@ -18,8 +18,8 @@
     <h1 id="welcomeBackMessage">Content de vous revoir !</h1>
     <section id="formContent">
         <form id="connectionContent" action="index.php?action=connectionForm" method="post">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" placeholder="Votre email" required>
+            <label for="username">Nom d'utilisateur</label>
+            <input type="text" name="username" id="username" placeholder="Super Jean-mi" required>
             <label for="password">Mot de passe</label>
             <input type="password" name="password" id="password" placeholder="Votre mot de passe" required>
             <input type="submit" id="connectionButton" class="button" value="Connexion">
