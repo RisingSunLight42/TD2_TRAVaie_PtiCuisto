@@ -1,5 +1,6 @@
 <?php
 require_once("./assets/php/model/BaseModel.php");
+require_once("./assets/php/model/NeededIngredients.php");
 require_once("./assets/php/model/RecipesStashModel.php");
 class RecipesModel extends BaseModel {
     private PDOStatement $preparedGetRecipesRequest;
@@ -10,6 +11,7 @@ class RecipesModel extends BaseModel {
     private PDOStatement $preparedGetLastNRecipesRequest;
     private PDOStatement $preparedCreateRecipeRequest;
     private PDOStatement $preparedEditRecipeRequest;
+    private PDOStatement $preparedDeleteRecipeRequest;
 
     public function __construct($isAdmin) {
         parent::__construct($isAdmin, null);
@@ -21,6 +23,7 @@ class RecipesModel extends BaseModel {
         $this->prepareGetLastNRecipes();
         $this->prepareCreateRecipe();
         $this->prepareEditRecipe();
+        $this->prepareDeleteRecipe();
     }
     
     /**
@@ -165,6 +168,16 @@ class RecipesModel extends BaseModel {
         ) AND reci_id = :reci_id";
         $this->preparedEditRecipeRequest = $this->connection->prepare($editRecipeRequest);
     }
+
+    /**
+     * Method prepareEditRecipe
+     * Method to prepare the request to edit a recipe.
+     * @return void
+     */
+    final private function prepareDeleteRecipe() {
+        $deleteRecipeRequest = "DELETE FROM ptic_recipes WHERE reci_id = ?";
+        $this->preparedDeleteRecipeRequest = $this->connection->prepare($deleteRecipeRequest);
+    }
     
     /**
      * Method getRecipes
@@ -294,5 +307,13 @@ class RecipesModel extends BaseModel {
         }
         $recipesStashModel = new RecipesStashModel($this->isAdmin, $this->connection);
         return $recipesStashModel->editStashRecipe($reci_id, $title, $desc, $resume, $category, $img, $user);
+    }
+
+    final public function deleteRecipe($reci_id) {
+        $neededIngredientsModel = new NeededIngredients(false);
+        $neededIngredientsModel->deleteRecipesIngredients($reci_id);
+        $recipesStashModel = new RecipesStashModel(false);
+        $recipesStashModel->deleteReference($reci_id);
+        $this->preparedDeleteRecipeRequest->execute([$reci_id]);
     }
 }

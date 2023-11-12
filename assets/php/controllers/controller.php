@@ -176,7 +176,7 @@ function refuse() {
     if (strcmp($_SESSION['userType'],"ADMINISTRATEUR") != 0) return welcome();
     if (empty($_GET['value'])) account();
     $reci_stash_id = strip_tags($_GET['value']);
-    deleteRecipeStash($reci_stash_id);
+    deleteStashRecipe($reci_stash_id);
     account();
 }
 
@@ -197,7 +197,7 @@ function validate() {
             array_push($ingredients,$value["ing_title"]);
         }
         addRecipesIngredients($reci_id, $ingredients, true);
-        deleteRecipeStash($reci_stash_id);
+        deleteStashRecipe($reci_stash_id);
         account();
     } elseif ($recipeStash["stash_type_value"] === "MODIFICATION") {
         editRecipe($recipeStash["reci_id"], $recipeStash["reci_title"], $recipeStash["reci_content"],
@@ -208,7 +208,7 @@ function validate() {
             array_push($ingredients,$value["ing_title"]);
         }
         editRecipesIngredients($recipeStash["reci_id"], $ingredients, true);
-        deleteRecipeStash($reci_stash_id);
+        deleteStashRecipe($reci_stash_id);
         account();
     }
 }

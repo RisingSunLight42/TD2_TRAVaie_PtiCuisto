@@ -4,12 +4,16 @@ class RecipesStashModel extends BaseModel {
     private PDOStatement $preparedCreateRecipeStashRequest;
     private PDOStatement $preparedGetRecipesStashByIdRequest;
     private PDOStatement $preparedEditStashRecipeRequest;
+    private PDOStatement $preparedGetStashByReferenceRequest;
+    private PDOStatement $preparedDeleteStashRecipeRequest;
 
     public function __construct($isAdmin, $connection = null) {
         parent::__construct($isAdmin, $connection);
         $this->prepareCreateRecipeStash();
         $this->prepareGetRecipesStashById();
         $this->prepareEditStashRecipe();
+        $this->prepareGetStashByReference();
+        $this->prepareDeleteStashRecipe();
     }
     
     /**
@@ -72,6 +76,16 @@ class RecipesStashModel extends BaseModel {
     }
 
     /**
+     * Method prepareEditRecipe
+     * Method to prepare the request to edit a recipe.
+     * @return void
+     */
+    final private function prepareDeleteStashRecipe() {
+        $deleteStashRecipeRequest = "DELETE FROM ptic_recipes_stash WHERE reci_stash_id = ?";
+        $this->preparedDeleteStashRecipeRequest = $this->connection->prepare($deleteStashRecipeRequest);
+    }
+
+    /**
      * Method createRecipeStash
      * Method to call the prepared request to create a stash recipe.
      * @param string $title Stash Recipe's title
@@ -95,6 +109,16 @@ class RecipesStashModel extends BaseModel {
     }
 
     /**
+     * Method prepareEditRecipe
+     * Method to prepare the request to edit a recipe.
+     * @return void
+     */
+    final private function prepareGetStashByReference() {
+        $getStashByReference = "SELECT reci_stash_id FROM ptic_recipes_stash WHERE reci_id = ?";
+        $this->preparedGetStashByReferenceRequest = $this->connection->prepare($getStashByReference);
+    }
+
+    /**
      * Method getRecipeStashById
      * Method to call the prepared request to get the stash recipe by its id.
      *
@@ -115,5 +139,23 @@ class RecipesStashModel extends BaseModel {
         $this->preparedEditStashRecipeRequest->bindValue(':reci_id', (int) $reci_id, PDO::PARAM_INT);
         $this->preparedEditStashRecipeRequest->execute();
         return $this->connection->lastInsertId();
+    }
+
+    final public function deleteStashRecipe($reci_stash_id) {
+        $neededIngredientsStashModel = new NeededIngredientsStash(false);
+        $neededIngredientsStashModel->deleteStashRecipesIngredients($reci_stash_id);
+        $this->preparedDeleteStashRecipeRequest->execute([$reci_stash_id]);
+    }
+
+    final public function getStashByReference($reci_id) {
+        $this->preparedGetStashByReferenceRequest->execute([$reci_id]);
+        return $this->preparedGetStashByReferenceRequest->fetchAll();
+    }
+
+    final public function deleteReference($reci_id) {
+        $stashRecipesReferencingRecipe = $this->getStashByReference($reci_id);
+        for ($i=0; $i<count($stashRecipesReferencingRecipe); $i++) {
+            $this->deleteStashRecipe($stashRecipesReferencingRecipe[$i]['reci_stash_id']);
+        }
     }
 }
