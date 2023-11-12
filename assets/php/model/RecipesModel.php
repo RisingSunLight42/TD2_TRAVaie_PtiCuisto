@@ -5,6 +5,7 @@ class RecipesModel extends BaseModel {
     private PDOStatement $preparedGetRecipeByTitleRequest;
     private PDOStatement $preparedGetRecipesByCategoryRequest;
     private PDOStatement $preparedGetRecipesCount;
+    private PDOStatement $preparedGetRecipesByIdRequest;
 
     public function __construct() {
         parent::__construct();
@@ -12,6 +13,7 @@ class RecipesModel extends BaseModel {
         $this->prepareGetRecipesByTitle();
         $this->prepareGetRecipesByCategory();
         $this->prepareGetRecipesCount();
+        $this->prepareGetRecipesById();
     }
     
     /**
@@ -60,16 +62,6 @@ class RecipesModel extends BaseModel {
     }
     
     /**
-     * Method prepareGetRecipesCount
-     * Method to prepare the request to get the number of recipes existing in the database.
-     * @return void
-     */
-    final private function prepareGetRecipesCount() {
-        $getRecipesCount = "SELECT COUNT(*) as count FROM ptic_recipes";
-        $this->preparedGetRecipesCount = $this->connection->prepare($getRecipesCount);
-    }
-
-    /**
      * Method prepareGetRecipesByIngredients
      * Method to prepare the request to get recipes matching the ingredients given.
      * @return PDOStatement
@@ -87,6 +79,31 @@ class RecipesModel extends BaseModel {
             $getRecipesByIngredientsRequest .= "OR ing_title= UPPER(:ingredient$i)";
         }
         return $this->connection->prepare($getRecipesByIngredientsRequest);
+    }
+
+    /**
+     * Method prepareGetRecipesCount
+     * Method to prepare the request to get the number of recipes existing in the database.
+     * @return void
+     */
+    final private function prepareGetRecipesCount() {
+        $getRecipesCount = "SELECT COUNT(*) as count FROM ptic_recipes";
+        $this->preparedGetRecipesCount = $this->connection->prepare($getRecipesCount);
+    }
+
+    /**
+     * Method prepareGetRecipesById
+     * Method to prepare the request to get recipe by its id.
+     * @return void
+     */
+    final private function prepareGetRecipesById() {
+        $getRecipesByIdRequest = "SELECT reci_title, rtype_title, reci_image, reci_content, users_nickname, reci_resume,
+        DATE_FORMAT(reci_creation_date, '%d/%m/%Y à %H:%i:%S') as reci_creation_date, DATE_FORMAT(reci_edit_date, '%d/%m/%Y à %H:%i:%S') as reci_edit_date
+        FROM ptic_recipes
+        JOIN ptic_recipes_type USING (rtype_id)
+        JOIN ptic_users USING (users_id)
+        WHERE reci_id = ?";
+        $this->preparedGetRecipesByIdRequest = $this->connection->prepare($getRecipesByIdRequest);
     }
     
     /**
@@ -151,6 +168,17 @@ class RecipesModel extends BaseModel {
     final public function getRecipesCount() {
         $this->preparedGetRecipesCount->execute();
         return intval($this->preparedGetRecipesCount->fetchAll()[0]['count']);
+    }
+
+    /**
+     * Method getRecipeById
+     * Method to call the prepared request to get the recipe by its id.
+     *
+     * @return array
+     */
+    final public function getRecipeById($reci_id) {    
+        $this->preparedGetRecipesByIdRequest->execute([$reci_id]);
+        return $this->preparedGetRecipesByIdRequest->fetchAll();
     }
     
 }

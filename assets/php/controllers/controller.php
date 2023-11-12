@@ -126,7 +126,7 @@ function recipe($reci_id="") {
     }
     if (!is_numeric($reci_id)) return getAllRecipes();
     if (intval($reci_id) < 1) return getAllRecipes();
-    $recipe = getOneRecipe($reci_id);
+    $recipe = getRecipeById($reci_id);
     if (empty($recipe)) getAllRecipes();
     $recipe = $recipe[0];
     $ingredients = getRecipeIngredients($reci_id);
@@ -158,7 +158,7 @@ function recipeStash($reci_stash_id="") {
     $reci_id = $recipeStash["reci_id"];
     if (is_numeric($reci_id)) {
         $content .= "<h1>Ancienne version de la recette</h1>";
-        $recipe = getOneRecipe($reci_id);
+        $recipe = getRecipeById($reci_id);
         if (empty($recipe)) getAllRecipes();
         $recipe = $recipe[0];
         $ingredients = getRecipeIngredients($reci_id);
@@ -418,7 +418,7 @@ function recipeCreationHandling() {
 function recipeEdition($text="") {
     $content = "$text";
     $reci_id = strip_tags($_GET['value']);
-    $recipe = getOneRecipe($reci_id);
+    $recipe = getRecipeById($reci_id);
     if (count($recipe) === 0) return welcome();
     if (!checkCanEditOrDelete($recipe[0]["users_nickname"])) return welcome(); 
     $recipeIngredients = getRecipeIngredients($reci_id);
@@ -506,8 +506,8 @@ function recipeEditionHandling() {
 function recipeDeletion() {
     if (empty($_GET['value'])) getAllRecipes();
     $reci_id = strip_tags($_GET['value']);
-    $recipe = getOneRecipe($reci_id);
-    if (count($recipe) === 0) return getAllRecipes();
+    $recipe = getRecipeById($reci_id);
+    if (!$recipe) return getAllRecipes();
     if (!checkCanEditOrDelete($recipe[0]['users_nickname'])) return getAllRecipes();
     deleteRecipe($reci_id);
     getAllRecipes("<p>La recette a bien été supprimée !</p>");
