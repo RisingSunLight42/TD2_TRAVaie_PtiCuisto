@@ -55,7 +55,7 @@ function buildRecipeDisplayAllRecipes(&$content, $recipes, $isStash=false) {
 }
 
 function welcome() {
-    $recipes = getLastThreeRecipes();
+    $recipes = getLastNRecipes(3);
 
     // Latest recipes building
     $content = "<section id='lastestRecipes'>";
@@ -126,7 +126,7 @@ function recipe($reci_id="") {
     }
     if (!is_numeric($reci_id)) return getAllRecipes();
     if (intval($reci_id) < 1) return getAllRecipes();
-    $recipe = getOneRecipe($reci_id);
+    $recipe = getRecipeById($reci_id);
     if (empty($recipe)) getAllRecipes();
     $recipe = $recipe[0];
     $ingredients = getRecipeIngredients($reci_id);
@@ -148,7 +148,7 @@ function recipeStash($reci_stash_id="") {
     }
     if (!is_numeric($reci_stash_id)) return getAllRecipes();
     if (intval($reci_stash_id) < 1) return getAllRecipes();
-    $recipeStash = getOneRecipeStash($reci_stash_id);
+    $recipeStash = getRecipeStashById($reci_stash_id);
     if (empty($recipeStash)) getAllRecipes();
     $recipeStash = $recipeStash[0];
     $ingredientsStash = getRecipeStashIngredients($reci_stash_id);
@@ -158,7 +158,7 @@ function recipeStash($reci_stash_id="") {
     $reci_id = $recipeStash["reci_id"];
     if (is_numeric($reci_id)) {
         $content .= "<h1>Ancienne version de la recette</h1>";
-        $recipe = getOneRecipe($reci_id);
+        $recipe = getRecipeById($reci_id);
         if (empty($recipe)) getAllRecipes();
         $recipe = $recipe[0];
         $ingredients = getRecipeIngredients($reci_id);
@@ -172,17 +172,21 @@ function recipeStash($reci_stash_id="") {
 
 /* To refuse a stash*/
 function refuse() {
+    if (empty($_SESSION["connected"]) || $_SESSION["connected"] = false) return welcome();
+    if (strcmp($_SESSION['userType'],"ADMINISTRATEUR") != 0) return welcome();
     if (empty($_GET['value'])) account();
     $reci_stash_id = strip_tags($_GET['value']);
-    deleteRecipeStash($reci_stash_id);
+    deleteStashRecipe($reci_stash_id);
     account();
 }
 
 /* To validate a stash */
 function validate() {
+    if (empty($_SESSION["connected"]) || $_SESSION["connected"] = false) return welcome();
+    if (strcmp($_SESSION['userType'],"ADMINISTRATEUR") != 0) return welcome();
     if (empty($_GET['value'])) account();
     $reci_stash_id = strip_tags($_GET['value']);
-    $recipeStash = getOneRecipeStash($reci_stash_id);
+    $recipeStash = getRecipeStashById($reci_stash_id);
     $recipeStash = $recipeStash[0];
     if ($recipeStash["stash_type_value"] === "CREATION") {
         $reci_id = createRecipe($recipeStash["reci_title"], $recipeStash["reci_content"],
@@ -193,7 +197,7 @@ function validate() {
             array_push($ingredients,$value["ing_title"]);
         }
         addRecipesIngredients($reci_id, $ingredients, true);
-        deleteRecipeStash($reci_stash_id);
+        deleteStashRecipe($reci_stash_id);
         account();
     } elseif ($recipeStash["stash_type_value"] === "MODIFICATION") {
         editRecipe($recipeStash["reci_id"], $recipeStash["reci_title"], $recipeStash["reci_content"],
@@ -204,7 +208,7 @@ function validate() {
             array_push($ingredients,$value["ing_title"]);
         }
         editRecipesIngredients($recipeStash["reci_id"], $ingredients, true);
-        deleteRecipeStash($reci_stash_id);
+        deleteStashRecipe($reci_stash_id);
         account();
     }
 }
@@ -414,7 +418,7 @@ function recipeCreationHandling() {
 function recipeEdition($text="") {
     $content = "$text";
     $reci_id = strip_tags($_GET['value']);
-    $recipe = getOneRecipe($reci_id);
+    $recipe = getRecipeById($reci_id);
     if (count($recipe) === 0) return welcome();
     if (!checkCanEditOrDelete($recipe[0]["users_nickname"])) return welcome(); 
     $recipeIngredients = getRecipeIngredients($reci_id);
@@ -502,8 +506,8 @@ function recipeEditionHandling() {
 function recipeDeletion() {
     if (empty($_GET['value'])) getAllRecipes();
     $reci_id = strip_tags($_GET['value']);
-    $recipe = getOneRecipe($reci_id);
-    if (count($recipe) === 0) return getAllRecipes();
+    $recipe = getRecipeById($reci_id);
+    if (!$recipe) return getAllRecipes();
     if (!checkCanEditOrDelete($recipe[0]['users_nickname'])) return getAllRecipes();
     deleteRecipe($reci_id);
     getAllRecipes("<p>La recette a bien été supprimée !</p>");

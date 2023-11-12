@@ -22,17 +22,17 @@
             <input type="submit" value="Filtrer">
         </form>
         <form method="post" action="index.php?action=filterRecipeCategory">
-            <label for="re_cat">Catégorie :</label>
+            <label for="re_cat">Catégorie :</label><br>
             <input type="radio" name="re_cat" value="ENTREE"/>
-            <label>Entrée</label>
+            <label>Entrée</label><br>
             <input type="radio" name="re_cat" value="PLAT"/>
-            <label>Plat</label>
+            <label>Plat</label><br>
             <input type="radio" name="re_cat" value="DESSERT"/>
-            <label>Dessert</label>
+            <label>Dessert</label><br>
             <input type="radio" name="re_cat" value="APERITIF"/>
-            <label>Aperitif</label>
+            <label>Aperitif</label><br>
             <input type="radio" name="re_cat" value="BOISSON"/>
-            <label>Boisson</label> <br/>
+            <label>Boisson</label><br/>
             <input type="submit" value="Filtrer">
         </form>
         <form method="post" action="index.php?action=filterRecipeIngredients">

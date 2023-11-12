@@ -156,6 +156,17 @@ p {
     height: 300px;
 }
 
+div > .welcomePicture {
+    padding: 0 15px;
+}
+
+.welcomePicture {
+    object-fit: cover;
+    width: 100%;
+    height: 300px;
+    margin: auto;
+}
+
 #leftRecipeCard, #rightRecipeCard {
     margin: 2%;
 }
