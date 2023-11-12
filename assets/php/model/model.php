@@ -4,6 +4,7 @@ require_once("./assets/php/model/RecipesModel.php");
 require_once("./assets/php/model/NeededIngredients.php");
 require_once("./assets/php/model/RecipesStashModel.php");
 require_once("./assets/php/model/NeededIngredientsStash.php");
+require_once("./assets/php/model/EditoModel.php");
 include_once("./assets/php/utils/pdo_agile.php");
 /*The model is the treatment part of informations in the database. The controller will use the information to transfer them to the view. 
 The treatment was mainly componsed of database's treatment, with selection for the displaying for websites's pages
@@ -67,13 +68,8 @@ function getLastNRecipes($number) {
 
 /*Retrieve the last Edito published*/
 function getLastEdito() {
-    $bdd = dbConnect();
-    
-    $editoRequest = "SELECT edi_text
-    FROM ptic_edito
-    ORDER BY edi_date DESC LIMIT 1";
-    LireDonneesPDO1($bdd, $editoRequest, $edito);
-    return $edito[0]['edi_text'];
+    $editoModel = new EditoModel(false);
+    return $editoModel->getLastEdito();
 }
 
 function getIngredients() {
