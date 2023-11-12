@@ -1,4 +1,4 @@
-    <footer>
+    <footer class="mt-auto">
         <div >
             <ul id="socialLinks">
                 <li>
@@ -19,3 +19,4 @@
             </ul>
         </div>
     </footer>
+    <script src="assets\js\bootstrap.js"></script>

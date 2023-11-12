@@ -8,22 +8,24 @@
     ?>
     <title>Nos recettes</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <?php 
         require ("header.php");
     ?>
-    <section id="allRecipesSection">
-        <?php
-        echo $content;
-        if ($number > 20) {
-            $anchor = $number - 20;
-            echo "<script type='text/javascript'>",
-            "window.location.href = '#$anchor';",
-            "</script>";
-            ;
-        }
-        ?>
-    </section>
+    <main>
+        <section id="allRecipesSection">
+            <?php
+            echo $content;
+            if ($number > 20) {
+                $anchor = $number - 20;
+                echo "<script type='text/javascript'>",
+                "window.location.href = '#$anchor';",
+                "</script>";
+                ;
+            }
+            ?>
+        </section>
+    </main>
     <?php 
         require ("footer.php");
     ?>

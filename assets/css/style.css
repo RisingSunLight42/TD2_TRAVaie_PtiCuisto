@@ -8,17 +8,23 @@
     --body-font: 'Pacifico';
 }
 
-* {
+*, ul {
     margin: 0;
     padding: 0;
 }
 
+main {
+    margin: 0 5px;
+}
+
 nav {
     background-color: var(--navbar-color);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     font-family: var(--heading-font), cursive;
+}
+
+ul {
+    margin-left: 5px;
+    width: 100%;
 }
 
 #welcomeSection {
@@ -27,20 +33,13 @@ nav {
     align-items: stretch;
 }
 
-#lastRecipes {
-    border-color: var(--unknown-color);
-    border: solid 1px;
-    width: 48%;
-    margin: 1%;
+#websiteLinks {
+    justify-content: end;
+    font-size: 1.5em;
 }
 
-#websiteLinks {
-    display: flex;
-    justify-content: space-between;
-    width: fit-content;
-    margin: 1.2em;
-    font-size: 1.5em;
-
+#websiteLinks li a {
+    text-align: center;
 }
 
 h1 {
@@ -60,13 +59,11 @@ h2 {
     color: var(--background-color);
 }
 
-#websiteLinks li {
-    list-style-type: none;
-    padding-left: 50px;
-
-}
-
 #lastRecipes {
+    flex: 1 1 0;
+    border-color: var(--unknown-color);
+    border: solid 1px;
+    margin: 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -74,13 +71,18 @@ h2 {
 }
 
 #edito {
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
+    padding: 5px;
     margin: 15px;
-    justify-content: center;
     align-items: center;
     background-color: var(--main-color);
     color: var(--background-color);
+}
+
+.col-md-4 {
+    padding: 5px;
 }
 
 #imgEdito {
@@ -94,7 +96,7 @@ a {
 
 #logo {
     height: 100%;
-    width: 25%;
+    width: 250px;
     margin: 5mm;
 }
 
@@ -106,6 +108,7 @@ footer {
     height: 100px;
     position: relative;
     bottom: 0;
+    margin-top: 5px;
 }
 
 #socialLinks {
@@ -122,7 +125,8 @@ footer {
 }
 
 .card {
-    font-family: var(--body-font), cursive;    
+    font-family: var(--body-font), cursive;
+    margin: 5px;
 }
 
 p {
@@ -166,15 +170,17 @@ p {
     padding: 0;
 }
 
-.button {
+
+body button, input[type=submit] {
     background-color: var(--main-color);
-    padding: 5px 40px 5px 40px;
-    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(53, 93, 204, 0.753);
     font-family: var(--body-font), cursive;
-    box-shadow: 4px 7px 5px var(--unknown-color);
     color: var(--background-color);
-    font-size: 2em;
-    margin-bottom: 20px;
+    width: 125px;
+    height: 50px;
+    border-radius: 5px;
+    color: #fff;
+    margin: 10px;
 }
 
 #formContent {
@@ -184,6 +190,7 @@ p {
 }
 
 #connectionContent {
+    width: 350px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -195,15 +202,15 @@ p {
 
 label {
     font-family: var(--body-font), cursive;
-    font-size: 2em;
+    font-size: 1.5em;
     padding: 10px 0 10px 0;
 }
 
 #connectionContent > input[type="password"],
-#connectionContent >input[type="text"] {
+#connectionContent > input[type="text"] {
     border-radius: 20px;
     text-align: center;
-    width: 23em;
+    width: 100%;
 }
 
 #welcomeBackMessage {
@@ -222,6 +229,10 @@ label {
 
 #connectionButton {
     margin-top: 10px;
+    background-color: var(--main-color);
+    font-size: 2em;
+    width: unset;
+    height: unset;
 }
 
 * { box-sizing: border-box; }
@@ -246,12 +257,9 @@ textarea {
 
 input[type=text] {
   background-color: #f1f1f1;
-  width: 100%;
+  width: 50%;
 }
-input[type=submit] {
-  background-color: DodgerBlue;
-  color: #fff;
-}
+
 .autocomplete-items {
   position: absolute;
   border: 1px solid #d4d4d4;
@@ -263,16 +271,19 @@ input[type=submit] {
   left: 0;
   right: 0;
 }
+
 .autocomplete-items div {
   padding: 10px;
   cursor: pointer;
   background-color: #fff;
   border-bottom: 1px solid #d4d4d4;
 }
+
 .autocomplete-items div:hover {
   /*when hovering an item:*/
   background-color: #e9e9e9;
 }
+
 .autocomplete-active {
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;
@@ -302,4 +313,43 @@ input[type=submit] {
   display: flex;
     justify-content: center;
     align-items: center;
+}
+
+@media (max-width: 1000px) {
+    .recipeCard, #welcomeSection, .row {
+        flex-direction: column;
+    }
+
+    #edito, #lastRecipes {
+        flex: unset;
+    }
+
+    .col-md-4 {
+        flex: unset;
+        width: unset;
+    }
+
+    .recipePicture {
+        width: 100%;
+    }
+     
+}
+
+@media (max-width: 500px) {
+    #welcomeBackMessage {
+        font-size: 2em;
+    }
+
+    #logo {
+        width: 125px;
+    }
+
+    input[type=text] {
+        width: 80%;
+      }
+     
+}
+
+.no-shadow {
+    box-shadow: none;
 }

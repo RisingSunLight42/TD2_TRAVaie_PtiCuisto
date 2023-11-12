@@ -13,12 +13,13 @@
     <?php 
         require ("header.php");
     ?>
-    <section>
-        <?php
-            echo $content;
-        ?>
-    </section>
-
+    <main>
+        <section>
+            <?php
+                echo $content;
+            ?>
+        </section>
+    </main>
     <?php 
         require ("footer.php");
     ?>

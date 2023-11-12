@@ -34,6 +34,5 @@
     <?php 
         require ("footer.php");
     ?>
-    <script src="assets/scripts/bootstrap.js" type="text/javascrit"></script>
 </body>
 </html>
