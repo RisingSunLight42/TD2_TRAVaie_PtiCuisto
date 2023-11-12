@@ -165,7 +165,22 @@ function refuse() {
 
 /* To validate a stash */
 function validate() {
-
+    if (empty($_GET['value'])) account();
+    $reci_stash_id = strip_tags($_GET['value']);
+    $recipeStash = getOneRecipeStash($reci_stash_id);
+    $recipeStash = $recipeStash[0];
+    if ($recipeStash["stash_type_value"] === "CREATION") {
+        $reci_id = createRecipe($recipeStash["reci_title"], $recipeStash["reci_content"],
+        $recipeStash["reci_resume"], $recipeStash["rtype_title"], $recipeStash["reci_image"], $recipeStash["users_nickname"], true);
+        $ingredientsStash = getRecipeStashIngredients($reci_stash_id);
+        $ingredients = array();
+        foreach($ingredientsStash as $key => $value) {
+            array_push($ingredients,$value["ing_title"]);
+        }
+        addRecipesIngredients($reci_id, $ingredients, true);
+        deleteRecipeStash($reci_stash_id);
+        account();
+    }
 }
 
 /*filter's page controller*/

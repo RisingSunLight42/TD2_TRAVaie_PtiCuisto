@@ -99,11 +99,12 @@ function getOneRecipe($reci_id) {
 function getOneRecipeStash($reci_id) {
     $bdd = dbConnect();
 
-    $preparedRecipeRequest = "SELECT reci_stash_title as reci_title, rtype_title, reci_stash_image as reci_image, reci_stash_content as reci_content,
+    $preparedRecipeRequest = "SELECT reci_stash_title as reci_title, rtype_title, reci_stash_image as reci_image, reci_stash_content as reci_content, stash_type_value,
     users_nickname, reci_stash_resume as reci_resume, DATE_FORMAT(reci_stash_creation_date, '%d/%m/%Y') as reci_creation_date, DATE_FORMAT(reci_stash_creation_date, '%d/%m/%Y') as reci_edit_date, reci_id
     FROM ptic_recipes_stash
     JOIN ptic_recipes_type USING (rtype_id)
     JOIN ptic_users USING (users_id)
+    JOIN ptic_stash_type USING (stash_type_id)
     WHERE reci_stash_id = ?";
     $preparedRequestGet = $bdd->prepare($preparedRecipeRequest);
     $preparedRequestGet->execute([$reci_id]);
