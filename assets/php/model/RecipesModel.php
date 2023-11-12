@@ -27,7 +27,7 @@ class RecipesModel extends BaseModel {
     }
 
     /**
-     * Method prepareGetRecipes
+     * Method prepareGetRecipesByTitle
      * Method to prepare the request to get recipes matching the title given.
      * @return void
      */
@@ -57,6 +57,25 @@ class RecipesModel extends BaseModel {
         $this->preparedGetRecipesByCategoryRequest = $this->connection->prepare($getRecipesByCategoryRequest);
     }
     
+    /**
+     * Method prepareGetRecipesByIngredients
+     * Method to prepare the request to get recipes matching the ingredients given.
+     * @return PDOStatement
+     */
+    final private function prepareGetRecipesByIngredients($ingredients) {
+        $getRecipesByIngredientsRequest = "SELECT DISTINCT reci_id, reci_title, reci_resume, rtype_title, reci_image, users_nickname
+        FROM ptic_recipes
+        JOIN ptic_recipes_type USING (rtype_id)
+        JOIN ptic_users USING (users_id)
+        JOIN ptic_needed_ingredients USING (reci_id)
+        JOIN ptic_ingredients USING (ing_id)
+        WHERE ing_title = UPPER(:ingredient0)";
+    
+        for ($i=1; $i<count($ingredients); $i++) {
+            $getRecipesByIngredientsRequest .= "OR ing_title= UPPER(:ingredient$i)";
+        }
+        return $this->connection->prepare($getRecipesByIngredientsRequest);
+    }
     
     /**
      * Method getRecipes
@@ -84,7 +103,7 @@ class RecipesModel extends BaseModel {
     }
 
     /**
-     * Method getRecipesByTitle
+     * Method getRecipesByCategory
      * Method to call the prepared request to get all recipes matching the given category
      * @param $category $category The category to match
      *
@@ -95,5 +114,20 @@ class RecipesModel extends BaseModel {
         return $this->preparedGetRecipesByCategoryRequest->fetchAll();
     }
     
+    /**
+     * Method getRecipesByIngredients
+     * Method to call the prepared request to get all recipes matching the given ingredients
+     * @param $category $category The category to match
+     *
+     * @return array
+     */
+    final public function getRecipesByIngredients($ingredients) {
+        $preparedGetRecipesByIngredientsRequest = $this->prepareGetRecipesByIngredients($ingredients);
+        for ($j=0; $j<count($ingredients); $j++) {
+            $preparedGetRecipesByIngredientsRequest->bindValue(":ingredient$j", (string) $ingredients[$j], PDO::PARAM_STR);
+        }
+        $preparedGetRecipesByIngredientsRequest->execute();
+        return $preparedGetRecipesByIngredientsRequest->fetchAll();
+    }
     
 }

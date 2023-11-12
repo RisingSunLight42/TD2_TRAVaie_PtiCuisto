@@ -23,26 +23,8 @@ function getRecipesByCategory($category) {
 }
 
 function getRecipesByIngredients($ingredients) {
-    $bdd = dbConnect();
-    
-    $recipeRequest = "SELECT DISTINCT reci_id, reci_title, reci_resume, rtype_title, reci_image, users_nickname
-    FROM ptic_recipes
-    JOIN ptic_recipes_type USING (rtype_id)
-    JOIN ptic_users USING (users_id)
-    JOIN ptic_needed_ingredients USING (reci_id)
-    JOIN ptic_ingredients USING (ing_id)
-    WHERE ing_title = UPPER(:ingredient0)";
-
-    for ($i=1; $i<count($ingredients); $i++) {
-        $recipeRequest .= "OR ing_title= UPPER(:ingredient$i)";
-    }
-    $preparedRecipesGet = $bdd->prepare($recipeRequest);
-    for ($j=0; $j<count($ingredients); $j++) {
-        $preparedRecipesGet->bindValue(":ingredient$j", (string) $ingredients[$j], PDO::PARAM_STR);
-    }
-    $preparedRecipesGet->execute();
-
-    return $preparedRecipesGet->fetchAll();
+    $recipesModel = new RecipesModel();
+    return $recipesModel->getRecipesByIngredients($ingredients);
 }
 
 /*Get the number total of recipe*/
