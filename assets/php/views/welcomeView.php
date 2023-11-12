@@ -13,6 +13,9 @@
         require ("header.php");
     ?>
     <main>
+        <div>
+            <img class="welcomePicture mt-3" src="./assets/images/recette/croque_monsieur.webp" alt="image de recette">
+        </div>
         <section id="welcomeSection">
             <article id="lastRecipes">
                 <h2 id="titleLastRecipes" >LES DERNIÈRES RECETTES</h2>
