@@ -94,7 +94,7 @@ a {
 
 #logo {
     height: 100%;
-    width: 25%;
+    width: 250px;
     margin: 5mm;
 }
 
@@ -166,15 +166,17 @@ p {
     padding: 0;
 }
 
-.button {
+
+input[type=submit] {
     background-color: var(--main-color);
-    padding: 5px 40px 5px 40px;
-    border-radius: 5px;
+    box-shadow: 5px 5px 5px rgba(53, 93, 204, 0.753);
     font-family: var(--body-font), cursive;
-    box-shadow: 4px 7px 5px var(--unknown-color);
     color: var(--background-color);
-    font-size: 2em;
-    margin-bottom: 20px;
+    width: 125px;
+    height: 50px;
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 10px;
 }
 
 #formContent {
@@ -222,6 +224,12 @@ label {
 
 #connectionButton {
     margin-top: 10px;
+    background-color: var(--main-color);
+    padding: 5px 40px 5px 40px;
+    font-size: 2em;
+    margin-bottom: 20px;
+    width: unset;
+    height: unset;
 }
 
 * { box-sizing: border-box; }
@@ -248,10 +256,7 @@ input[type=text] {
   background-color: #f1f1f1;
   width: 100%;
 }
-input[type=submit] {
-  background-color: DodgerBlue;
-  color: #fff;
-}
+
 .autocomplete-items {
   position: absolute;
   border: 1px solid #d4d4d4;
@@ -263,16 +268,19 @@ input[type=submit] {
   left: 0;
   right: 0;
 }
+
 .autocomplete-items div {
   padding: 10px;
   cursor: pointer;
   background-color: #fff;
   border-bottom: 1px solid #d4d4d4;
 }
+
 .autocomplete-items div:hover {
   /*when hovering an item:*/
   background-color: #e9e9e9;
 }
+
 .autocomplete-active {
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;

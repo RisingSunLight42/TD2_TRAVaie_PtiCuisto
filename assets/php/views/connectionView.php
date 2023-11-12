@@ -22,7 +22,7 @@
             <input type="text" name="username" id="username" placeholder="Super Jean-mi" required>
             <label for="password">Mot de passe</label>
             <input type="password" name="password" id="password" placeholder="Votre mot de passe" required>
-            <input type="submit" id="connectionButton" class="button" value="Connexion">
+            <input type="submit" id="connectionButton" value="Connexion">
         </form>
     </section>
 </body>
